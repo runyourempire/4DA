@@ -1,0 +1,28 @@
+#!/bin/sh
+# CADE Pre-commit Hook
+# Runs validation before allowing commit
+
+echo "Running CADE pre-commit validation..."
+
+# Frontend validation (fast checks only)
+echo "Checking TypeScript types..."
+npm run typecheck || {
+    echo "TypeScript check failed. Fix type errors before committing."
+    exit 1
+}
+
+echo "Running ESLint..."
+npm run lint || {
+    echo "ESLint check failed. Fix lint errors before committing."
+    exit 1
+}
+
+# Rust validation (format only - full tests in CI)
+echo "Checking Rust formatting..."
+cd src-tauri && cargo fmt --check || {
+    echo "Rust formatting check failed. Run 'cargo fmt' to fix."
+    exit 1
+}
+cd ..
+
+echo "Pre-commit validation passed!"
