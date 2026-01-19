@@ -1,0 +1,169 @@
+# Architecture Reference
+## System Structure for 4DA v3
+
+---
+
+## Canonical Source
+
+The complete architecture specification lives in:
+**`/specs/ARCHITECTURE.md`** - Full system design
+**`/specs/ACE-STONE-TABLET.md`** - ACE subsystem specification
+
+This file provides a quick reference. For detailed design, read the specs.
+
+---
+
+## System Overview
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         4DA v3                                   │
+│                 "The Internet Searches For You"                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐       │
+│  │   Context    │    │    World     │    │  Relevance   │       │
+│  │   Membrane   │───▶│   Scanner    │───▶│    Judge     │       │
+│  │  (Local)     │    │  (External)  │    │  (Filter)    │       │
+│  └──────────────┘    └──────────────┘    └──────────────┘       │
+│         │                                       │                │
+│         │                                       ▼                │
+│         │                              ┌──────────────┐          │
+│         │                              │   Delivery   │          │
+│         │                              │    Engine    │          │
+│         │                              └──────────────┘          │
+│         │                                       │                │
+│         ▼                                       ▼                │
+│  ┌──────────────────────────────────────────────────────┐       │
+│  │                   Learning Engine                     │       │
+│  │              (Feedback → Model Updates)               │       │
+│  └──────────────────────────────────────────────────────┘       │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Core Components
+
+### 1. Context Membrane (ACE)
+- **Location:** `src-tauri/src/ace/`
+- **Purpose:** Understand user's local context
+- **Key Files:**
+  - `scanner.rs` - File/project scanning
+  - `watcher.rs` - Real-time file watching
+  - `git.rs` - Git history analysis
+  - `behavior.rs` - Implicit learning
+  - `validation.rs` - Signal validation
+  - `confidence.rs` - Confidence scoring
+
+### 2. World Scanner
+- **Location:** `src-tauri/src/sources/`
+- **Purpose:** Fetch external content
+- **Key Files:**
+  - `hackernews.rs` - HN adapter
+  - `arxiv.rs` - arXiv adapter
+  - `reddit.rs` - Reddit adapter
+
+### 3. Relevance Judge
+- **Location:** `src-tauri/src/llm.rs`, `src-tauri/src/lib.rs`
+- **Purpose:** Score items for relevance
+- **Key Concepts:**
+  - Embedding similarity (primary)
+  - LLM re-ranking (optional)
+  - Multi-stage filtering
+
+### 4. Delivery Engine
+- **Location:** `src-tauri/src/` (notifications), `src/App.tsx` (UI)
+- **Purpose:** Surface relevant items
+- **Modes:** Feed, Notifications, Digests (planned)
+
+### 5. Learning Engine
+- **Location:** `src-tauri/src/ace/behavior.rs`
+- **Purpose:** Improve over time
+- **Signals:** Clicks, dismissals, saves, explicit feedback
+
+---
+
+## Tech Stack Summary
+
+| Layer | Technology |
+|-------|------------|
+| Application Shell | Tauri 2.0 |
+| Backend | Rust |
+| Frontend | React 18 + TypeScript |
+| Styling | Tailwind CSS |
+| Database | SQLite + sqlite-vss |
+| Embeddings | fastembed (MiniLM-L6-v2) |
+| LLM (optional) | Claude, OpenAI, Ollama |
+
+---
+
+## Data Flow
+
+```
+User Files  ──┐
+              ├──▶ Context Membrane ──▶ Interest Model
+Git History ──┘                              │
+                                             ▼
+External    ──▶ World Scanner ──▶ Relevance Judge ──▶ Delivery
+Sources                              ▲
+                                     │
+                              User Feedback
+```
+
+---
+
+## Key Directories
+
+```
+4da-v3/
+├── .ai/                 # CADE cognition artifacts (YOU ARE HERE)
+├── .claude/             # Runtime hooks and state
+├── src-tauri/           # Rust backend
+│   └── src/
+│       ├── ace/         # Autonomic Context Engine
+│       ├── sources/     # External adapters
+│       ├── lib.rs       # Main library
+│       └── db.rs        # Database layer
+├── src/                 # React frontend
+├── specs/               # Design documents (ARCHITECTURE.md, ACE-STONE-TABLET.md)
+└── mcp-memory-server/   # MCP memory tools
+```
+
+---
+
+## Critical Boundaries
+
+### Tauri IPC Boundary
+- All Rust↔Frontend communication via IPC commands
+- No direct file access from frontend
+- Commands defined in `lib.rs`
+
+### Privacy Boundary
+- Raw data stays local
+- Only aggregated/anonymized data may leave (with consent)
+- API calls send minimal context
+
+### Embedding Boundary
+- Embeddings generated locally (fastembed)
+- Same text → same embedding (deterministic)
+- Model changes trigger re-embedding
+
+---
+
+## For Deep Dives
+
+| Topic | Document |
+|-------|----------|
+| Full architecture | `specs/ARCHITECTURE.md` |
+| ACE specification | `specs/ACE-STONE-TABLET.md` |
+| Phase 0 scope | `specs/PHASE-0-SCOPE.md` |
+| Context engine | `specs/CONTEXT-ENGINE.md` |
+| Invariants | `.ai/INVARIANTS.md` |
+| Decisions | `.ai/DECISIONS.md` |
+| Failure modes | `.ai/FAILURE_MODES.md` |
+
+---
+
+*This is a reference. For full details, read the specs directory.*

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "memory": {
+      "command": "node",
+      "args": ["/mnt/d/4da-v3/mcp-memory-server/dist/index.js"],
+      "env": {
+        "MEMORY_DB_PATH": "/mnt/d/4da-v3/.claude/memory.db"
+      }
+    }
+  }
+}
