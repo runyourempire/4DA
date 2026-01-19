@@ -1,0 +1,10 @@
+# Context rot defense system - gitignore
+
+# Backups (local only)
+backups/
+
+# Memory database (local only)
+memory.db
+
+# Local state that shouldn't be shared
+*.local.md

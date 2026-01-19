@@ -1,0 +1,189 @@
+# Architectural Decisions Log
+## Engineering Memory for 4DA v3
+
+**Version:** 1.0.0
+**Source:** Migrated from .claude/rules/decisions.md + CADE additions
+**Purpose:** Prevent re-litigation of settled decisions
+
+---
+
+## How to Use This File
+
+1. **Before proposing changes:** Check if a relevant decision exists
+2. **When making new decisions:** Add to this file immediately
+3. **When challenging decisions:** Note alternatives in "Considered" section
+
+---
+
+## Core Architecture
+
+### AD-001: Tauri 2.0 over Electron
+- **Decision:** Use Tauri 2.0 (Rust + WebView) instead of Electron
+- **Rationale:** 10x smaller binary, 5x faster startup, native Rust performance for indexing
+- **Considered:**
+  - Electron: Rejected - too heavy for an ambient background tool
+  - Flutter: Rejected - less mature desktop support, Dart learning curve
+- **Date:** Project inception
+- **Status:** Final
+
+### AD-002: SQLite + sqlite-vss for Vector Storage
+- **Decision:** Use SQLite with sqlite-vss extension for embeddings
+- **Rationale:** No external database needed, single file, portable, sufficient for local-first app
+- **Considered:**
+  - Pinecone/Weaviate: Rejected - violates local-first principle, adds complexity
+  - PostgreSQL + pgvector: Rejected - too heavy for desktop app
+  - Qdrant: Rejected - external dependency for local-first app
+- **Date:** Project inception
+- **Status:** Final
+
+### AD-003: BYOK (Bring Your Own Key) Model
+- **Decision:** Users provide their own API keys, never stored remotely
+- **Rationale:** Privacy-first principle, no server costs, user controls their data
+- **Considered:**
+  - Server-side API proxy: Rejected - privacy violation, liability
+  - Free tier: Rejected - unsustainable, creates wrong incentives
+- **Date:** Project inception
+- **Status:** Final
+
+---
+
+## Embedding Strategy
+
+### AD-004: Embedding Model Selection
+- **Decision:** Use fastembed with MiniLM-L6-v2 (384 dimensions) for local embeddings
+- **Rationale:**
+  - Runs locally without API calls
+  - Deterministic results
+  - Sufficient quality for similarity search
+  - Fast inference on CPU
+- **Considered:**
+  - OpenAI text-embedding-3-small: Good but requires API, costs money
+  - Ollama embeddings: Viable fallback but slower
+- **Date:** Phase 0 implementation
+- **Status:** Final for Phase 0, may revisit for v2
+
+---
+
+## Frontend Architecture
+
+### AD-005: React 18 + TypeScript + Tailwind
+- **Decision:** Standard modern web stack
+- **Rationale:** Developer familiarity, excellent tooling, Tailwind for rapid UI
+- **Considered:**
+  - Vue: Rejected - smaller ecosystem
+  - Svelte: Rejected - less mature Tauri integration
+  - Solid: Rejected - smaller community
+- **Date:** Project inception
+- **Status:** Final
+
+---
+
+## Design System
+
+### AD-006: Matte Black Minimalism
+- **Decision:** Dark theme (#0A0A0A base), minimal chrome, gold accent sparingly
+- **Rationale:** Ambient tool should be visually quiet, not attention-seeking
+- **Considered:**
+  - Light theme: Rejected - most developers prefer dark
+  - Colorful UI: Rejected - too attention-seeking for ambient tool
+- **Date:** Project inception
+- **Status:** Final
+
+---
+
+## CADE Decisions
+
+### AD-007: Cognition Artifacts in .ai/
+- **Decision:** Create dedicated `.ai/` directory for cognition artifacts separate from `.claude/`
+- **Rationale:**
+  - `.claude/` is for runtime state and hooks
+  - `.ai/` is for truth-source documents that define agent behavior
+  - Clear separation of concerns
+  - `.ai/` contents are stable, `.claude/` contents are dynamic
+- **Considered:**
+  - Merge with .claude/: Rejected - conflates runtime and truth-source
+  - Use root-level files: Rejected - clutters project root
+- **Date:** CADE implementation
+- **Status:** Final
+
+### AD-008: Two-Phase Protocol Enforcement
+- **Decision:** Require explicit Phase 1 (Orientation) before Phase 2 (Execution)
+- **Rationale:**
+  - Prevents premature coding
+  - Ensures shared understanding before work begins
+  - Reduces rework from misunderstood requirements
+- **Date:** CADE implementation
+- **Status:** Final
+
+### AD-009: CI as Validation Authority
+- **Decision:** GitHub Actions CI serves as the validation authority (not the agent)
+- **Rationale:**
+  - Agents cannot self-certify correctness
+  - Machine verification prevents fabricated claims
+  - Audit trail via CI logs
+- **Considered:**
+  - Agent self-validation: Rejected - agents can fabricate confidence
+  - Manual review only: Rejected - not scalable
+- **Date:** CADE implementation
+- **Status:** Final
+
+### AD-010: Warnings-First CI Rollout
+- **Decision:** Start CI gates in warnings mode (continue-on-error: true)
+- **Rationale:**
+  - Allows baseline establishment
+  - Prevents productivity loss during tuning
+  - Graduate to blocking after patterns understood
+- **Date:** CADE implementation
+- **Status:** Active - will transition to blocking mode
+
+### AD-011: Frontend Test Infrastructure First
+- **Decision:** Set up Vitest infrastructure without writing extensive tests initially
+- **Rationale:**
+  - Gets gates in place
+  - Allows incremental test addition
+  - Doesn't derail main CADE implementation
+- **Date:** CADE implementation
+- **Status:** Final
+
+---
+
+## Rejected Alternatives (Reference)
+
+| ID | Alternative | Reason for Rejection |
+|----|-------------|---------------------|
+| REJ-001 | Electron | Too heavy for ambient background tool |
+| REJ-002 | External Vector DB | Violates local-first principle |
+| REJ-003 | Server-side API keys | Privacy violation, liability |
+| REJ-004 | Agent self-certification | Agents can fabricate confidence |
+| REJ-005 | Light theme | Most developers prefer dark |
+
+---
+
+## Pending Decisions
+
+*Decisions under active consideration*
+
+| ID | Topic | Options | Status |
+|----|-------|---------|--------|
+| - | (None currently) | - | - |
+
+---
+
+## Decision Template
+
+When adding a new decision:
+
+```markdown
+### AD-NNN: [Short Title]
+- **Decision:** [What was decided]
+- **Rationale:** [Why this choice was made]
+- **Considered:**
+  - [Alternative 1]: [Why rejected]
+  - [Alternative 2]: [Why rejected]
+- **Date:** [When decided]
+- **Status:** [Final/Active/Superseded]
+```
+
+---
+
+*Decisions are made once and referenced often. Re-litigation requires new evidence.*
