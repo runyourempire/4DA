@@ -6,80 +6,97 @@
 
 ---
 
+## Operating Mode
+
+**Mode**: Lead Senior Developer
+**Authority**: Full technical decision-making, autonomous execution
+**Updated**: 2026-02-08
+
+---
+
 ## Active Task
 
-**Task**: Context rot defense system - COMPLETE
-**Phase**: Ready for use
-**Completed**: This session
+**Task**: App.tsx Decomposition - COMPLETE
+**Phase**: SettingsModal extracted, verified
+**Updated**: 2026-02-08
 
-### What Was Built
-1. `.claude/rules/` memory system (decisions, state, conventions) - DONE
-2. PreCompact hooks for transcript backup - DONE
-3. MCP memory server for semantic recall - DONE
-4. Subagent configurations for context isolation - DONE
+### Void Engine Complete Summary
 
-### Implementation Complete
-- [x] Created directory structure
-- [x] Created decisions.md
-- [x] Created current-state.md
-- [x] Created conventions.md
-- [x] Setting up hooks
-- [x] Built MCP server
-- [x] Created setup script
-- [x] Created usage documentation
+Ambient heartbeat indicator + fullscreen 3D information universe.
 
----
+**Phase 1 (Heartbeat)**:
+- CSS + WebGL2 ambient indicator, change-driven signals from Rust backend
+- VoidSignal struct with 7 fields, emit_if_changed dedup, staleness timer
+- Cold start states: Dormant, Awakening, Active, Scanning, Discoveries, Stale, Error
 
-## Recently Completed
+**Phase 2 Backend**:
+- Random projection (384-dim -> 3D) via xorshift64 + Box-Muller Gaussian
+- `build_universe()` from db source items + context chunks + interest orbitals
+- K-means clustering for LOD at >5K particles (hard cap MAX_PARTICLES=5000)
+- 3 Tauri commands: void_get_universe, void_get_particle_detail, void_get_neighbors
+- Position cache table (void_positions) with projection_version
+- 21 unit tests
 
-<!-- Move completed tasks here for reference -->
+**Phase 2 Frontend**:
+- React.lazy() code-split Three.js bundle (~910KB, zero startup cost)
+- InstancedMesh for up to 5K particles (single draw call)
+- OrbitControls (drag to orbit, scroll to zoom)
+- Camera fly-to animations (ease-out cubic, 0.67s)
+- Particle selection with detail panel + nearest neighbors
+- Search overlay (/ key, matching particles brighten, non-matching dim)
+- Full keyboard shortcuts: Esc, H, F, R, /, 1-9
+- VoidCore (pulsing gold centroid), VoidInterestOrbitals (labeled topic nodes)
+- HUD with stats + keyboard shortcut legend
 
----
-
-## Files Modified This Session
-
-| File | Change | Status |
-|------|--------|--------|
-| `.claude/rules/decisions.md` | Created | Done |
-| `.claude/rules/current-state.md` | Created | Done |
-| `.claude/rules/conventions.md` | Created | Done |
-| `.claude/settings.json` | Created hooks config | Done |
-| `.claude/scripts/pre-compact-backup.sh` | Created | Done |
-| `.claude/agents/*.md` | Created subagent docs | Done |
-| `.claude/setup-context-defense.sh` | Created | Done |
-| `.claude/USAGE.md` | Created | Done |
-| `.mcp.json` | Created MCP config | Done |
-| `mcp-memory-server/*` | Created MCP server | Done |
-
----
-
-## Blocked / Waiting
-
-<!-- Note any blockers here -->
-
-None currently.
+**Files Created**:
+- `src-tauri/src/void_engine.rs` (~850 lines)
+- `src/components/void-engine/VoidUniverse.tsx` (~360 lines)
+- `src/components/void-engine/VoidParticles.tsx` (~112 lines)
+- `src/components/void-engine/VoidCore.tsx` (~55 lines)
+- `src/components/void-engine/VoidInterestOrbitals.tsx` (~65 lines)
+- `src/components/void-engine/VoidSelectionPanel.tsx` (~140 lines)
+- `src/components/void-engine/VoidHUD.tsx` (~133 lines)
+- `src/hooks/use-void-universe.ts` (~80 lines)
 
 ---
 
-## Context for Next Task
+## What's Built
 
-Now that context rot defense is complete, next priorities are:
-1. Run setup script: `.claude/setup-context-defense.sh`
-2. Continue 4DA Phase 0 implementation (Tauri skeleton)
-3. Build file indexer
-4. Implement HN source adapter
+- 86+ Tauri commands wired
+- 8 source adapters (HN, arXiv, Reddit, RSS, GitHub, Product Hunt, Twitter, YouTube)
+- 6 file extractors (PDF, Office, Image/OCR, Audio, Archive)
+- ACE context engine with file watcher
+- sqlite-vec KNN search (O(log n))
+- LLM integration (Anthropic/OpenAI/Ollama)
+- System tray + background monitoring
+- Autonomous context discovery
+- Cache-first analysis architecture
+- Digest auto-save on analysis completion
+- MCP server v3.2.0 (13 tools, 14 resources)
+- Relevance explanations
+- Score Autopsy UI
+- Confidence indicators
+- Natural language search
+- Onboarding flow
+- Settings modal with all sections
+- Polished matte black UI
+- **Void Engine heartbeat** (ambient state indicator)
+- **Void Engine universe** (3D spatial visualization with full interaction)
+- **Signal Classifier** (6 types, 4 priority levels, pattern matching)
+- **Signals UI Panel** (filterable, color-coded, actionable)
 
 ---
 
-## Important Context That Must Survive
+## Build Status
 
-- User wants high-quality development ALL THE TIME, not just with fresh context
-- We did deep research on context rot - 7 failure modes identified
-- Solution is layered: files + hooks + MCP + subagents
-- Terminal rendering bug exists separately (claudescreenfix-hardwicksoftware)
-- All sessions are now archived and searchable via MCP tools
-- Can reference exact past conversations with search_sessions/get_session_messages
+- **Version:** 1.0.0
+- **Warnings:** 0
+- **Tests:** 171 Rust + 10 Frontend = 181 passing
+- **TypeScript:** Clean
+- **MCP Server:** v3.2.0 (13 tools)
+- **Build:** Main 353KB + Lazy Three.js 910KB (correctly code-split)
+- **Runtime:** Verified working
 
 ---
 
-*Last updated: Compaction at 20260120_012211 (auto)*
+*Last updated: Compaction at 20260208_235327 (auto)*
