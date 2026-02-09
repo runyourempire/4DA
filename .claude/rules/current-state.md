@@ -16,16 +16,19 @@
 
 ## Active Task
 
-**Task**: Signal-aware heartbeat + clippy cleanup
+**Task**: Frontend component decomposition
 **Phase**: Complete
 **Updated**: 2026-02-09
 
 ### This Session Completed
 
-1. **Signal-aware heartbeat** - Connected Signal Classifier to Void Heartbeat via 4 new VoidSignal fields + SignalSummary struct
-2. **Shader color logic** - Cool blue (learning) to warm gold/red (alert), critical double-pulse rhythm
-3. **State labels** - Alert, Breaking, Discovery, Learning (priority over legacy labels)
-4. **Clippy zero** - Fixed all warnings across 8 files (PI constants, field_reassign, useless_vec, clone on Copy, transmute, clamp)
+1. **Onboarding.tsx split** - 1,184 → 394 lines parent + 6 step components + types
+   - `onboarding/WelcomeStep.tsx` (59), `ApiKeysStep.tsx` (290), `ContextStep.tsx` (166)
+   - `InterestsStep.tsx` (162), `FirstScanStep.tsx` (176), `CompleteStep.tsx` (62), `types.ts` (24)
+2. **SettingsModal.tsx split** - 966 → 334 lines parent + 5 section components
+   - `settings/AIProviderSection.tsx` (239), `MonitoringSection.tsx` (102), `DigestSection.tsx` (103)
+   - `ContextDiscoverySection.tsx` (152), `PersonalizationSection.tsx` (209)
+3. **Validation**: TypeScript clean, ESLint 0 warnings, 10 frontend tests passing
 
 ---
 
@@ -64,7 +67,7 @@
 
 - **Version:** 1.0.0
 - **Warnings:** 0 (ESLint 0, Clippy 0)
-- **Tests:** 185 Rust + 10 Frontend = 195 passing
+- **Tests:** 208 Rust + 10 Frontend = 218 passing
 - **TypeScript:** Clean
 - **MCP Server:** v3.2.0 (13 tools)
 - **Build:** Main 353KB + Lazy Three.js 910KB (correctly code-split)
@@ -72,4 +75,4 @@
 
 ---
 
-*Last updated: Compaction at 20260209_223600 (manual)*
+*Last updated: Compaction at 20260210_004302 (auto)*
