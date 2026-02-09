@@ -16,18 +16,16 @@
 
 ## Active Task
 
-**Task**: Void Engine vision cleanup + plan hygiene
+**Task**: Code quality + architecture polish
 **Phase**: Complete
 **Updated**: 2026-02-09
 
 ### This Session Completed
 
-1. **Void Engine investigation** - Comprehensive audit of all Void Engine files (backend + frontend)
-2. **Architectural decision AD-012** - Recorded in `.ai/DECISIONS.md`: Heartbeat=production, Universe=experimental
-3. **Architectural decision AD-013** - Void Engine signal architecture (change-driven, not timer-driven)
-4. **Updated `.ai/ARCHITECTURE.md`** - Added Void Engine and Signal Classifier sections
-5. **Cleaned up 4 stale plan files** - Marked 2 COMPLETE, 2 SUPERSEDED (prevents stale context injection)
-6. **Updated MEMORY.md** - Void Engine section now clearly distinguishes production vs experimental
+1. **ESLint warnings fixed** - All 4 warnings resolved (trailing comma, missing deps, unused var). 0 errors, 0 warnings
+2. **Unsafe unwrap() fixed** - Replaced dangerous unwrap() calls with unwrap_or/expect across 5 files
+3. **Clippy warnings fixed** - All 13 resolved (manual_clamp, manual_strip, type_complexity, etc). 0 clippy warnings
+4. **Hook extraction** - Created use-result-filters.ts (81 lines) extracting filter/sort + batch ops from App.tsx
 
 ---
 
@@ -64,8 +62,8 @@
 ## Build Status
 
 - **Version:** 1.0.0
-- **Warnings:** 0
-- **Tests:** 177 Rust + 10 Frontend = 187 passing
+- **Warnings:** 0 (ESLint 0, Clippy 0)
+- **Tests:** 185 Rust + 10 Frontend = 195 passing
 - **TypeScript:** Clean
 - **MCP Server:** v3.2.0 (13 tools)
 - **Build:** Main 353KB + Lazy Three.js 910KB (correctly code-split)
@@ -73,4 +71,4 @@
 
 ---
 
-*Last updated: Compaction at 20260209_125432 (auto)*
+*Last updated: Compaction at 20260209_130928 (auto)*
