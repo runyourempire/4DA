@@ -147,6 +147,35 @@
 
 ---
 
+## Void Engine
+
+### AD-012: Void Engine - Heartbeat is Production, Universe is Experimental
+- **Decision:** The Void Engine heartbeat (Phase 1: ambient signal indicator) is a production feature. The 3D universe (Phase 2: Three.js spatial visualization) is classified as experimental and should not receive further investment until the core product loop (signals, briefings, feedback) is mature.
+- **Rationale:**
+  - The heartbeat communicates real system state (scanning, idle, stale, error, discoveries) through a 48px ambient glow. It fits the "quiet ambient tool" design philosophy perfectly.
+  - The 3D universe contradicts 4DA's core value proposition. 4DA delivers what matters to you - it doesn't ask you to explore a cloud of dots. The universe is discovery mode; 4DA is delivery mode.
+  - Johnson-Lindenstrauss random projection from 384-dim to 3D doesn't produce human-interpretable clusters. Users see dots but can't form a mental model.
+  - Three.js bundle (~908KB) is 2.5x the rest of the app (353KB) for a rarely-used feature.
+  - Particle relevance scores were never populated (all 0.0), making the visualization purely spatial with no relevance dimension.
+  - The `void_get_neighbors` command rebuilds the entire universe per query instead of using cached data or the existing sqlite-vec KNN.
+- **Considered:**
+  - Remove universe entirely: Rejected - the code is clean, well-tested, and costs nothing when not loaded (React.lazy code-split). Keeping it as opt-in experimental preserves optionality.
+  - Invest in fixing universe (relevance scores, 2D mode, caching): Deferred - signals, briefings, and feedback loop have higher ROI for user value.
+  - Make universe the primary view: Rejected - antithetical to 4DA's ambient delivery philosophy.
+- **Date:** 2026-02-09
+- **Status:** Final
+
+### AD-013: Void Engine Signal Architecture
+- **Decision:** Void signals are change-driven (emit only when values differ), not timer-driven. Frontend interpolates locally at 30fps.
+- **Rationale:**
+  - Zero CPU cost when nothing changes (most of the time for an ambient tool)
+  - Signal emissions are hooked into real backend events (fetch start, analysis complete, error, ACE scan)
+  - Frontend RAF loop with cancelled flag prevents memory leaks on unmount
+- **Date:** 2026-02-09
+- **Status:** Final
+
+---
+
 ## Rejected Alternatives (Reference)
 
 | ID | Alternative | Reason for Rejection |
@@ -156,6 +185,8 @@
 | REJ-003 | Server-side API keys | Privacy violation, liability |
 | REJ-004 | Agent self-certification | Agents can fabricate confidence |
 | REJ-005 | Light theme | Most developers prefer dark |
+| REJ-006 | 3D universe as primary view | Contradicts ambient delivery philosophy; discovery mode vs delivery mode |
+| REJ-007 | Remove universe code entirely | Code is clean, code-split, costs nothing when unused; preserves optionality |
 
 ---
 

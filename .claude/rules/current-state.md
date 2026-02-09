@@ -10,53 +10,24 @@
 
 **Mode**: Lead Senior Developer
 **Authority**: Full technical decision-making, autonomous execution
-**Updated**: 2026-02-08
+**Updated**: 2026-02-09
 
 ---
 
 ## Active Task
 
-**Task**: App.tsx Decomposition - COMPLETE
-**Phase**: SettingsModal extracted, verified
-**Updated**: 2026-02-08
+**Task**: Void Engine vision cleanup + plan hygiene
+**Phase**: Complete
+**Updated**: 2026-02-09
 
-### Void Engine Complete Summary
+### This Session Completed
 
-Ambient heartbeat indicator + fullscreen 3D information universe.
-
-**Phase 1 (Heartbeat)**:
-- CSS + WebGL2 ambient indicator, change-driven signals from Rust backend
-- VoidSignal struct with 7 fields, emit_if_changed dedup, staleness timer
-- Cold start states: Dormant, Awakening, Active, Scanning, Discoveries, Stale, Error
-
-**Phase 2 Backend**:
-- Random projection (384-dim -> 3D) via xorshift64 + Box-Muller Gaussian
-- `build_universe()` from db source items + context chunks + interest orbitals
-- K-means clustering for LOD at >5K particles (hard cap MAX_PARTICLES=5000)
-- 3 Tauri commands: void_get_universe, void_get_particle_detail, void_get_neighbors
-- Position cache table (void_positions) with projection_version
-- 21 unit tests
-
-**Phase 2 Frontend**:
-- React.lazy() code-split Three.js bundle (~910KB, zero startup cost)
-- InstancedMesh for up to 5K particles (single draw call)
-- OrbitControls (drag to orbit, scroll to zoom)
-- Camera fly-to animations (ease-out cubic, 0.67s)
-- Particle selection with detail panel + nearest neighbors
-- Search overlay (/ key, matching particles brighten, non-matching dim)
-- Full keyboard shortcuts: Esc, H, F, R, /, 1-9
-- VoidCore (pulsing gold centroid), VoidInterestOrbitals (labeled topic nodes)
-- HUD with stats + keyboard shortcut legend
-
-**Files Created**:
-- `src-tauri/src/void_engine.rs` (~850 lines)
-- `src/components/void-engine/VoidUniverse.tsx` (~360 lines)
-- `src/components/void-engine/VoidParticles.tsx` (~112 lines)
-- `src/components/void-engine/VoidCore.tsx` (~55 lines)
-- `src/components/void-engine/VoidInterestOrbitals.tsx` (~65 lines)
-- `src/components/void-engine/VoidSelectionPanel.tsx` (~140 lines)
-- `src/components/void-engine/VoidHUD.tsx` (~133 lines)
-- `src/hooks/use-void-universe.ts` (~80 lines)
+1. **Void Engine investigation** - Comprehensive audit of all Void Engine files (backend + frontend)
+2. **Architectural decision AD-012** - Recorded in `.ai/DECISIONS.md`: Heartbeat=production, Universe=experimental
+3. **Architectural decision AD-013** - Void Engine signal architecture (change-driven, not timer-driven)
+4. **Updated `.ai/ARCHITECTURE.md`** - Added Void Engine and Signal Classifier sections
+5. **Cleaned up 4 stale plan files** - Marked 2 COMPLETE, 2 SUPERSEDED (prevents stale context injection)
+6. **Updated MEMORY.md** - Void Engine section now clearly distinguishes production vs experimental
 
 ---
 
@@ -80,10 +51,13 @@ Ambient heartbeat indicator + fullscreen 3D information universe.
 - Onboarding flow
 - Settings modal with all sections
 - Polished matte black UI
-- **Void Engine heartbeat** (ambient state indicator)
-- **Void Engine universe** (3D spatial visualization with full interaction)
+- **Void Engine heartbeat** (PRODUCTION - ambient state indicator, AD-012)
+- **Void Engine universe** (EXPERIMENTAL - 3D visualization, not actively maintained, AD-012)
 - **Signal Classifier** (6 types, 4 priority levels, pattern matching)
 - **Signals UI Panel** (filterable, color-coded, actionable)
+- **Keyboard shortcuts** (R, F, B, comma, Esc)
+- **Last-analyzed timestamp** in action bar
+- **Summary badges** (result count, relevant, top picks)
 
 ---
 
@@ -91,7 +65,7 @@ Ambient heartbeat indicator + fullscreen 3D information universe.
 
 - **Version:** 1.0.0
 - **Warnings:** 0
-- **Tests:** 171 Rust + 10 Frontend = 181 passing
+- **Tests:** 177 Rust + 10 Frontend = 187 passing
 - **TypeScript:** Clean
 - **MCP Server:** v3.2.0 (13 tools)
 - **Build:** Main 353KB + Lazy Three.js 910KB (correctly code-split)
@@ -99,4 +73,4 @@ Ambient heartbeat indicator + fullscreen 3D information universe.
 
 ---
 
-*Last updated: Compaction at 20260208_235327 (auto)*
+*Last updated: Compaction at 20260209_125432 (auto)*
