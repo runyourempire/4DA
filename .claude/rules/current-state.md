@@ -16,16 +16,16 @@
 
 ## Active Task
 
-**Task**: Code quality + architecture polish
+**Task**: Signal-aware heartbeat + clippy cleanup
 **Phase**: Complete
 **Updated**: 2026-02-09
 
 ### This Session Completed
 
-1. **ESLint warnings fixed** - All 4 warnings resolved (trailing comma, missing deps, unused var). 0 errors, 0 warnings
-2. **Unsafe unwrap() fixed** - Replaced dangerous unwrap() calls with unwrap_or/expect across 5 files
-3. **Clippy warnings fixed** - All 13 resolved (manual_clamp, manual_strip, type_complexity, etc). 0 clippy warnings
-4. **Hook extraction** - Created use-result-filters.ts (81 lines) extracting filter/sort + batch ops from App.tsx
+1. **Signal-aware heartbeat** - Connected Signal Classifier to Void Heartbeat via 4 new VoidSignal fields + SignalSummary struct
+2. **Shader color logic** - Cool blue (learning) to warm gold/red (alert), critical double-pulse rhythm
+3. **State labels** - Alert, Breaking, Discovery, Learning (priority over legacy labels)
+4. **Clippy zero** - Fixed all warnings across 8 files (PI constants, field_reassign, useless_vec, clone on Copy, transmute, clamp)
 
 ---
 
@@ -49,7 +49,8 @@
 - Onboarding flow
 - Settings modal with all sections
 - Polished matte black UI
-- **Void Engine heartbeat** (PRODUCTION - ambient state indicator, AD-012)
+- **Void Engine heartbeat** (PRODUCTION - signal-aware, AD-012/AD-013)
+- **Signal-aware heartbeat** (color shifts, double-pulse, state labels from Signal Classifier)
 - **Void Engine universe** (EXPERIMENTAL - 3D visualization, not actively maintained, AD-012)
 - **Signal Classifier** (6 types, 4 priority levels, pattern matching)
 - **Signals UI Panel** (filterable, color-coded, actionable)
@@ -71,4 +72,4 @@
 
 ---
 
-*Last updated: Compaction at 20260209_130928 (auto)*
+*Last updated: Compaction at 20260209_223600 (manual)*
