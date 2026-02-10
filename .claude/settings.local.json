@@ -147,7 +147,16 @@
       "Bash(dir /b /ad \"D:\"\" 2>nul | findstr /i \"void \")",
       "Bash(dir:*)",
       "Bash(cmd /c \"taskkill /PID 10840 /F\")",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(npx eslint:*)",
+      "Bash(sort:*)",
+      "Bash(python -c:*)",
+      "Bash(printf:*)",
+      "Bash(bash:*)",
+      "Bash(pushd:*)",
+      "Bash(cd:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(set NODE_OPTIONS=--max-old-space-size=2048)"
     ]
   },
   "enableAllProjectMcpServers": true,
