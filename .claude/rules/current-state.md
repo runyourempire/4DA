@@ -16,32 +16,26 @@
 
 ## Active Task
 
-**Task**: Quality Hardening: 13-fix plan (COMPLETE)
+**Task**: Deep Audit Remediation (COMPLETE)
 **Updated**: 2026-02-11
 
-### Quality Hardening Fixes (13/13 Complete)
+### Deep Audit Fixes (5/5 Complete)
 
-| # | Fix | Status |
-|---|-----|--------|
-| 1 | Embedding status tracking (pending/retry) | Done |
-| 2 | blob_to_embedding .expect() -> .unwrap_or() | Done |
-| 3 | digest.rs double unwrap safety | Done |
-| 4 | MCP version mismatch 3.1.0 -> 3.2.0 | Done |
-| 5 | MCP DB path resolution (platform-aware) | Done |
-| 6 | MCP build in validate:all pipeline | Done |
-| 7 | Summary badges -> useMemo | Done |
-| 8 | Source labels -> module constant | Done |
-| 9 | console.log -> console.debug for fallbacks | Done |
-| 10 | SignalsPanel -> React.memo | Done |
-| 11 | Dead store code (recordInteraction) removed | Done |
-| 12 | ResultItem aria-controls | Done |
-| 13 | Void universe feature gate (void-universe) | Done |
+| # | Fix | Priority | Status |
+|---|-----|----------|--------|
+| 1 | Implement ace_record_accuracy_feedback (was crashing) | P0 CRITICAL | Done |
+| 2 | Remove dead code void_signal_context_change | P1 | Done |
+| 3 | Remove dead struct field has_active_work from ScoringContext | P1 | Done |
+| 4 | Fix 6x console.log -> console.debug in legacy hooks | P2 | Done |
+| 5 | Wire ace_record_accuracy_feedback in invoke_handler | P0 | Done |
+
+### Previous: Quality Hardening (13/13 Complete)
 
 ---
 
 ## What's Built
 
-- 86+ Tauri commands wired
+- 87+ Tauri commands wired (added ace_record_accuracy_feedback)
 - 8 source adapters (HN, arXiv, Reddit, RSS, GitHub, Product Hunt, Twitter, YouTube)
 - 6 file extractors (PDF, Office, Image/OCR, Audio, Archive)
 - ACE context engine with file watcher
@@ -77,7 +71,7 @@
 
 - **Version:** 1.0.0
 - **Warnings:** 0 (ESLint 0, Clippy 0)
-- **Tests:** 193 Rust (default) + 14 gated (void-universe) + 10 Frontend = 217 total
+- **Tests:** 241 Rust (default) + 14 gated (void-universe) + 10 Frontend = 265 total
 - **TypeScript:** Clean
 - **MCP Server:** v3.2.0 (13 tools)
 - **Build:** 373KB (Three.js removed, 70% reduction)
@@ -85,4 +79,4 @@
 
 ---
 
-*Last updated: Compaction at 20260211_005647 (auto)*
+*Last updated: Compaction at 20260211_122824 (auto)*
