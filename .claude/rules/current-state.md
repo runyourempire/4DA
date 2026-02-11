@@ -16,20 +16,19 @@
 
 ## Active Task
 
-**Task**: Deep Audit Remediation (COMPLETE)
+**Task**: Quality Fixes — Scoring, Signals, Briefing, Explanations (COMPLETE)
 **Updated**: 2026-02-11
 
-### Deep Audit Fixes (5/5 Complete)
+### Quality Fixes (4/4 Complete)
 
-| # | Fix | Priority | Status |
-|---|-----|----------|--------|
-| 1 | Implement ace_record_accuracy_feedback (was crashing) | P0 CRITICAL | Done |
-| 2 | Remove dead code void_signal_context_change | P1 | Done |
-| 3 | Remove dead struct field has_active_work from ScoringContext | P1 | Done |
-| 4 | Fix 6x console.log -> console.debug in legacy hooks | P2 | Done |
-| 5 | Wire ace_record_accuracy_feedback in invoke_handler | P0 | Done |
+| # | Fix | Impact | Status |
+|---|-----|--------|--------|
+| 1 | Gate signal classifier behind relevance threshold | No false critical alerts on low-score items | Done |
+| 2 | AI briefing reads AnalysisState instead of stale DB query | Briefing works after analysis | Done |
+| 3 | Raise default threshold 0.30→0.45 + dynamic context weighting | Better score discrimination | Done |
+| 4 | Richer explanations with content snippets | "Relates to your architecture docs — Vector search..." | Done |
 
-### Previous: Quality Hardening (13/13 Complete)
+### Previous: Deep Audit Remediation (5/5 Complete)
 
 ---
 
@@ -71,7 +70,7 @@
 
 - **Version:** 1.0.0
 - **Warnings:** 0 (ESLint 0, Clippy 0)
-- **Tests:** 241 Rust (default) + 14 gated (void-universe) + 10 Frontend = 265 total
+- **Tests:** 246 Rust (default) + 14 gated (void-universe) + 10 Frontend = 270 total
 - **TypeScript:** Clean
 - **MCP Server:** v3.2.0 (13 tools)
 - **Build:** 373KB (Three.js removed, 70% reduction)
