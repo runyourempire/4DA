@@ -16,20 +16,23 @@
 
 ## Active Task
 
-**Task**: Ollama Integration Hardening (COMPLETE)
+**Task**: Results System Dramatic Improvement (COMPLETE)
 **Updated**: 2026-02-11
 
-### Ollama Fixes (5/5 Complete)
+### Results Improvements (8/8 Complete)
 
 | # | Fix | Impact | Status |
 |---|-----|--------|--------|
-| 1 | Lightweight 3-phase Ollama test (version→model→tiny inference) | No more "stuck on Testing connection..." | Done |
-| 2 | Frontend timeout (90s Ollama, 30s cloud) with Promise.race | UI never hangs indefinitely | Done |
-| 3 | connect_timeout on ALL HTTP clients (5-10s) | Fast failure on Ollama not running | Done |
-| 4 | Hardened embed_texts_ollama with extracted single fallback | Better error messages, model-not-found detection | Done |
-| 5 | Actionable error messages throughout | "Run: ollama pull X", "ollama serve", "try smaller model" | Done |
+| 1 | Score decompression (calibrated sigmoid) | Scores spread 5-95% instead of 45-50% | Done |
+| 2 | Keyword interest boost | Items matching declared interests score higher | Done |
+| 3 | HTML entity decoding (all sources) | No more `&amp;` literals in titles/signals | Done |
+| 4 | Cross-source deduplication | Same article from HN+Reddit = 1 entry | Done |
+| 5 | Signal severity rebalancing | Max 1-2 CRITICAL (was 9/19) | Done |
+| 6 | WSL path conversion + recursive scan | Context files actually indexed now | Done |
+| 7 | Load cached results on mount | Results persist after onboarding | Done |
+| 8 | Ollama banner context fix | Only shows when Ollama provider selected | Done |
 
-### Previous: Quality Fixes (4/4 Complete), Deep Audit Remediation (5/5 Complete)
+### Previous: Ollama Hardening (5/5), Quality Fixes (4/4), Deep Audit (5/5)
 
 ---
 
@@ -79,4 +82,4 @@
 
 ---
 
-*Last updated: Compaction at 20260211_125655 (auto)*
+*Last updated: Compaction at 20260211_231842 (auto)*
