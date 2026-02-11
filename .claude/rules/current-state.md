@@ -16,19 +16,20 @@
 
 ## Active Task
 
-**Task**: Quality Fixes — Scoring, Signals, Briefing, Explanations (COMPLETE)
+**Task**: Ollama Integration Hardening (COMPLETE)
 **Updated**: 2026-02-11
 
-### Quality Fixes (4/4 Complete)
+### Ollama Fixes (5/5 Complete)
 
 | # | Fix | Impact | Status |
 |---|-----|--------|--------|
-| 1 | Gate signal classifier behind relevance threshold | No false critical alerts on low-score items | Done |
-| 2 | AI briefing reads AnalysisState instead of stale DB query | Briefing works after analysis | Done |
-| 3 | Raise default threshold 0.30→0.45 + dynamic context weighting | Better score discrimination | Done |
-| 4 | Richer explanations with content snippets | "Relates to your architecture docs — Vector search..." | Done |
+| 1 | Lightweight 3-phase Ollama test (version→model→tiny inference) | No more "stuck on Testing connection..." | Done |
+| 2 | Frontend timeout (90s Ollama, 30s cloud) with Promise.race | UI never hangs indefinitely | Done |
+| 3 | connect_timeout on ALL HTTP clients (5-10s) | Fast failure on Ollama not running | Done |
+| 4 | Hardened embed_texts_ollama with extracted single fallback | Better error messages, model-not-found detection | Done |
+| 5 | Actionable error messages throughout | "Run: ollama pull X", "ollama serve", "try smaller model" | Done |
 
-### Previous: Deep Audit Remediation (5/5 Complete)
+### Previous: Quality Fixes (4/4 Complete), Deep Audit Remediation (5/5 Complete)
 
 ---
 
