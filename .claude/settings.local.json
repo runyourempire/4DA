@@ -172,7 +172,14 @@
       "Bash(where.exe node npm pnpm cargo rustc ollama git code)",
       "Bash(where.exe:*)",
       "Bash(npm ls:*)",
-      "Bash(cmd /c \"cd /d D:\\\\4da-v3\\\\src-tauri && cargo test 2>&1\")"
+      "Bash(cmd /c \"cd /d D:\\\\4da-v3\\\\src-tauri && cargo test 2>&1\")",
+      "Bash(while read ref)",
+      "Bash(do git update-ref -d \"$ref\")",
+      "Bash(pip install:*)",
+      "WebFetch(domain:growth.maestro.onl)",
+      "WebFetch(domain:growthcurve.co)",
+      "Bash(npx pnpm approve-builds)",
+      "Bash(FOURDA_DB_PATH=D:/4da-v3/data/4da.db node dist/index.js:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
