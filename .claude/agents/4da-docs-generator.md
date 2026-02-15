@@ -203,7 +203,7 @@ REPO="/mnt/d/4da-v3"
 cat << 'HEADER'
 # 4DA - 4 Dimensional Autonomy
 
-> The internet searches for you.
+> All signal. No feed.
 
 An ambient intelligence layer that monitors your local context, watches external sources continuously, filters ruthlessly (99.9% rejection), and delivers only what matters - before you know you need it.
 
