@@ -183,9 +183,15 @@
       "Bash(gh repo view:*)",
       "Bash(cmd /c \"pnpm run tauri dev 2>&1\")",
       "WebFetch(domain:mariadb.com)",
-      "WebFetch(domain:spdx.org)"
+      "WebFetch(domain:spdx.org)",
+      "Bash(xxd:*)"
     ]
   },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "memory",
+    "4da"
+  ],
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -198,10 +204,5 @@
         ]
       }
     ]
-  },
-  "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "memory",
-    "4da"
-  ]
+  }
 }
