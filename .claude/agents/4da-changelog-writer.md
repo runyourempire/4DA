@@ -453,7 +453,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ```markdown
 # 🎉 4DA v2.0.0 Released!
 
-We're excited to announce the release of 4DA v2.0.0, bringing significant improvements to how the internet searches for you.
+We're excited to announce the release of 4DA v2.0.0, bringing significant improvements to your signal-to-noise ratio.
 
 ## What's New
 
