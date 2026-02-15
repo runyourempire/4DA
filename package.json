@@ -2,6 +2,8 @@
   "name": "4da",
   "private": true,
   "version": "1.0.0",
+  "author": "4DA Systems",
+  "license": "BUSL-1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
