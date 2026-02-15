@@ -176,6 +176,39 @@
 
 ---
 
+## Module Structure
+
+### AD-014: lib.rs Decomposition into Focused Modules
+- **Decision:** Split the monolithic `lib.rs` (3,835 lines) into 7 focused modules while preserving all `use crate::` import paths via re-exports.
+- **Rationale:**
+  - Single file had 6 unrelated responsibilities: types, global state (43 statics), embeddings, text processing, events, and 15+ Tauri commands
+  - Re-export pattern (`pub use module::Item` in lib.rs) means zero changes needed in any other module — all existing `use crate::function_name` imports continue to work
+  - Same mechanical pattern that succeeded with the `scoring.rs` split into `scoring/` submodules
+- **Structure:**
+  - `lib.rs` (707 lines) — mod declarations, re-exports, `run()`, `initialize_ace_on_startup()`
+  - `commands.rs` (1,391 lines) — all `#[tauri::command]` handlers + background jobs
+  - `utils.rs` (736 lines) — text processing, vector math, topic extraction, tests
+  - `state.rs` (360 lines) — all OnceCells/statics + accessor functions + DB/config helpers
+  - `embeddings.rs` (355 lines) — embedding generation (OpenAI + Ollama + retry logic)
+  - `types.rs` (247 lines) — all struct/enum definitions + serde defaults
+  - `events.rs` (136 lines) — Tauri event emission helpers
+- **Considered:**
+  - Keep as single file: Rejected — 3,835 lines makes navigation, review, and merge conflicts painful
+  - Move commands into domain-specific `*_commands.rs` files: Deferred — would fragment the invoke_handler further; current split keeps all general commands together
+- **Date:** 2026-02-15
+- **Status:** Final
+
+### AD-015: Re-export Pattern for Module Decomposition
+- **Decision:** When splitting modules, always re-export from `lib.rs` to preserve `use crate::item` paths. Never require callers to change imports.
+- **Rationale:**
+  - Zero-disruption refactoring — no other file needs modification
+  - Allows incremental extraction (one module per step, test after each)
+  - Easy rollback — `git checkout src-tauri/src/lib.rs` restores previous state at any step
+- **Date:** 2026-02-15
+- **Status:** Final
+
+---
+
 ## Rejected Alternatives (Reference)
 
 | ID | Alternative | Reason for Rejection |

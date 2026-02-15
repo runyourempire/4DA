@@ -179,7 +179,11 @@
       "WebFetch(domain:growth.maestro.onl)",
       "WebFetch(domain:growthcurve.co)",
       "Bash(npx pnpm approve-builds)",
-      "Bash(FOURDA_DB_PATH=D:/4da-v3/data/4da.db node dist/index.js:*)"
+      "Bash(FOURDA_DB_PATH=D:/4da-v3/data/4da.db node dist/index.js:*)",
+      "Bash(gh repo view:*)",
+      "Bash(cmd /c \"pnpm run tauri dev 2>&1\")",
+      "WebFetch(domain:mariadb.com)",
+      "WebFetch(domain:spdx.org)"
     ]
   },
   "enableAllProjectMcpServers": true,
