@@ -76,7 +76,7 @@ Generate changelog from git history:
 #!/bin/bash
 # Generate changelog from git history
 
-REPO="/mnt/d/4da-v3"
+REPO="/mnt/d/4DA"
 SINCE="${1:-$(git -C "$REPO" describe --tags --abbrev=0 2>/dev/null || echo '')}"
 
 echo "=== Changelog Generation ==="
@@ -126,7 +126,7 @@ Create user-friendly release notes:
 #!/bin/bash
 # Generate release notes
 
-REPO="/mnt/d/4da-v3"
+REPO="/mnt/d/4DA"
 VERSION="${1:-UNRELEASED}"
 PREV_VERSION="${2:-$(git -C "$REPO" describe --tags --abbrev=0 2>/dev/null || echo '')}"
 
@@ -193,7 +193,7 @@ Summarize changes for a pull request:
 #!/bin/bash
 # Generate PR summary from branch changes
 
-REPO="/mnt/d/4da-v3"
+REPO="/mnt/d/4DA"
 BASE="${1:-main}"
 HEAD="${2:-HEAD}"
 
@@ -247,7 +247,7 @@ Create migration guides for breaking changes:
 #!/bin/bash
 # Generate migration guide
 
-REPO="/mnt/d/4da-v3"
+REPO="/mnt/d/4DA"
 FROM_VERSION="${1:-v1.0.0}"
 TO_VERSION="${2:-v2.0.0}"
 
@@ -327,7 +327,7 @@ Convert to different output formats:
 #!/bin/bash
 # Multi-format changelog output
 
-REPO="/mnt/d/4da-v3"
+REPO="/mnt/d/4DA"
 FORMAT="${1:-markdown}"
 VERSION="${2:-$(date +%Y.%m.%d)}"
 
@@ -513,7 +513,7 @@ Thanks to everyone who provided feedback during the beta!
 #!/bin/bash
 # Parse and analyze commits
 
-REPO="/mnt/d/4da-v3"
+REPO="/mnt/d/4DA"
 
 echo "=== Commit Analysis ==="
 

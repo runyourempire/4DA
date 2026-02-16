@@ -72,7 +72,7 @@ Track topic frequency over time:
 #!/bin/bash
 # Topic trend analysis
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 TOPIC="${1:-rust}"
 
 echo "=== Trend Analysis: $TOPIC ==="
@@ -144,7 +144,7 @@ Find unusual patterns in content volume:
 #!/bin/bash
 # Volume anomaly detection
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Volume Anomaly Detection ==="
 
@@ -216,7 +216,7 @@ Find topics that appear together:
 #!/bin/bash
 # Topic correlation analysis
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Topic Correlation Analysis ==="
 
@@ -283,7 +283,7 @@ Compare different time periods:
 #!/bin/bash
 # Comparative period analysis
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Comparative Period Analysis ==="
 echo "Comparing: This Week vs Last Week vs Month Ago"
@@ -352,7 +352,7 @@ Analyze how user feedback patterns change:
 #!/bin/bash
 # Feedback trend analysis
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Feedback Trend Analysis ==="
 
@@ -553,7 +553,7 @@ sparkline() {
 }
 
 # Example: Daily volumes
-volumes=$(sqlite3 /mnt/d/4da-v3/data/4da.db "
+volumes=$(sqlite3 /mnt/d/4DA/data/4da.db "
   SELECT COUNT(*) FROM items
   WHERE created_at > datetime('now', '-14 days')
   GROUP BY date(created_at)

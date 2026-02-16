@@ -23,10 +23,10 @@ This command invokes the **4da-config-validator** agent to check configuration h
 
 ## Files Checked
 
-- `/mnt/d/4da-v3/data/settings.json` - Main settings
-- `/mnt/d/4da-v3/.mcp.json` - MCP server config
-- `/mnt/d/4da-v3/src-tauri/tauri.conf.json` - Tauri config
-- `/mnt/d/4da-v3/.claude/settings.json` - Claude Code settings
+- `/mnt/d/4DA/data/settings.json` - Main settings
+- `/mnt/d/4DA/.mcp.json` - MCP server config
+- `/mnt/d/4DA/src-tauri/tauri.conf.json` - Tauri config
+- `/mnt/d/4DA/.claude/settings.json` - Claude Code settings
 
 ## Example Output
 

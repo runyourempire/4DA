@@ -14,8 +14,8 @@ const path = require('path');
 // Configuration
 const CONFIG = {
   threshold: 4,                    // Score threshold for recommendation
-  stateFile: '/mnt/d/4da-v3/.claude/analyzer-state.json',
-  logFile: '/mnt/d/4da-v3/.claude/sessions/analyzer.log',
+  stateFile: '/mnt/d/4DA/.claude/analyzer-state.json',
+  logFile: '/mnt/d/4DA/.claude/sessions/analyzer.log',
   enableLogging: true,
 };
 

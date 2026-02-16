@@ -2,7 +2,7 @@
 # Session stop hook - Archive complete session transcript
 set -e
 
-SESSIONS_DIR="/mnt/d/4da-v3/.claude/sessions"
+SESSIONS_DIR="/mnt/d/4DA/.claude/sessions"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
 # Read hook input
@@ -28,7 +28,7 @@ if [ -n "$TRANSCRIPT_PATH" ] && [ -f "$TRANSCRIPT_PATH" ]; then
   "session_id": "$SESSION_ID",
   "started_at": "$(grep -o '"started_at":"[^"]*"' "$META_FILE" | cut -d'"' -f4 || echo "unknown")",
   "ended_at": "$(date -Iseconds)",
-  "project": "4da-v3",
+  "project": "4DA",
   "status": "completed",
   "transcript_file": "$(basename "$ARCHIVE_FILE")",
   "message_count": $LINE_COUNT,

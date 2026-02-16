@@ -12,7 +12,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-PROJECT_DIR="/mnt/d/4da-v3"
+PROJECT_DIR="/mnt/d/4DA"
 MCP_DIR="$PROJECT_DIR/mcp-memory-server"
 
 # Step 1: Environment variables

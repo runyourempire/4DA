@@ -34,7 +34,7 @@ Spawn this agent when:
 
 ### Digest Module Structure
 
-Location: `/mnt/d/4da-v3/src-tauri/src/digest.rs` (615 lines)
+Location: `/mnt/d/4DA/src-tauri/src/digest.rs` (615 lines)
 
 ```rust
 pub struct DigestConfig {
@@ -88,9 +88,9 @@ The current implementation uses:
 
 | File | Purpose | Key Lines |
 |------|---------|-----------|
-| `/mnt/d/4da-v3/src-tauri/src/digest.rs` | Main digest module | Full file |
-| `/mnt/d/4da-v3/src-tauri/src/settings.rs` | DigestConfig struct | Search "DigestConfig" |
-| `/mnt/d/4da-v3/src-tauri/src/llm.rs` | LLM integration | For summaries |
+| `/mnt/d/4DA/src-tauri/src/digest.rs` | Main digest module | Full file |
+| `/mnt/d/4DA/src-tauri/src/settings.rs` | DigestConfig struct | Search "DigestConfig" |
+| `/mnt/d/4DA/src-tauri/src/llm.rs` | LLM integration | For summaries |
 
 ---
 

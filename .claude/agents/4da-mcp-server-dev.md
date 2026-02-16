@@ -78,10 +78,10 @@ export async function execute(params: ToolParams, db: Database): Promise<ToolRes
 
 | File | Purpose | Key Lines |
 |------|---------|-----------|
-| `/mnt/d/4da-v3/mcp-4da-server/src/index.ts` | Server entry, tool registration | Full file |
-| `/mnt/d/4da-v3/mcp-4da-server/src/db.ts` | Database accessor, score calculation | Lines 265-393, 452-518 |
-| `/mnt/d/4da-v3/mcp-4da-server/src/types.ts` | Type definitions | Full file |
-| `/mnt/d/4da-v3/mcp-4da-server/package.json` | Dependencies | Full file |
+| `/mnt/d/4DA/mcp-4da-server/src/index.ts` | Server entry, tool registration | Full file |
+| `/mnt/d/4DA/mcp-4da-server/src/db.ts` | Database accessor, score calculation | Lines 265-393, 452-518 |
+| `/mnt/d/4DA/mcp-4da-server/src/types.ts` | Type definitions | Full file |
+| `/mnt/d/4DA/mcp-4da-server/package.json` | Dependencies | Full file |
 
 ---
 
@@ -228,7 +228,7 @@ When completing tasks, return:
 ## Integration Points
 
 The MCP server communicates with:
-1. **SQLite Database:** `/mnt/d/4da-v3/data/4da.db`
+1. **SQLite Database:** `/mnt/d/4DA/data/4da.db`
 2. **Claude Code:** Via stdio transport
 3. **Tauri Backend:** Shares database, no direct communication
 

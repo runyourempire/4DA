@@ -66,11 +66,11 @@ From `.ai/INVARIANTS.md`:
 
 | File | Purpose |
 |------|---------|
-| `/mnt/d/4da-v3/.ai/INVARIANTS.md` | Invariant definitions |
-| `/mnt/d/4da-v3/.ai/AI_ENGINEERING_CONTRACT.md` | Engineering rules |
-| `/mnt/d/4da-v3/.ai/VALIDATION_CHECKLIST.md` | Completion checklist |
-| `/mnt/d/4da-v3/src-tauri/src/lib.rs` | Tauri commands |
-| `/mnt/d/4da-v3/src-tauri/src/db.rs` | Database operations |
+| `/mnt/d/4DA/.ai/INVARIANTS.md` | Invariant definitions |
+| `/mnt/d/4DA/.ai/AI_ENGINEERING_CONTRACT.md` | Engineering rules |
+| `/mnt/d/4DA/.ai/VALIDATION_CHECKLIST.md` | Completion checklist |
+| `/mnt/d/4DA/src-tauri/src/lib.rs` | Tauri commands |
+| `/mnt/d/4DA/src-tauri/src/db.rs` | Database operations |
 
 ---
 

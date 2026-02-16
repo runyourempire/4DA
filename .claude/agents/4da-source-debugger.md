@@ -50,11 +50,11 @@ External API → Fetch → Parse → Transform → Store → Score
 
 | File | Purpose |
 |------|---------|
-| `/mnt/d/4da-v3/src-tauri/src/sources/mod.rs` | Source trait, error types |
-| `/mnt/d/4da-v3/src-tauri/src/sources/hackernews.rs` | HN implementation |
-| `/mnt/d/4da-v3/src-tauri/src/sources/arxiv.rs` | arXiv implementation |
-| `/mnt/d/4da-v3/src-tauri/src/sources/reddit.rs` | Reddit implementation |
-| `/mnt/d/4da-v3/data/4da.db` | Stored items |
+| `/mnt/d/4DA/src-tauri/src/sources/mod.rs` | Source trait, error types |
+| `/mnt/d/4DA/src-tauri/src/sources/hackernews.rs` | HN implementation |
+| `/mnt/d/4DA/src-tauri/src/sources/arxiv.rs` | arXiv implementation |
+| `/mnt/d/4DA/src-tauri/src/sources/reddit.rs` | Reddit implementation |
+| `/mnt/d/4DA/data/4da.db` | Stored items |
 
 ---
 
@@ -113,7 +113,7 @@ Check what's actually stored:
 
 ```bash
 # Recent items by source
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT source_id, COUNT(*) as count,
        MAX(created_at) as latest,
        MIN(created_at) as oldest
@@ -122,7 +122,7 @@ GROUP BY source_id;
 "
 
 # Items with missing data
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT id, title,
        CASE WHEN url IS NULL OR url = '' THEN 'MISSING' ELSE 'OK' END as url_status,
        CASE WHEN content IS NULL OR content = '' THEN 'MISSING' ELSE 'OK' END as content_status,
@@ -133,7 +133,7 @@ LIMIT 20;
 "
 
 # Source fetch timestamps (if tracked)
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT * FROM sources;
 "
 ```
@@ -152,7 +152,7 @@ curl -sI "https://www.reddit.com/r/programming/hot.json" \
 # X-Ratelimit-Remaining, X-Ratelimit-Reset, X-Ratelimit-Used
 
 # Count recent fetches (if logged)
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT source_id,
        COUNT(*) as fetches_last_hour,
        COUNT(*) * 1.0 / 60 as per_minute
@@ -177,17 +177,17 @@ echo "Raw response:"
 echo $RAW | jq .
 
 # Step 3: Check if in database
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT id, title, url, relevance_score, created_at
 FROM items WHERE id = 'hn_$ITEM_ID';
 "
 
 # Step 4: If not found, check why
 # - Is source enabled?
-sqlite3 /mnt/d/4da-v3/data/4da.db "SELECT * FROM sources WHERE id = 'hackernews';"
+sqlite3 /mnt/d/4DA/data/4da.db "SELECT * FROM sources WHERE id = 'hackernews';"
 
 # - When was last fetch?
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT MAX(created_at) as last_item FROM items WHERE source_id = 'hackernews';
 "
 
@@ -436,10 +436,10 @@ OAuth token expired. Reddit requires re-authentication.
 
 ```bash
 # All sources status
-sqlite3 /mnt/d/4da-v3/data/4da.db "SELECT * FROM sources;"
+sqlite3 /mnt/d/4DA/data/4da.db "SELECT * FROM sources;"
 
 # Recent items per source
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT source_id, COUNT(*), MAX(created_at)
 FROM items
 WHERE created_at > datetime('now', '-24 hours')
@@ -447,7 +447,7 @@ GROUP BY source_id;
 "
 
 # Failed/incomplete items
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT source_id, COUNT(*) as incomplete
 FROM items
 WHERE embedding IS NULL OR content IS NULL

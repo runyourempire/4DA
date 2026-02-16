@@ -43,7 +43,7 @@ The Docs Generator creates and maintains documentation by analyzing the actual c
 ### Documentation Locations
 
 ```
-4da-v3/
+4DA/
 ├── docs/
 │   ├── api/              # API reference
 │   ├── guides/           # User guides
@@ -97,7 +97,7 @@ Extract API docs from code:
 #!/bin/bash
 # Extract API documentation from Rust code
 
-REPO="/mnt/d/4da-v3"
+REPO="/mnt/d/4DA"
 MODULE="${1:-lib}"
 
 echo "# API Documentation: $MODULE"
@@ -139,7 +139,7 @@ Generate documentation for a specific module:
 #!/bin/bash
 # Generate module documentation
 
-REPO="/mnt/d/4da-v3"
+REPO="/mnt/d/4DA"
 MODULE="${1:-ace}"
 MODULE_PATH="$REPO/src-tauri/src/$MODULE"
 
@@ -198,7 +198,7 @@ Generate project README:
 #!/bin/bash
 # Generate README from project analysis
 
-REPO="/mnt/d/4da-v3"
+REPO="/mnt/d/4DA"
 
 cat << 'HEADER'
 # 4DA - 4 Dimensional Autonomy
@@ -225,14 +225,14 @@ echo "## Quick Start"
 echo ""
 echo '```bash'
 echo '# Clone the repository'
-echo 'git clone https://github.com/user/4da-v3.git'
-echo 'cd 4da-v3'
+echo 'git clone https://github.com/runyourempire/4DA.git'
+echo 'cd 4DA'
 echo ''
 echo '# Install dependencies'
-echo 'npm install'
+echo 'pnpm install'
 echo ''
 echo '# Run development server'
-echo 'npm run tauri dev'
+echo 'pnpm tauri dev'
 echo '```'
 echo ""
 
@@ -250,7 +250,7 @@ echo ""
 echo "## Project Structure"
 echo ""
 echo '```'
-echo '4da-v3/'
+echo '4DA/'
 ls -1 "$REPO" | grep -v "^\." | head -10 | sed 's/^/├── /'
 echo '```'
 echo ""
@@ -386,7 +386,7 @@ Find outdated documentation:
 #!/bin/bash
 # Detect documentation drift
 
-REPO="/mnt/d/4da-v3"
+REPO="/mnt/d/4DA"
 
 echo "# Documentation Drift Report"
 echo ""

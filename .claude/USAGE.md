@@ -194,7 +194,7 @@ I'll use a debugger subagent to investigate this error
 ```bash
 # In your shell profile
 export CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=60  # Compact at 60% instead of 95%
-export MEMORY_DB_PATH="/mnt/d/4da-v3/.claude/memory.db"
+export MEMORY_DB_PATH="/mnt/d/4DA/.claude/memory.db"
 ```
 
 ---
