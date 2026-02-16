@@ -85,11 +85,11 @@ SourceItem::builder()
 
 | File | Purpose | Key Lines |
 |------|---------|-----------|
-| `/mnt/d/4da-v3/src-tauri/src/sources/mod.rs` | Trait definition | Lines 1-80 |
-| `/mnt/d/4da-v3/src-tauri/src/sources/hackernews.rs` | Reference REST impl | Full file |
-| `/mnt/d/4da-v3/src-tauri/src/sources/arxiv.rs` | Reference XML impl | Full file |
-| `/mnt/d/4da-v3/src-tauri/src/sources/reddit.rs` | Reference JSON impl | Full file |
-| `/mnt/d/4da-v3/src-tauri/src/lib.rs` | Registration | Lines 886-901, 915-919 |
+| `/mnt/d/4DA/src-tauri/src/sources/mod.rs` | Trait definition | Lines 1-80 |
+| `/mnt/d/4DA/src-tauri/src/sources/hackernews.rs` | Reference REST impl | Full file |
+| `/mnt/d/4DA/src-tauri/src/sources/arxiv.rs` | Reference XML impl | Full file |
+| `/mnt/d/4DA/src-tauri/src/sources/reddit.rs` | Reference JSON impl | Full file |
+| `/mnt/d/4DA/src-tauri/src/lib.rs` | Registration | Lines 886-901, 915-919 |
 
 ---
 

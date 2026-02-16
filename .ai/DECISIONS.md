@@ -1,5 +1,5 @@
 # Architectural Decisions Log
-## Engineering Memory for 4DA v3
+## Engineering Memory for 4DA
 
 **Version:** 1.0.0
 **Source:** Migrated from .claude/rules/decisions.md + CADE additions

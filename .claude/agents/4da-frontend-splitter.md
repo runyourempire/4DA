@@ -32,7 +32,7 @@ Spawn this agent when:
 
 ### Current App.tsx Structure
 
-Location: `/mnt/d/4da-v3/src/App.tsx` (1,798 LOC)
+Location: `/mnt/d/4DA/src/App.tsx` (1,798 LOC)
 
 **Approximate Structure:**
 ```
@@ -103,9 +103,9 @@ export function useSettings() {
 
 | File | Purpose |
 |------|---------|
-| `/mnt/d/4da-v3/src/App.tsx` | Monolithic source (1,798 LOC) |
-| `/mnt/d/4da-v3/src/components/` | Existing small components |
-| `/mnt/d/4da-v3/src/types.ts` | Type definitions |
+| `/mnt/d/4DA/src/App.tsx` | Monolithic source (1,798 LOC) |
+| `/mnt/d/4DA/src/components/` | Existing small components |
+| `/mnt/d/4DA/src/types.ts` | Type definitions |
 
 ---
 

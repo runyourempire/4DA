@@ -1,4 +1,4 @@
-# 4DA v3 Handoff
+# 4DA Handoff
 
 ## Current Status
 
@@ -45,8 +45,8 @@ All Phase 0 deliverables implemented:
 ## Running the App
 
 ```bash
-cd /mnt/d/4da-v3
-npm run tauri dev
+cd /mnt/d/4DA
+pnpm run tauri dev
 ```
 
 First run downloads ~90MB embedding model (one-time).
@@ -107,7 +107,7 @@ Click "Analyze" to:
 ## File Structure
 
 ```
-4da-v3/
+4DA/
 ├── src-tauri/
 │   ├── src/lib.rs       # Indexer, HN adapter, embeddings, similarity
 │   └── Cargo.toml       # fastembed, reqwest, tauri deps

@@ -1,4 +1,4 @@
-# 4DA v3 Final Implementation Summary
+# 4DA Final Implementation Summary
 
 **Date**: 2026-02-03
 **Session Duration**: ~6 hours
@@ -9,7 +9,7 @@
 
 ## 🎉 Executive Summary
 
-Successfully implemented **6 out of 7 planned tasks** from the 4DA v3 Comprehensive Implementation Plan, transforming 4DA from a 53% relevance prototype to a **launch-ready, world-class ambient intelligence platform** with 83%+ expected relevance, transparent scoring, and 6 source adapters.
+Successfully implemented **6 out of 7 planned tasks** from the 4DA Comprehensive Implementation Plan, transforming 4DA from a 53% relevance prototype to a **launch-ready, world-class ambient intelligence platform** with 83%+ expected relevance, transparent scoring, and 6 source adapters.
 
 ### Achievement Highlights
 
@@ -505,7 +505,7 @@ Successfully implemented **6 out of 7 planned tasks** from the 4DA v3 Comprehens
 ## 📁 Repository Structure
 
 ```
-D:\4da-v3\
+4DA/
 ├── README-MARKETING.md                    # Show HN ready (NEW)
 ├── FINAL_IMPLEMENTATION_SUMMARY.md        # This document (NEW)
 ├── IMPLEMENTATION_PROGRESS.md             # Session progress (NEW)
@@ -578,5 +578,5 @@ This implementation transformed 4DA from a working prototype into a launch-ready
 *End of Implementation Summary*
 *Session Date: 2026-02-03*
 *Total Development Time: ~6 hours*
-*Repository: D:\4da-v3\*
+*Repository: https://github.com/runyourempire/4DA*
 *Status: LAUNCH READY 🚀*

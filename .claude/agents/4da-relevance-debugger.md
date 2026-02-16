@@ -75,10 +75,10 @@ FROM items ORDER BY distance LIMIT 10;
 
 | File | Contains |
 |------|----------|
-| `/mnt/d/4da-v3/data/4da.db` | Live database |
-| `/mnt/d/4da-v3/mcp-4da-server/src/db.ts` | Score calculation (lines 265-393) |
-| `/mnt/d/4da-v3/src-tauri/src/context_engine.rs` | Rust scoring context |
-| `/mnt/d/4da-v3/src-tauri/src/ace/embedding.rs` | Embedding generation |
+| `/mnt/d/4DA/data/4da.db` | Live database |
+| `/mnt/d/4DA/mcp-4da-server/src/db.ts` | Score calculation (lines 265-393) |
+| `/mnt/d/4DA/src-tauri/src/context_engine.rs` | Rust scoring context |
+| `/mnt/d/4DA/src-tauri/src/ace/embedding.rs` | Embedding generation |
 
 ---
 
@@ -90,24 +90,24 @@ For any item, perform complete score breakdown:
 
 ```bash
 # Step 1: Get item details
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT id, title, url, relevance_score, source_id, created_at,
        length(content) as content_length
 FROM items WHERE id = 'ITEM_ID';
 "
 
 # Step 2: Get user context at scoring time
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT key, value FROM user_context;
 "
 
 # Step 3: Get relevant affinities
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT topic, score, source FROM affinities ORDER BY score DESC LIMIT 20;
 "
 
 # Step 4: Check feedback history for similar items
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT i.title, f.rating, f.created_at
 FROM feedback f JOIN items i ON f.item_id = i.id
 WHERE i.source_id = (SELECT source_id FROM items WHERE id = 'ITEM_ID')
@@ -115,7 +115,7 @@ ORDER BY f.created_at DESC LIMIT 10;
 "
 
 # Step 5: Find semantically similar items and their scores
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT id, title, relevance_score FROM items
 WHERE source_id = (SELECT source_id FROM items WHERE id = 'ITEM_ID')
 ORDER BY relevance_score DESC LIMIT 10;
@@ -128,7 +128,7 @@ Compare two items to understand score differences:
 
 ```bash
 # Get both items side by side
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT
   a.id as id_a, a.title as title_a, a.relevance_score as score_a,
   b.id as id_b, b.title as title_b, b.relevance_score as score_b,
@@ -151,12 +151,12 @@ Find topics that should score high but don't:
 
 ```bash
 # High-affinity topics
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT topic, score FROM affinities WHERE score > 0.7 ORDER BY score DESC;
 "
 
 # Items mentioning those topics that scored low
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT id, title, relevance_score FROM items
 WHERE (title LIKE '%TOPIC%' OR content LIKE '%TOPIC%')
 AND relevance_score < 0.5
@@ -216,7 +216,7 @@ Trace how feedback affected scoring:
 
 ```bash
 # All feedback with resulting score changes
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT
   f.item_id,
   i.title,
@@ -229,7 +229,7 @@ ORDER BY f.created_at DESC LIMIT 50;
 "
 
 # Aggregate feedback patterns
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT
   source_id,
   COUNT(*) as feedback_count,
@@ -342,7 +342,7 @@ Item B might be equally relevant but is penalized for age and indirect keyword m
 
 ```bash
 # Export embeddings for visualization
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT id, title, relevance_score, hex(embedding)
 FROM items
 WHERE embedding IS NOT NULL
@@ -357,7 +357,7 @@ LIMIT 100;
 
 ```bash
 # Score histogram
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT
   CAST(relevance_score * 10 AS INT) / 10.0 as bucket,
   COUNT(*) as count,
@@ -376,7 +376,7 @@ ORDER BY bucket DESC;
 
 ```bash
 # How do scores change over time for same content type?
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT
   date(created_at) as date,
   source_id,
@@ -397,7 +397,7 @@ ORDER BY date DESC;
 
 ```bash
 # Score distribution sanity check
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT
   MIN(relevance_score) as min,
   MAX(relevance_score) as max,
@@ -407,7 +407,7 @@ FROM items WHERE relevance_score > 0;
 "
 
 # Affinity coverage
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT COUNT(*) as affinity_count,
        AVG(score) as avg_score,
        MIN(score) as min_score,
@@ -416,7 +416,7 @@ FROM affinities;
 "
 
 # Feedback volume
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT
   SUM(CASE WHEN rating > 0 THEN 1 ELSE 0 END) as positive,
   SUM(CASE WHEN rating < 0 THEN 1 ELSE 0 END) as negative,

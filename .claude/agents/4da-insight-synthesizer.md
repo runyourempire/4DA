@@ -64,7 +64,7 @@ Create a daily executive summary from recent items:
 #!/bin/bash
 # Generate daily briefing data
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Daily Briefing Data ==="
 echo "Date: $(date +%Y-%m-%d)"
@@ -111,7 +111,7 @@ Group items by semantic theme:
 #!/bin/bash
 # Extract themes from recent items
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Theme Extraction ==="
 
@@ -155,7 +155,7 @@ Identify trends over time:
 #!/bin/bash
 # Analyze trends over 30 days
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== 30-Day Trend Analysis ==="
 
@@ -199,7 +199,7 @@ Generate specific actions from insights:
 #!/bin/bash
 # Generate actionable recommendations
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Actionable Recommendations ==="
 
@@ -249,7 +249,7 @@ Find connections across different sources:
 #!/bin/bash
 # Cross-source pattern detection
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Cross-Source Synthesis ==="
 

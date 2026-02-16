@@ -243,8 +243,8 @@ Find what's missing from your context:
 #!/bin/bash
 # Analyze context coverage gaps
 
-SETTINGS="/mnt/d/4da-v3/data/settings.json"
-DB="/mnt/d/4da-v3/data/4da.db"
+SETTINGS="/mnt/d/4DA/data/settings.json"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Context Coverage Analysis ==="
 
@@ -347,7 +347,7 @@ git -C "$DIR" log --since="30 days ago" --oneline | \
 ### Current Context Summary
 
 **Watched Directories:**
-1. `/home/user/projects/4da-v3` (Rust + TypeScript, Tauri)
+1. `/home/user/projects/4DA` (Rust + TypeScript, Tauri)
 2. `/home/user/projects/api-service` (Go, REST API)
 3. `/home/user/projects/ml-experiments` (Python, ML)
 
@@ -457,10 +457,10 @@ Based on code analysis, you likely care about:
 ```bash
 # Add recommended exclusions
 jq '.ace.excluded_patterns += ["*.lock", "*.min.js", ".next"]' \
-  /mnt/d/4da-v3/data/settings.json > tmp && mv tmp settings.json
+  /mnt/d/4DA/data/settings.json > tmp && mv tmp settings.json
 
 # Add interest
-sqlite3 /mnt/d/4da-v3/data/4da.db \
+sqlite3 /mnt/d/4DA/data/4da.db \
   "INSERT INTO affinities (topic, score, source) VALUES ('vector databases', 0.8, 'explicit');"
 ```
 ```
@@ -473,13 +473,13 @@ sqlite3 /mnt/d/4da-v3/data/4da.db \
 
 ```bash
 # What is 4DA watching?
-jq '.ace' /mnt/d/4da-v3/data/settings.json
+jq '.ace' /mnt/d/4DA/data/settings.json
 
 # How many files indexed?
-sqlite3 /mnt/d/4da-v3/data/4da.db "SELECT COUNT(*) FROM indexed_files;"
+sqlite3 /mnt/d/4DA/data/4da.db "SELECT COUNT(*) FROM indexed_files;"
 
 # Top file types
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT substr(path, -10) as ext, COUNT(*) as count
 FROM indexed_files
 GROUP BY ext
@@ -488,7 +488,7 @@ LIMIT 10;
 "
 
 # Recent index activity
-sqlite3 /mnt/d/4da-v3/data/4da.db "
+sqlite3 /mnt/d/4DA/data/4da.db "
 SELECT path, updated_at
 FROM indexed_files
 ORDER BY updated_at DESC

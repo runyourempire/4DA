@@ -3,7 +3,7 @@
 # Usage: ./.claude/scripts/save-transcript-now.sh [optional-note]
 set -e
 
-SESSIONS_DIR="/mnt/d/4da-v3/.claude/sessions"
+SESSIONS_DIR="/mnt/d/4DA/.claude/sessions"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 NOTE="${1:-manual-save}"
 

@@ -1,4 +1,4 @@
-# 4DA v3 Comprehensive Audit Report
+# 4DA Comprehensive Audit Report
 
 **Audit Date:** 2026-01-20
 **Auditor:** Principal Systems Architect (Claude)
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-4DA v3 has **substantial implementation** with ~18,500 lines of code (16,600 Rust + 1,900 TypeScript). The core hypothesis has been validated (Phase 0 complete). The codebase is architecturally sound but has scope creep - Phase 2+ features were built before Phase 1 was fully wired.
+4DA has **substantial implementation** with ~18,500 lines of code (16,600 Rust + 1,900 TypeScript). The core hypothesis has been validated (Phase 0 complete). The codebase is architecturally sound but has scope creep - Phase 2+ features were built before Phase 1 was fully wired.
 
 | Metric | Value |
 |--------|-------|
@@ -279,7 +279,7 @@
 ## Appendix: File Structure
 
 ```
-4da-v3/
+4DA/
 ├── src-tauri/
 │   └── src/
 │       ├── lib.rs              # 3,785 LOC - Main commands
