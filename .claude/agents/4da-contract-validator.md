@@ -95,10 +95,10 @@ const result = await invoke<ReturnType>('command_name', {
 
 | File | Purpose | Key Patterns |
 |------|---------|--------------|
-| `/mnt/d/4da-v3/src-tauri/src/lib.rs` | Tauri commands | `#[tauri::command]` |
-| `/mnt/d/4da-v3/src/App.tsx` | Frontend invokes | `invoke<` |
-| `/mnt/d/4da-v3/mcp-4da-server/src/types.ts` | MCP types | interfaces |
-| `/mnt/d/4da-v3/mcp-4da-server/src/tools/*.ts` | MCP schemas | `inputSchema` |
+| `/mnt/d/4DA/src-tauri/src/lib.rs` | Tauri commands | `#[tauri::command]` |
+| `/mnt/d/4DA/src/App.tsx` | Frontend invokes | `invoke<` |
+| `/mnt/d/4DA/mcp-4da-server/src/types.ts` | MCP types | interfaces |
+| `/mnt/d/4DA/mcp-4da-server/src/tools/*.ts` | MCP schemas | `inputSchema` |
 
 ---
 

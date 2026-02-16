@@ -70,7 +70,7 @@ Build a graph of topic relationships:
 #!/bin/bash
 # Build topic co-occurrence graph
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Topic Graph Construction ==="
 
@@ -130,7 +130,7 @@ Extract entities (people, companies, projects) from content:
 #!/bin/bash
 # Entity extraction from recent items
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Entity Extraction ==="
 
@@ -222,7 +222,7 @@ EOF
 echo ""
 echo "### Item-to-Concept Mapping (sample)"
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 sqlite3 "$DB" "
 SELECT
   title,
@@ -248,7 +248,7 @@ Find connection paths between topics:
 #!/bin/bash
 # Find paths between topics
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 START="${1:-rust}"
 END="${2:-ai}"
 
@@ -321,7 +321,7 @@ Identify gaps in the knowledge graph:
 #!/bin/bash
 # Knowledge gap analysis
 
-DB="/mnt/d/4da-v3/data/4da.db"
+DB="/mnt/d/4DA/data/4da.db"
 
 echo "=== Knowledge Gap Analysis ==="
 

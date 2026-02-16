@@ -71,10 +71,10 @@ affinities(topic, score, source)
 
 | File | Purpose |
 |------|---------|
-| `/mnt/d/4da-v3/mcp-4da-server/src/db.ts` | Database accessor |
-| `/mnt/d/4da-v3/mcp-4da-server/src/types.ts` | Type definitions |
-| `/mnt/d/4da-v3/mcp-4da-server/src/tools/*.ts` | Tools to test |
-| `/mnt/d/4da-v3/mcp-4da-server/package.json` | Dependencies |
+| `/mnt/d/4DA/mcp-4da-server/src/db.ts` | Database accessor |
+| `/mnt/d/4DA/mcp-4da-server/src/types.ts` | Type definitions |
+| `/mnt/d/4DA/mcp-4da-server/src/tools/*.ts` | Tools to test |
+| `/mnt/d/4DA/mcp-4da-server/package.json` | Dependencies |
 
 ---
 

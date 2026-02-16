@@ -31,7 +31,7 @@ This command invokes the **4da-context-optimizer** agent to improve your context
 ### Current Context Summary
 | Directory | Tech Stack | Files |
 |-----------|------------|-------|
-| ~/projects/4da-v3 | Rust, TypeScript, Tauri | 847 |
+| ~/projects/4DA | Rust, TypeScript, Tauri | 847 |
 | ~/projects/api | Go, REST | 234 |
 | ~/projects/ml | Python, ML | 156 |
 

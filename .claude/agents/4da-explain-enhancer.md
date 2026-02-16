@@ -73,10 +73,10 @@ mcp-4da-server/src/db.ts
 
 | File | Purpose | Key Lines |
 |------|---------|-----------|
-| `/mnt/d/4da-v3/mcp-4da-server/src/db.ts` | Score calculation | Lines 265-393, 452-518 |
-| `/mnt/d/4da-v3/mcp-4da-server/src/tools/explain-relevance.ts` | MCP explanation tool | Full file |
-| `/mnt/d/4da-v3/src-tauri/src/context_engine.rs` | Rust scoring context | Full file |
-| `/mnt/d/4da-v3/src-tauri/src/sources/mod.rs` | HNRelevance struct | Lines with `why_relevant` |
+| `/mnt/d/4DA/mcp-4da-server/src/db.ts` | Score calculation | Lines 265-393, 452-518 |
+| `/mnt/d/4DA/mcp-4da-server/src/tools/explain-relevance.ts` | MCP explanation tool | Full file |
+| `/mnt/d/4DA/src-tauri/src/context_engine.rs` | Rust scoring context | Full file |
+| `/mnt/d/4DA/src-tauri/src/sources/mod.rs` | HNRelevance struct | Lines with `why_relevant` |
 
 ---
 

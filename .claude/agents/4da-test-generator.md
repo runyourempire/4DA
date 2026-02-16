@@ -32,7 +32,7 @@ Spawn this agent when:
 
 ### Failure Modes Document
 
-Location: `/mnt/d/4da-v3/.ai/FAILURE_MODES.md`
+Location: `/mnt/d/4DA/.ai/FAILURE_MODES.md`
 
 Documents known fragile areas:
 - File system edge cases (symlinks, permissions)
@@ -92,11 +92,11 @@ mod tests {
 
 | File | Purpose |
 |------|---------|
-| `/mnt/d/4da-v3/.ai/FAILURE_MODES.md` | Documented failure modes |
-| `/mnt/d/4da-v3/src-tauri/src/ace/scanner.rs` | File scanning (fragile) |
-| `/mnt/d/4da-v3/src-tauri/src/ace/watcher.rs` | File watching (race conditions) |
-| `/mnt/d/4da-v3/src-tauri/src/ace/db.rs` | Database operations |
-| `/mnt/d/4da-v3/src-tauri/src/sources/*.rs` | Network operations |
+| `/mnt/d/4DA/.ai/FAILURE_MODES.md` | Documented failure modes |
+| `/mnt/d/4DA/src-tauri/src/ace/scanner.rs` | File scanning (fragile) |
+| `/mnt/d/4DA/src-tauri/src/ace/watcher.rs` | File watching (race conditions) |
+| `/mnt/d/4DA/src-tauri/src/ace/db.rs` | Database operations |
+| `/mnt/d/4DA/src-tauri/src/sources/*.rs` | Network operations |
 
 ---
 

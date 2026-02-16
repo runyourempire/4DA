@@ -2,7 +2,7 @@
 # Session start hook - Initialize session tracking
 set -e
 
-SESSIONS_DIR="/mnt/d/4da-v3/.claude/sessions"
+SESSIONS_DIR="/mnt/d/4DA/.claude/sessions"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
 # Read hook input
@@ -15,7 +15,7 @@ cat > "$SESSION_FILE" << EOF
 {
   "session_id": "$SESSION_ID",
   "started_at": "$(date -Iseconds)",
-  "project": "4da-v3",
+  "project": "4DA",
   "status": "active"
 }
 EOF

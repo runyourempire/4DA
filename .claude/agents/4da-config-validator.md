@@ -33,10 +33,10 @@ The Config Validator is your configuration safety net. It validates settings fil
 
 | File | Purpose | Format |
 |------|---------|--------|
-| `/mnt/d/4da-v3/data/settings.json` | Main application settings | JSON |
-| `/mnt/d/4da-v3/.mcp.json` | MCP server configuration | JSON |
-| `/mnt/d/4da-v3/src-tauri/tauri.conf.json` | Tauri app configuration | JSON |
-| `/mnt/d/4da-v3/.claude/settings.json` | Claude Code settings | JSON |
+| `/mnt/d/4DA/data/settings.json` | Main application settings | JSON |
+| `/mnt/d/4DA/.mcp.json` | MCP server configuration | JSON |
+| `/mnt/d/4DA/src-tauri/tauri.conf.json` | Tauri app configuration | JSON |
+| `/mnt/d/4DA/.claude/settings.json` | Claude Code settings | JSON |
 
 ### Settings Schema
 
@@ -98,7 +98,7 @@ echo "=== 4DA Configuration Audit ==="
 echo ""
 
 # Check settings.json exists and is valid JSON
-SETTINGS="/mnt/d/4da-v3/data/settings.json"
+SETTINGS="/mnt/d/4DA/data/settings.json"
 if [ -f "$SETTINGS" ]; then
   echo "✓ settings.json exists"
   if jq . "$SETTINGS" > /dev/null 2>&1; then
@@ -112,7 +112,7 @@ else
 fi
 
 # Check .mcp.json
-MCP="/mnt/d/4da-v3/.mcp.json"
+MCP="/mnt/d/4DA/.mcp.json"
 if [ -f "$MCP" ]; then
   echo "✓ .mcp.json exists"
   if jq . "$MCP" > /dev/null 2>&1; then
@@ -125,7 +125,7 @@ else
 fi
 
 # Check tauri.conf.json
-TAURI="/mnt/d/4da-v3/src-tauri/tauri.conf.json"
+TAURI="/mnt/d/4DA/src-tauri/tauri.conf.json"
 if [ -f "$TAURI" ]; then
   echo "✓ tauri.conf.json exists"
   if jq . "$TAURI" > /dev/null 2>&1; then
@@ -140,7 +140,7 @@ fi
 
 ```bash
 # Validate settings against expected schema
-SETTINGS="/mnt/d/4da-v3/data/settings.json"
+SETTINGS="/mnt/d/4DA/data/settings.json"
 
 # Required fields check
 echo "=== Required Fields ==="
@@ -186,7 +186,7 @@ done
 
 ```bash
 # Check for security issues in configuration
-SETTINGS="/mnt/d/4da-v3/data/settings.json"
+SETTINGS="/mnt/d/4DA/data/settings.json"
 
 echo "=== Security Audit ==="
 
@@ -233,8 +233,8 @@ done
 # Check that all config files agree
 echo "=== Cross-File Consistency ==="
 
-SETTINGS="/mnt/d/4da-v3/data/settings.json"
-MCP="/mnt/d/4da-v3/.mcp.json"
+SETTINGS="/mnt/d/4DA/data/settings.json"
+MCP="/mnt/d/4DA/.mcp.json"
 
 # Database path consistency
 SETTINGS_DB=$(jq -r '.database_path // empty' "$SETTINGS")
@@ -256,7 +256,7 @@ SETTINGS_DIM=$(jq -r '.embedding_dimensions // 1536' "$SETTINGS")
 echo "Settings embedding_dimensions: $SETTINGS_DIM"
 
 # Check Rust code for matching constant
-RUST_DIM=$(grep -r "EMBEDDING_DIM\|1536" /mnt/d/4da-v3/src-tauri/src/ --include="*.rs" | head -1)
+RUST_DIM=$(grep -r "EMBEDDING_DIM\|1536" /mnt/d/4DA/src-tauri/src/ --include="*.rs" | head -1)
 if [ -n "$RUST_DIM" ]; then
   echo "Rust embedding reference: $RUST_DIM"
 fi
@@ -266,8 +266,8 @@ fi
 
 ```bash
 # Compare current config against a baseline or previous version
-SETTINGS="/mnt/d/4da-v3/data/settings.json"
-BACKUP="/mnt/d/4da-v3/data/settings.json.bak"
+SETTINGS="/mnt/d/4DA/data/settings.json"
+BACKUP="/mnt/d/4DA/data/settings.json.bak"
 
 if [ -f "$BACKUP" ]; then
   echo "=== Configuration Changes ==="
@@ -278,10 +278,10 @@ else
 fi
 
 # Git-based diff if in repo
-if [ -d "/mnt/d/4da-v3/.git" ]; then
+if [ -d "/mnt/d/4DA/.git" ]; then
   echo ""
   echo "=== Git Changes to Settings ==="
-  git -C /mnt/d/4da-v3 diff HEAD -- data/settings.json
+  git -C /mnt/d/4DA diff HEAD -- data/settings.json
 fi
 ```
 
@@ -385,7 +385,7 @@ fi
 
 ```bash
 # Verify JSON syntax
-jq . /mnt/d/4da-v3/data/settings.json
+jq . /mnt/d/4DA/data/settings.json
 
 # Test watched directories
 for dir in $(jq -r '.ace.watched_directories[]' settings.json); do
@@ -393,7 +393,7 @@ for dir in $(jq -r '.ace.watched_directories[]' settings.json); do
 done
 
 # Check embedding consistency
-grep -r "1536" /mnt/d/4da-v3/src-tauri/src/
+grep -r "1536" /mnt/d/4DA/src-tauri/src/
 ```
 ```
 
