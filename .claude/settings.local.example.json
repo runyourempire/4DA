@@ -1,0 +1,119 @@
+{
+  "_comment": "Copy this to settings.local.json and customize. This file documents the permissions and hooks used by the 4DA development setup.",
+  "permissions": {
+    "allow": [
+      "// --- Build & Dev ---",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(pnpm:*)",
+      "Bash(cargo --version:*)",
+      "Bash(rustc:*)",
+      "Bash(cargo check:*)",
+      "Bash(cargo build:*)",
+      "Bash(cargo test:*)",
+      "Bash(cargo run:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run tauri:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm test)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite build)",
+      "Bash(npx vitest run:*)",
+
+      "// --- Git & GitHub ---",
+      "Bash(gh auth:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh api:*)",
+      "Bash(gh release:*)",
+      "Bash(gh secret set:*)",
+
+      "// --- System utilities ---",
+      "Bash(node:*)",
+      "Bash(node -e:*)",
+      "Bash(ls:*)",
+      "Bash(wc:*)",
+      "Bash(du:*)",
+      "Bash(find:*)",
+      "Bash(tree:*)",
+      "Bash(grep:*)",
+      "Bash(sort:*)",
+      "Bash(curl:*)",
+      "Bash(command -v:*)",
+      "Bash(where.exe:*)",
+      "Bash(timeout:*)",
+      "Bash(kill:*)",
+      "Bash(pkill:*)",
+      "Bash(chmod:*)",
+      "Bash(echo:*)",
+      "Bash(bash:*)",
+      "Bash(tail:*)",
+      "Bash(cat:*)",
+      "Bash(test:*)",
+      "Bash(sqlite3:*)",
+      "Bash(ollama:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+
+      "// --- Windows-specific ---",
+      "Bash(powershell:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(cmd.exe:*)",
+      "Bash(cmd /c:*)",
+      "Bash(tasklist:*)",
+      "Bash(dir:*)",
+
+      "// --- Web access ---",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.rs)",
+      "WebFetch(domain:crates.io)",
+      "WebFetch(domain:lib.rs)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:docs.npmjs.com)",
+      "WebFetch(domain:arxiv.org)",
+      "WebFetch(domain:www.anthropic.com)",
+
+      "// --- MCP tools ---",
+      "mcp__memory__remember_decision",
+      "mcp__memory__recall_decisions",
+      "mcp__memory__get_state",
+      "mcp__memory__update_state",
+      "mcp__memory__remember_learning",
+      "mcp__memory__recall_learnings",
+      "mcp__memory__remember_code_location",
+      "mcp__memory__search_memory",
+      "mcp__memory__list_sessions",
+      "mcp__memory__search_sessions",
+      "mcp__4da__get_context",
+      "mcp__4da__get_relevant_content",
+      "mcp__4da__source_health",
+      "mcp__4da__score_autopsy",
+
+      "// --- Vercel (if configured) ---",
+      "mcp__claude_ai_Vercel__list_teams",
+      "mcp__claude_ai_Vercel__list_projects",
+      "mcp__claude_ai_Vercel__get_project"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "memory",
+    "4da"
+  ],
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/git-hygiene-check.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
