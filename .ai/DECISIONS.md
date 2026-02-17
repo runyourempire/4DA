@@ -66,8 +66,8 @@
 
 ## Frontend Architecture
 
-### AD-005: React 18 + TypeScript + Tailwind
-- **Decision:** Standard modern web stack
+### AD-005: React 19 + TypeScript + Tailwind v4
+- **Decision:** Standard modern web stack (upgraded to React 19, Tailwind v4, Vite 7)
 - **Rationale:** Developer familiarity, excellent tooling, Tailwind for rapid UI
 - **Considered:**
   - Vue: Rejected - smaller ecosystem
