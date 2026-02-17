@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "author": "4DA Systems",
-  "license": "BUSL-1.1",
+  "license": "FSL-1.1-Apache-2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
