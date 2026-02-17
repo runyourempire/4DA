@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node /mnt/d/4DA/.claude/scripts/analyze-prompt.cjs"
+            "command": "node .claude/scripts/analyze-prompt.cjs"
           }
         ]
       }
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/mnt/d/4DA/.claude/scripts/pre-compact-backup.sh"
+            "command": "bash .claude/scripts/pre-compact-backup.sh"
           }
         ]
       },
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/mnt/d/4DA/.claude/scripts/pre-compact-backup.sh"
+            "command": "bash .claude/scripts/pre-compact-backup.sh"
           }
         ]
       }
@@ -37,7 +37,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/mnt/d/4DA/.claude/scripts/session-stop.sh"
+            "command": "bash .claude/scripts/session-stop.sh"
           }
         ]
       }
