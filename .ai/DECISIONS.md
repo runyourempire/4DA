@@ -209,6 +209,39 @@
 
 ---
 
+## License & Monetization
+
+### AD-016: FSL-1.1-Apache-2.0 over BUSL-1.1
+- **Decision:** Switch from BUSL-1.1 to FSL-1.1-Apache-2.0. MCP server stays MIT.
+- **Rationale:**
+  - BUSL-1.1 is not OSI-approved, causing enterprise legal friction and developer hesitancy
+  - FSL-1.1 provides equivalent competitive fork protection with a shorter 2-year conversion (vs 4 years)
+  - FSL avoids the "HashiCorp backlash" association that BUSL carries
+  - Apache 2.0 change license is more permissive and widely trusted
+  - MCP server remains MIT to maximize ecosystem adoption and integration
+- **Considered:**
+  - AGPL-3.0: Rejected — too restrictive for desktop app, scares enterprise users
+  - MIT/Apache-2.0 immediately: Rejected — no competitive protection for monetization
+  - Keep BUSL-1.1: Rejected — adoption friction outweighs stricter protection
+- **Date:** 2026-02-17
+- **Status:** Final
+
+### AD-017: Pro Tier Feature Gate ($12/mo, $99/yr)
+- **Decision:** Gate AI-powered intelligence features behind a Pro tier. Free tier retains all source adapters, scoring engine, feed UI, and basic signal detection.
+- **Rationale:**
+  - AI briefings, intelligence panels, and Developer DNA are the highest-value features that justify a subscription
+  - Free tier must remain genuinely useful (11 sources + scoring + feed) to drive adoption
+  - Feature gate is implemented as a simple tier check, not a hard block — shows blurred preview with upgrade CTA
+  - License key stored locally in settings.json (BYOK philosophy extends to licensing)
+- **Considered:**
+  - Usage-based pricing: Rejected — unpredictable costs scare users, especially BYOK model
+  - Open core with separate repo: Rejected — maintenance overhead of two codebases
+  - Donations/sponsorship only: Rejected — insufficient for sustainable development
+- **Date:** 2026-02-17
+- **Status:** Final
+
+---
+
 ## Rejected Alternatives (Reference)
 
 | ID | Alternative | Reason for Rejection |
@@ -220,6 +253,9 @@
 | REJ-005 | Light theme | Most developers prefer dark |
 | REJ-006 | 3D universe as primary view | Contradicts ambient delivery philosophy; discovery mode vs delivery mode |
 | REJ-007 | Remove universe code entirely | Code is clean, code-split, costs nothing when unused; preserves optionality |
+| REJ-008 | Keep BUSL-1.1 license | Adoption friction outweighs stricter protection period |
+| REJ-009 | AGPL-3.0 license | Too restrictive for desktop app, scares enterprise users |
+| REJ-010 | Usage-based Pro pricing | Unpredictable costs scare users in BYOK model |
 
 ---
 
