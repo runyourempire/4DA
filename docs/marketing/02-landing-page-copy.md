@@ -26,6 +26,15 @@
 **Option E (Identity):**
 > # Intelligence, not information.
 
+**Option F (Rebellion -- for privacy-intent traffic):**
+> # Your feed is watching you. 4DA watches for you.
+
+**Option G (BYOK Power -- for technical audiences):**
+> # Your keys. Your data. Your edge.
+
+**Option H (Manifesto -- for high-awareness organic traffic):**
+> # Intelligence without surveillance.
+
 ---
 
 ### Subheadline
@@ -259,6 +268,79 @@ Body:   Terminal-native access to your intelligence feed. Scriptable,
 ### Rationale
 
 Card ordering follows persuasion priority: lead with the unique mechanism (scoring), follow with the trust objection (privacy), explain the magic (context discovery), hook power users (MCP), show the improvement trajectory (learning), and close with accessibility (CLI). Each description ends with a punchy sentence that reinforces the value proposition. *Authority* is established through technical specificity. *Commitment/Consistency* is activated by the learning card -- the tool gets better the more you use it, which makes switching costs feel like investment rather than lock-in.
+
+---
+
+## 5B. PRIVACY AS REBELLION SECTION
+
+### Section Label
+`PRIVACY`
+
+### Section Headline
+> Your tools should work for you, not profile you
+
+### Section Subtitle
+> 4DA is built on a simple principle: developer intelligence does not require developer surveillance. Every architectural decision enforces this.
+
+### Feature Cards
+
+**Card 1 -- Zero Telemetry**
+```
+Tag:    ZERO TELEMETRY
+Title:  We genuinely cannot see your data
+Body:   No analytics SDK. No error reporting service. No "phone home"
+        on startup. The application does not contain code that sends
+        data to any server we operate. We do not know how many people
+        use 4DA. That is by design.
+```
+
+**Card 2 -- BYOK Architecture**
+```
+Tag:    BYOK
+Title:  Your keys go directly to your provider
+Body:   When you use an AI feature, your request goes from your machine
+        directly to the AI provider you chose. 4DA does not proxy it.
+        We do not see the request. We do not see the response. Your API
+        key is stored locally and never transmitted.
+```
+
+**Card 3 -- Source Verifiable**
+```
+Tag:    VERIFIABLE
+Title:  Do not trust us. Verify.
+Body:   The source code is public under FSL-1.1-Apache-2.0. Read every
+        line. Build from source. Monitor the network traffic. You will
+        find content fetches and your BYOK API calls. Nothing else.
+        After 2 years, it converts to Apache 2.0. Full open source.
+```
+
+**Card 4 -- Desktop, Not SaaS**
+```
+Tag:    LOCAL
+Title:  There is no 4DA server
+Body:   4DA is a Tauri desktop app with a SQLite database on your disk.
+        No cloud sync. No account required for the free tier. No server
+        that can be breached, acquired, or shut down. When Pocket died
+        in 2025, users lost their data. Your 4DA data is a file on
+        your machine.
+```
+
+### Rebellion Taglines Callout
+
+> **Intelligence without surveillance.**
+>
+> Your feed is watching you. 4DA watches for you.
+> Your keys. Your data. Your edge.
+>
+> [Download -- it's free and private]
+
+### Blog Post Link
+
+> Read the full privacy architecture: [Why 4DA Is a Desktop App](/blog/privacy-architecture)
+
+### Rationale
+
+This section converts privacy from a feature bullet ("Privacy First" in the Features section) into a standalone value proposition. For visitors arriving via privacy-intent channels, this is the decision point. The four cards answer the four questions a privacy-conscious developer asks: "Do you track me?" (Zero Telemetry), "What happens to my API keys?" (BYOK), "How can I verify?" (Source Verifiable), "What if you shut down?" (Desktop, Not SaaS). The Pocket shutdown reference (July 2025) is fresh in developer memory. The rebellion taglines callout displays all three non-confrontational taglines as a visual statement. The blog post link converts the curious into advocates.
 
 ---
 
