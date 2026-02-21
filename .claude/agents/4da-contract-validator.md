@@ -95,10 +95,12 @@ const result = await invoke<ReturnType>('command_name', {
 
 | File | Purpose | Key Patterns |
 |------|---------|--------------|
-| `/mnt/d/4DA/src-tauri/src/lib.rs` | Tauri commands | `#[tauri::command]` |
-| `/mnt/d/4DA/src/App.tsx` | Frontend invokes | `invoke<` |
-| `/mnt/d/4DA/mcp-4da-server/src/types.ts` | MCP types | interfaces |
-| `/mnt/d/4DA/mcp-4da-server/src/tools/*.ts` | MCP schemas | `inputSchema` |
+| `src-tauri/src/commands.rs` | Tauri commands | `#[tauri::command]` |
+| `src-tauri/src/commands/*.rs` | Command modules | `#[tauri::command]` |
+| `src/App.tsx` + `src/components/*.tsx` | Frontend invokes | `invoke<` |
+| `mcp-4da-server/src/schema-registry.ts` | MCP tool registry | `TOOL_REGISTRY` (27 tools) |
+| `mcp-4da-server/src/schemas/*.json` | MCP tool schemas | 27 JSON schema files |
+| `mcp-4da-server/src/types.ts` | MCP types | interfaces |
 
 ---
 
@@ -147,23 +149,20 @@ invoke('command_name', { param1, param2 })
 ### Extract MCP Tool Schemas
 
 ```bash
-# Find all tool definitions
-grep -rn "inputSchema" mcp-4da-server/src/tools/
+# Canonical tool list (source of truth):
+grep "summary:" mcp-4da-server/src/schema-registry.ts
+
+# Schema files:
+ls mcp-4da-server/src/schemas/
+
+# Tool implementations:
+ls mcp-4da-server/src/tools/ | grep -v index | grep -v __tests__
 ```
 
-**Extraction Pattern:**
-```typescript
-// Look for:
-export const toolDefinition = {
-  name: "tool_name",
-  inputSchema: { ... }
-}
-
-// Extract:
-// - tool_name
-// - input parameters and types
-// - required fields
-```
+**Architecture:** Tools use a schema registry pattern (not inline `toolDefinition` objects).
+- `schema-registry.ts` — canonical list of all 27 tools with slim summaries
+- `schemas/*.json` — full JSON Schema files exposed as MCP Resources
+- `tools/*.ts` — implementation files export `execute*` functions
 
 ### Detect Mismatches
 
@@ -204,7 +203,7 @@ When completing tasks, return:
 |-------|----------------|--------|
 | Tauri Backend | 66 | 3 |
 | Frontend | 45 | 2 |
-| MCP Server | 4 | 0 |
+| MCP Server | 27 | 0 |
 
 ### Tauri Commands
 <details>
@@ -335,13 +334,14 @@ For CI integration:
 # validate-contracts.sh
 
 echo "Extracting Tauri commands..."
-grep -c "#\[tauri::command\]" src-tauri/src/lib.rs
+grep -rc "#\[tauri::command\]" src-tauri/src/
 
 echo "Extracting frontend invokes..."
-grep -c "invoke" src/App.tsx
+grep -rc "invoke<\|invoke(" src/components/ src/App.tsx
 
 echo "Extracting MCP tools..."
-find mcp-4da-server/src/tools -name "*.ts" | xargs grep -l "toolDefinition"
+grep -c "summary:" mcp-4da-server/src/schema-registry.ts
+ls mcp-4da-server/src/schemas/*.json | wc -l
 
 # Add more sophisticated parsing as needed
 ```

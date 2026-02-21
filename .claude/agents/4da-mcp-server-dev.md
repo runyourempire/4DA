@@ -6,14 +6,14 @@
 
 ## Purpose
 
-The MCP Server Developer Agent specializes in enhancing the 4DA MCP server located at `mcp-4da-server/`. It understands the tool definition patterns, database accessors, and MCP protocol requirements.
+The MCP Server Developer Agent specializes in enhancing the 4DA MCP server located at `mcp-4da-server/`. It understands the tool definition patterns, schema registry, LLM synthesis layer, database accessors, and MCP protocol requirements.
 
 **Key Responsibilities:**
-- Add new MCP tools (search, digest, source status, etc.)
-- Implement MCP resources (user://context, digest://latest)
-- Add caching layers for performance
-- Implement batch operations
-- Maintain type safety across the server
+- Add new MCP tools with schema, implementation, and registration
+- Implement MCP resources (lazy-loaded schemas, user context)
+- Extend the LLM synthesis layer for AI-powered tools
+- Add caching layers and optimize database queries
+- Maintain type safety and schema consistency across the server
 
 ---
 
@@ -24,214 +24,180 @@ Spawn this agent when:
 - Creating MCP resources for content exposure
 - Optimizing database queries in the MCP layer
 - Adding new capabilities to existing tools
+- Extending the LLM synthesis layer
 - Debugging MCP protocol issues
 
 ---
 
 ## Key Knowledge
 
-### MCP Server Structure
+### MCP Server Structure (v3.3.0 — 27 tools)
+
 ```
 mcp-4da-server/
-├── src/
-│   ├── index.ts          # Server entry, tool registration
-│   ├── db.ts             # Database accessor (SQLite)
-│   ├── types.ts          # TypeScript types
-│   └── tools/
-│       ├── get-relevant-content.ts
-│       ├── get-context.ts
-│       ├── explain-relevance.ts
-│       └── record-feedback.ts
-├── package.json
-└── tsconfig.json
+  src/
+    index.ts              # Server entry, tool dispatcher, resource handler
+    db.ts                 # SQLite accessor (better-sqlite3), validation, scoring, retry logic
+    llm.ts                # LLM synthesis (Anthropic, OpenAI, Ollama), tiered models
+    types.ts              # TypeScript type definitions for all DB rows + tool params
+    schema-registry.ts    # Tool registry, slim tool list, lazy schema loading via Resources
+    output-manager.ts     # Compact result format, token reduction (~80%)
+    http-transport.ts     # Streamable HTTP transport (spec 2025-03-26)
+    doctor.ts             # Installation health checker (--doctor flag)
+    setup.ts              # Zero-friction editor config (--setup flag)
+    schemas/              # 27 JSON schemas (one per tool)
+    tools/
+      index.ts            # Tool exports (27 tools)
+      get-relevant-content.ts    # Core: query filtered content
+      get-context.ts             # Core: user interests/tech stack
+      explain-relevance.ts       # Core: score breakdown
+      record-feedback.ts         # Core: learning loop
+      score-autopsy.ts           # AI: forensic score analysis
+      trend-analysis.ts          # AI: statistical patterns
+      daily-briefing.ts          # AI: executive summary
+      context-analysis.ts        # AI: context optimization
+      source-health.ts           # Diagnostics: source pipeline
+      topic-connections.ts       # AI: knowledge graphs
+      config-validator.ts        # Diagnostics: config validation
+      llm-status.ts              # Diagnostics: LLM availability
+      get-actionable-signals.ts  # Signal classification
+      export-context.ts          # Portable context packets
+      knowledge-gaps.ts          # Dependency knowledge gaps
+      signal-chains.ts           # Causal signal chains
+      semantic-shifts.ts         # Narrative shift detection
+      reverse-mentions.ts        # Project mention discovery
+      attention-report.ts        # Attention allocation analysis
+      project-health.ts          # Dependency health radar
+      decision-memory.ts         # Decision CRUD
+      tech-radar.ts              # Tech radar generation
+      decision-enforcement.ts    # Decision alignment checks
+      agent-memory.ts            # Cross-agent persistent memory
+      agent-session-brief.ts     # Session startup context
+      delegation-score.ts        # AI-delegatability assessment
+      developer-dna.ts           # Developer identity export
+    __tests__/
+      db.test.ts           # Database integration tests (9 tests)
+      tools.test.ts        # Tool contract tests (62 tests)
+  package.json
+  tsconfig.json
 ```
 
-### Tool Definition Pattern
-Each tool follows this structure:
-```typescript
-// Definition object for registration
-export const toolDefinition = {
-  name: "tool_name",
-  description: "What this tool does",
-  inputSchema: {
-    type: "object",
-    properties: { /* params */ },
-    required: []
-  }
-};
+### Tool Architecture
 
-// Execute function
-export async function execute(params: ToolParams, db: Database): Promise<ToolResult> {
-  // Implementation
+Each tool has three components:
+
+**1. Schema file** (`src/schemas/{tool-name}.json`):
+```json
+{
+  "name": "tool_name",
+  "description": "What this tool does",
+  "inputSchema": {
+    "type": "object",
+    "properties": { },
+    "required": []
+  }
 }
 ```
 
-### Database Access Patterns
-- Use `better-sqlite3` for synchronous queries
-- All queries use prepared statements
-- Score calculations in `computeRelevanceScore()`
-- Context loading via `loadUserContext()`
+**2. Implementation file** (`src/tools/{tool-name}.ts`):
+```typescript
+import { FourDADatabase } from "../db.js";
+import type { CompactResult } from "../output-manager.js";
+
+export interface ToolNameParams {
+  param: string;
+}
+
+export async function executeToolName(
+  params: ToolNameParams,
+  db: FourDADatabase
+): Promise<CompactResult<ToolNameResult>> {
+  // Implementation using db.getRawDb() for direct queries
+  return { sections: [...], meta: { ... } };
+}
+```
+
+**3. Registration** — three places to update:
+- `src/schema-registry.ts` — add to TOOL_REGISTRY
+- `src/tools/index.ts` — add export
+- `src/index.ts` — add case in dispatcher
+
+### AI-Powered Tools
+
+Tools that use LLM synthesis follow this pattern:
+```typescript
+import { loadLLMConfig, canSynthesize, synthesize } from "../llm.js";
+
+// In execute function:
+const llmConfig = loadLLMConfig();
+if (shouldSynthesize && canSynthesize(llmConfig)) {
+  try {
+    const synthesis = await synthesize(llmConfig, {
+      prompt: "...",
+      data: { ... },
+      task: "tool_name",
+    });
+    result.ai_synthesis = synthesis;
+  } catch (error) {
+    console.error("AI synthesis failed:", error);
+    // Non-blocking — tool still returns data-only result
+  }
+}
+```
+
+### Database Access
+
+- Use `db.getRawDb()` for direct `better-sqlite3` queries
+- Use `db.queryWithRetry()` for retry on SQLITE_BUSY/LOCKED
+- Use `db.getUserContext()` for user context data
+- All queries use parameterized statements (never string concatenation)
 
 ---
 
 ## Critical Files
 
-| File | Purpose | Key Lines |
-|------|---------|-----------|
-| `/mnt/d/4DA/mcp-4da-server/src/index.ts` | Server entry, tool registration | Full file |
-| `/mnt/d/4DA/mcp-4da-server/src/db.ts` | Database accessor, score calculation | Lines 265-393, 452-518 |
-| `/mnt/d/4DA/mcp-4da-server/src/types.ts` | Type definitions | Full file |
-| `/mnt/d/4DA/mcp-4da-server/package.json` | Dependencies | Full file |
+| File | Purpose |
+|------|---------|
+| `mcp-4da-server/src/schema-registry.ts` | Canonical tool list (source of truth for tool count) |
+| `mcp-4da-server/src/index.ts` | Tool dispatcher, resource handler, transport setup |
+| `mcp-4da-server/src/db.ts` | Database layer, scoring, validation |
+| `mcp-4da-server/src/llm.ts` | LLM synthesis (Anthropic/OpenAI/Ollama) |
+| `mcp-4da-server/src/types.ts` | All TypeScript type definitions |
+| `mcp-4da-server/src/output-manager.ts` | CompactResult format for token reduction |
 
 ---
 
-## Common Tasks
+## Adding a New Tool — Complete Checklist
 
-### Add a New Tool
-
-1. Create tool file in `src/tools/`:
-```typescript
-// src/tools/new-tool.ts
-import { Database } from '../db';
-
-export const toolDefinition = {
-  name: "new_tool",
-  description: "Description",
-  inputSchema: {
-    type: "object",
-    properties: {
-      param: { type: "string", description: "Param description" }
-    },
-    required: ["param"]
-  }
-};
-
-export interface NewToolParams {
-  param: string;
-}
-
-export async function execute(params: NewToolParams, db: Database): Promise<any> {
-  // Implementation
-}
-```
-
-2. Register in `src/index.ts`:
-```typescript
-import { toolDefinition as newToolDef, execute as executeNewTool } from './tools/new-tool';
-
-// In tools array
-tools: [/* existing */, newToolDef]
-
-// In handler
-case 'new_tool':
-  return executeNewTool(args, db);
-```
-
-### Add an MCP Resource
-
-Resources expose data that agents can read:
-```typescript
-// In index.ts
-resources: [
-  {
-    uri: "digest://latest",
-    name: "Latest Digest",
-    description: "Most recent content digest",
-    mimeType: "application/json"
-  }
-]
-
-// Handler
-server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-  if (request.params.uri === "digest://latest") {
-    const digest = db.getLatestDigest();
-    return { contents: [{ uri: request.params.uri, text: JSON.stringify(digest) }] };
-  }
-});
-```
-
-### Add Caching
-
-```typescript
-const cache = new Map<string, { data: any, expires: number }>();
-
-function getCached<T>(key: string, ttlMs: number, fetcher: () => T): T {
-  const now = Date.now();
-  const cached = cache.get(key);
-  if (cached && cached.expires > now) {
-    return cached.data;
-  }
-  const data = fetcher();
-  cache.set(key, { data, expires: now + ttlMs });
-  return data;
-}
-```
-
----
-
-## Output Format
-
-When completing tasks, return:
-
-```markdown
-## MCP Server Enhancement Report
-
-**Change Type:** [New Tool / New Resource / Optimization / Bug Fix]
-
-### Files Modified
-- `src/tools/new-tool.ts` - Created (45 LOC)
-- `src/index.ts` - Added registration
-
-### Tool/Resource Added
-- **Name:** `tool_name`
-- **Purpose:** Brief description
-- **Input Schema:** JSON schema
-- **Output Format:** Expected output
-
-### Testing Instructions
-1. Build: `npm run build`
-2. Test: [specific test command]
-3. Verify: [how to verify it works]
-
-### Considerations
-- [Any edge cases handled]
-- [Performance implications]
-- [Breaking changes, if any]
-```
+1. Create schema: `src/schemas/new-tool.json`
+2. Create implementation: `src/tools/new-tool.ts`
+3. Register in `src/schema-registry.ts` (TOOL_REGISTRY)
+4. Export from `src/tools/index.ts`
+5. Add case in `src/index.ts` dispatcher
+6. Add contract tests in `src/__tests__/tools.test.ts`
+7. Build: `pnpm run build`
+8. Test: `pnpm test`
+9. Verify: `node dist/index.js --doctor`
 
 ---
 
 ## Constraints
 
-**CAN:**
-- Create new tool files
-- Modify index.ts for registration
-- Update types.ts
-- Add database queries to db.ts
-- Create test files
-
 **MUST:**
-- Follow existing tool pattern exactly
-- Use TypeScript strict mode
-- Use prepared statements for all queries
-- Include input validation
-- Document all public functions
+- Follow existing tool pattern exactly (schema + impl + registration)
+- Use TypeScript strict mode (no `any` types in tool code)
+- Use prepared statements for all SQL queries
+- Return `CompactResult` format from tools
+- Log to stderr only (stdout is MCP protocol)
+- Handle errors gracefully (no unhandled rejections)
 
 **CANNOT:**
-- Modify Tauri backend code
-- Change database schema directly
-- Remove existing tools without approval
-- Expose sensitive data in responses
+- Modify Tauri backend code (separate codebase)
+- Change database schema directly (schema owned by Rust backend)
+- Remove existing tools without explicit approval
+- Expose API keys or sensitive data in tool responses
+- Use hardcoded file paths (use env vars, __dirname-relative, or process.cwd())
 
 ---
 
-## Integration Points
-
-The MCP server communicates with:
-1. **SQLite Database:** `/mnt/d/4DA/data/4da.db`
-2. **Claude Code:** Via stdio transport
-3. **Tauri Backend:** Shares database, no direct communication
-
----
-
-*The MCP server is the agent's window into 4DA. Make it powerful.*
+*The MCP server is the agent's window into 4DA. Make it powerful, keep it immaculate.*

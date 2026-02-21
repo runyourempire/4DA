@@ -1,3 +1,9 @@
+---
+description: "Run the full 4DA pre-launch readiness audit — scoring benchmark, MCP server, first-run experience, and build health"
+allowed-tools: ["Read", "Bash", "Glob", "Grep", "Edit", "Write", "Task"]
+argument-hint: "[--scoring | --mcp | --fre | --build | --fix]"
+---
+
 # /pre-launch
 
 Run the full 4DA pre-launch readiness audit — scoring, MCP server, first-run experience, and build health.
