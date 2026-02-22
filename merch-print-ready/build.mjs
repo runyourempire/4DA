@@ -211,7 +211,23 @@ async function removeBlackBackground(inputPath, outputPath) {
     .ensureAlpha()
     .toBuffer({ resolveWithObject: true });
 
+  const w = info.width, h = info.height, ch = 4;
+
+  // Step 1: Force edge rows/columns fully transparent.
+  // Topaz upscaling creates artifact pixels at image borders (luminance 30-60)
+  // that survive the threshold and create a visible unprofessional border.
+  const EDGE_PX = 5;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (y < EDGE_PX || y >= h - EDGE_PX || x < EDGE_PX || x >= w - EDGE_PX) {
+        data[(y * w + x) * ch + 3] = 0;
+      }
+    }
+  }
+
+  // Step 2: Luminance-based black removal on remaining pixels
   for (let i = 0; i < data.length; i += 4) {
+    if (data[i + 3] === 0) continue; // already cleared by edge pass
     const r = data[i], g = data[i + 1], b = data[i + 2];
     const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
 
@@ -222,12 +238,14 @@ async function removeBlackBackground(inputPath, outputPath) {
     }
   }
 
-  await sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } })
+  // Step 3: Save then trim transparent borders for a clean edge
+  await sharp(data, { raw: { width: w, height: h, channels: 4 } })
+    .trim()
     .png({ compressionLevel: 6 })
     .toFile(outputPath);
 
   const meta = await sharp(outputPath).metadata();
-  console.log(`  [ok] ${basename(outputPath)} — ${meta.width}x${meta.height}px (black → transparent)`);
+  console.log(`  [ok] ${basename(outputPath)} — ${meta.width}x${meta.height}px (black → transparent, trimmed)`);
 }
 
 // ─── Main ─────────────────────────────────────────────────────
