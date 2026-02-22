@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
+  <!-- 4DA Text Mark — Clean, minimal. For chest placement on tees, hoodies, caps. -->
+  <!-- Print on black fabric: use white fill. Print on white fabric: use #0A0A0A fill. -->
+  <rect width="400" height="120" fill="#0A0A0A"/>
+  <text x="200" y="82" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="72" font-weight="600" letter-spacing="-3" fill="#FFFFFF">4DA</text>
+  <text x="200" y="108" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" letter-spacing="4" fill="#666666" text-transform="uppercase">FOUR DIMENSIONAL AUTONOMY</text>
+</svg>

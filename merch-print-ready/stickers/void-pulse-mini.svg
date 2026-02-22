@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+  <!-- Void Pulse Mini Sticker — Die-cut circle, 3 inch -->
+  <circle cx="600" cy="600" r="580" fill="#0A0A0A" stroke="#8C470F" stroke-width="16"/>
+  <circle cx="600" cy="560" r="280" fill="none" stroke="#D4AF37" stroke-width="6" opacity="0.5"/>
+  <circle cx="600" cy="560" r="180" fill="none" stroke="#FFD14D" stroke-width="8" opacity="0.7"/>
+  <circle cx="600" cy="560" r="70" fill="#FFD14D"/>
+  <text x="600" y="960" text-anchor="middle" font-family="'Courier New', monospace" font-size="56" letter-spacing="6" fill="#888888">VOID ENGINE</text>
+</svg>

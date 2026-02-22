@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3600 3600" width="3600" height="3600">
+  <!-- PASIFA Schematic Tee — PRINT READY (transparent background) -->
+  <!-- Placement: full front, 10-12 inches -->
+  <!-- Product: Bella+Canvas 3001 Black -->
+  <defs>
+    <pattern id="grid" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M 120 0 L 0 0 0 120" fill="none" stroke="#2A2A2A" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <!-- Subtle grid background (will be very faint on black shirt) -->
+  <rect width="3600" height="3600" fill="url(#grid)" opacity="0.3"/>
+  <!-- Title -->
+  <text x="1800" y="250" text-anchor="middle" font-family="'Courier New', monospace" font-size="64" letter-spacing="28" fill="#888888">PRIVATE AUTONOMOUS SYSTEM FOR</text>
+  <text x="1800" y="340" text-anchor="middle" font-family="'Courier New', monospace" font-size="64" letter-spacing="28" fill="#888888">INTELLIGENT FILE ANALYSIS</text>
+  <!-- Central scoring node -->
+  <circle cx="1800" cy="1800" r="430" fill="none" stroke="#D4AF37" stroke-width="14"/>
+  <circle cx="1800" cy="1800" r="395" fill="none" stroke="#D4AF37" stroke-width="4" opacity="0.5"/>
+  <text x="1800" y="1770" text-anchor="middle" font-family="'Courier New', monospace" font-size="80" fill="#D4AF37">PASIFA</text>
+  <text x="1800" y="1870" text-anchor="middle" font-family="'Courier New', monospace" font-size="60" fill="#888888">SCORING CORE</text>
+  <!-- Input nodes -->
+  <!-- Stack Detection (top-left) -->
+  <circle cx="600" cy="750" r="250" fill="none" stroke="#F97316" stroke-width="8"/>
+  <text x="600" y="730" text-anchor="middle" font-family="'Courier New', monospace" font-size="64" fill="#F97316">STACK</text>
+  <text x="600" y="810" text-anchor="middle" font-family="'Courier New', monospace" font-size="52" fill="#888888">DETECT</text>
+  <line x1="830" y1="940" x2="1430" y2="1540" stroke="#F97316" stroke-width="6" opacity="0.5"/>
+  <text x="1050" y="1150" font-family="'Courier New', monospace" font-size="44" fill="#555555" transform="rotate(-35 1050 1150)">rust, react, py</text>
+  <!-- Signal Extraction (top-right) -->
+  <circle cx="3000" cy="750" r="250" fill="none" stroke="#F97316" stroke-width="8"/>
+  <text x="3000" y="730" text-anchor="middle" font-family="'Courier New', monospace" font-size="64" fill="#F97316">SIGNAL</text>
+  <text x="3000" y="810" text-anchor="middle" font-family="'Courier New', monospace" font-size="52" fill="#888888">EXTRACT</text>
+  <line x1="2770" y1="940" x2="2170" y2="1540" stroke="#F97316" stroke-width="6" opacity="0.5"/>
+  <text x="2550" y="1150" font-family="'Courier New', monospace" font-size="44" fill="#555555" transform="rotate(35 2550 1150)">keywords, entities</text>
+  <!-- Embedding (bottom-left) -->
+  <circle cx="600" cy="2850" r="250" fill="none" stroke="#F97316" stroke-width="8"/>
+  <text x="600" y="2830" text-anchor="middle" font-family="'Courier New', monospace" font-size="64" fill="#F97316">EMBED</text>
+  <text x="600" y="2910" text-anchor="middle" font-family="'Courier New', monospace" font-size="52" fill="#888888">LOCAL</text>
+  <line x1="830" y1="2660" x2="1430" y2="2060" stroke="#F97316" stroke-width="6" opacity="0.5"/>
+  <text x="1050" y="2450" font-family="'Courier New', monospace" font-size="44" fill="#555555" transform="rotate(35 1050 2450)">vec&lt;f32&gt;</text>
+  <!-- Confidence Gate (bottom-right) -->
+  <circle cx="3000" cy="2850" r="250" fill="none" stroke="#F97316" stroke-width="8"/>
+  <text x="3000" y="2830" text-anchor="middle" font-family="'Courier New', monospace" font-size="64" fill="#F97316">GATE</text>
+  <text x="3000" y="2910" text-anchor="middle" font-family="'Courier New', monospace" font-size="52" fill="#888888">CONFIDENCE</text>
+  <line x1="2770" y1="2660" x2="2170" y2="2060" stroke="#F97316" stroke-width="6" opacity="0.5"/>
+  <text x="2550" y="2450" font-family="'Courier New', monospace" font-size="44" fill="#555555" transform="rotate(-35 2550 2450)">0/1/2+ signals</text>
+  <!-- Output arrow -->
+  <line x1="1800" y1="2230" x2="1800" y2="3050" stroke="#D4AF37" stroke-width="10"/>
+  <polygon points="1740,3050 1800,3150 1860,3050" fill="#D4AF37"/>
+  <text x="1800" y="3300" text-anchor="middle" font-family="'Courier New', monospace" font-size="80" fill="#FFFFFF">RELEVANCE</text>
+  <text x="1800" y="3400" text-anchor="middle" font-family="'Courier New', monospace" font-size="60" fill="#D4AF37">0.00 --- 1.00</text>
+  <!-- Corner marks -->
+  <text x="150" y="3550" font-family="'Courier New', monospace" font-size="56" fill="#444444">4DA v1.0</text>
+  <text x="3450" y="3550" text-anchor="end" font-family="'Courier New', monospace" font-size="56" fill="#444444">CLASSIFIED</text>
+</svg>

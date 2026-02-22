@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3000 3000" width="3000" height="3000">
+  <!-- Solar Crown Tee — PRINT READY (transparent background) -->
+  <!-- Placement: center chest, 6-8 inches -->
+  <!-- Product: Bella+Canvas 3001 Black -->
+  <defs>
+    <radialGradient id="corona" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD14D"/>
+      <stop offset="30%" stop-color="#F97316"/>
+      <stop offset="60%" stop-color="#D4530A"/>
+      <stop offset="85%" stop-color="#8C2D0A"/>
+      <stop offset="100%" stop-color="#8C2D0A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="innerGlow" cx="50%" cy="50%" r="35%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="40%" stop-color="#FFD14D" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#F97316" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="20" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Outer corona -->
+  <circle cx="1500" cy="1500" r="1200" fill="url(#corona)" opacity="0.9"/>
+  <!-- Corona tendrils -->
+  <g opacity="0.6" filter="url(#glow)">
+    <ellipse cx="1500" cy="375" rx="112" ry="262" fill="#F97316" transform="rotate(0 1500 1500)"/>
+    <ellipse cx="1500" cy="375" rx="90" ry="225" fill="#F97316" transform="rotate(45 1500 1500)"/>
+    <ellipse cx="1500" cy="375" rx="135" ry="300" fill="#D4530A" transform="rotate(90 1500 1500)"/>
+    <ellipse cx="1500" cy="375" rx="105" ry="240" fill="#F97316" transform="rotate(135 1500 1500)"/>
+    <ellipse cx="1500" cy="375" rx="120" ry="285" fill="#F97316" transform="rotate(180 1500 1500)"/>
+    <ellipse cx="1500" cy="375" rx="97" ry="210" fill="#D4530A" transform="rotate(225 1500 1500)"/>
+    <ellipse cx="1500" cy="375" rx="150" ry="315" fill="#F97316" transform="rotate(270 1500 1500)"/>
+    <ellipse cx="1500" cy="375" rx="82" ry="195" fill="#F97316" transform="rotate(315 1500 1500)"/>
+  </g>
+  <!-- Inner sun body -->
+  <circle cx="1500" cy="1500" r="825" fill="url(#corona)"/>
+  <!-- Core glow -->
+  <circle cx="1500" cy="1500" r="675" fill="url(#innerGlow)"/>
+  <!-- The "4" -->
+  <text x="1500" y="1725" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="1050" font-weight="600" fill="#FFFFFF" filter="url(#glow)">4</text>
+</svg>

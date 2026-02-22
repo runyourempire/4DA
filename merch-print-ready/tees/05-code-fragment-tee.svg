@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3600 3600" width="3600" height="3600">
+  <!-- Code Fragment Tee — PRINT READY (transparent background) -->
+  <!-- Placement: full front, 10-12 inches -->
+  <!-- Product: Bella+Canvas 3001 Black -->
+  <!-- Terminal window frame -->
+  <rect x="100" y="100" width="3400" height="3400" rx="48" fill="#141414" stroke="#3A3A3A" stroke-width="6"/>
+  <!-- Window dots -->
+  <circle cx="280" cy="260" r="32" fill="#EF4444" opacity="0.85"/>
+  <circle cx="380" cy="260" r="32" fill="#F97316" opacity="0.85"/>
+  <circle cx="480" cy="260" r="32" fill="#22C55E" opacity="0.85"/>
+  <!-- Title bar -->
+  <text x="1800" y="275" text-anchor="middle" font-family="'Courier New', monospace" font-size="72" fill="#888888">relevance.rs</text>
+  <!-- Separator line -->
+  <line x1="100" y1="340" x2="3500" y2="340" stroke="#3A3A3A" stroke-width="3"/>
+  <!-- Code lines (scaled up for print) -->
+  <g font-family="'Courier New', monospace" font-size="82">
+    <!-- Line numbers -->
+    <text x="220" y="510" fill="#555555">1</text>
+    <text x="220" y="670" fill="#555555">2</text>
+    <text x="220" y="830" fill="#555555">3</text>
+    <text x="220" y="990" fill="#555555">4</text>
+    <text x="220" y="1150" fill="#555555">5</text>
+    <text x="220" y="1310" fill="#555555">6</text>
+    <text x="220" y="1470" fill="#555555">7</text>
+    <text x="220" y="1630" fill="#555555">8</text>
+    <text x="220" y="1790" fill="#555555">9</text>
+    <text x="170" y="1950" fill="#555555">10</text>
+    <text x="170" y="2110" fill="#555555">11</text>
+    <text x="170" y="2270" fill="#555555">12</text>
+    <text x="170" y="2430" fill="#555555">13</text>
+    <text x="170" y="2590" fill="#555555">14</text>
+    <text x="170" y="2750" fill="#555555">15</text>
+    <text x="170" y="2910" fill="#555555">16</text>
+    <text x="170" y="3070" fill="#555555">17</text>
+    <!-- Code content -->
+    <text x="400" y="510" fill="#F97316">/// Score what matters.</text>
+    <text x="400" y="670" fill="#F97316">/// Ignore the noise.</text>
+    <text x="400" y="830" fill="#D4AF37">pub fn </text>
+    <text x="750" y="830" fill="#FFFFFF">score_relevance(</text>
+    <text x="400" y="990" fill="#AAAAAA">    item: </text>
+    <text x="820" y="990" fill="#D4AF37">&amp;ContentItem,</text>
+    <text x="400" y="1150" fill="#AAAAAA">    ctx: </text>
+    <text x="770" y="1150" fill="#D4AF37">&amp;DevContext,</text>
+    <text x="400" y="1310" fill="#AAAAAA">) -&gt; </text>
+    <text x="720" y="1310" fill="#D4AF37">f64</text>
+    <text x="920" y="1310" fill="#AAAAAA"> {</text>
+    <text x="400" y="1470" fill="#AAAAAA">    </text>
+    <text x="500" y="1470" fill="#D4AF37">let </text>
+    <text x="740" y="1470" fill="#FFFFFF">stack = ctx.detect();</text>
+    <text x="500" y="1630" fill="#D4AF37">    let </text>
+    <text x="740" y="1630" fill="#FFFFFF">signal = item.extract();</text>
+    <text x="500" y="1790" fill="#D4AF37">    let </text>
+    <text x="740" y="1790" fill="#FFFFFF">score = pasifa(</text>
+    <text x="400" y="1950" fill="#FFFFFF">        stack, signal, ctx</text>
+    <text x="400" y="2110" fill="#FFFFFF">    );</text>
+    <text x="400" y="2270" fill="#333333"> </text>
+    <text x="400" y="2430" fill="#F97316">    // Privacy first. Always.</text>
+    <text x="500" y="2590" fill="#D4AF37">    assert!</text>
+    <text x="990" y="2590" fill="#AAAAAA">(</text>
+    <text x="1040" y="2590" fill="#FFFFFF">data.stays_local()</text>
+    <text x="2200" y="2590" fill="#AAAAAA">);</text>
+    <text x="400" y="2750" fill="#AAAAAA"> </text>
+    <text x="400" y="2910" fill="#AAAAAA">    confidence.</text>
+    <text x="1250" y="2910" fill="#FFFFFF">score</text>
+    <text x="400" y="3070" fill="#AAAAAA">}</text>
+    <text x="400" y="3300" fill="#444444">// 4DA</text>
+  </g>
+</svg>

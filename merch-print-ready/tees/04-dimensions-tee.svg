@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3000 3000" width="3000" height="3000">
+  <!-- 4 Dimensions Tee — PRINT READY (transparent background) -->
+  <!-- Placement: center chest, 8 inches -->
+  <!-- Product: Bella+Canvas 3001 Black -->
+  <!-- Dimension labels -->
+  <text x="1500" y="200" text-anchor="middle" font-family="'Courier New', monospace" font-size="68" letter-spacing="28" fill="#888888">D1: INTELLIGENCE</text>
+  <text x="2820" y="1560" text-anchor="middle" font-family="'Courier New', monospace" font-size="68" letter-spacing="14" fill="#888888" transform="rotate(90 2820 1560)">D2: PRIVACY</text>
+  <text x="1500" y="2880" text-anchor="middle" font-family="'Courier New', monospace" font-size="68" letter-spacing="28" fill="#888888">D3: AUTONOMY</text>
+  <text x="180" y="1560" text-anchor="middle" font-family="'Courier New', monospace" font-size="68" letter-spacing="14" fill="#888888" transform="rotate(-90 180 1560)">D4: REVENUE</text>
+  <!-- Geometric frame -->
+  <rect x="400" y="400" width="2200" height="2200" fill="none" stroke="#555555" stroke-width="6"/>
+  <rect x="520" y="520" width="1960" height="1960" fill="none" stroke="#444444" stroke-width="3"/>
+  <!-- Diagonal cross -->
+  <line x1="400" y1="400" x2="2600" y2="2600" stroke="#444444" stroke-width="3"/>
+  <line x1="2600" y1="400" x2="400" y2="2600" stroke="#444444" stroke-width="3"/>
+  <!-- Inner diamond -->
+  <polygon points="1500,600 2400,1500 1500,2400 600,1500" fill="none" stroke="#D4AF37" stroke-width="10"/>
+  <!-- Center circle -->
+  <circle cx="1500" cy="1500" r="340" fill="none" stroke="#FFFFFF" stroke-width="14"/>
+  <!-- The "4" -->
+  <text x="1500" y="1640" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="360" font-weight="600" fill="#FFFFFF">4</text>
+  <!-- Diamond vertex dots -->
+  <circle cx="1500" cy="600" r="28" fill="#D4AF37"/>
+  <circle cx="2400" cy="1500" r="28" fill="#D4AF37"/>
+  <circle cx="1500" cy="2400" r="28" fill="#D4AF37"/>
+  <circle cx="600" cy="1500" r="28" fill="#D4AF37"/>
+  <!-- Midpoint dots -->
+  <circle cx="1950" cy="1050" r="14" fill="#888888"/>
+  <circle cx="1950" cy="1950" r="14" fill="#888888"/>
+  <circle cx="1050" cy="1950" r="14" fill="#888888"/>
+  <circle cx="1050" cy="1050" r="14" fill="#888888"/>
+</svg>

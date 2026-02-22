@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+  <!-- 4DA Circle Badge Sticker — Die-cut circle, 3 inch -->
+  <circle cx="600" cy="600" r="580" fill="#0A0A0A" stroke="#D4AF37" stroke-width="16"/>
+  <text x="600" y="560" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="280" font-weight="600" fill="#FFFFFF">4DA</text>
+  <text x="600" y="700" text-anchor="middle" font-family="'Courier New', monospace" font-size="60" letter-spacing="8" fill="#D4AF37">AUTONOMY</text>
+</svg>

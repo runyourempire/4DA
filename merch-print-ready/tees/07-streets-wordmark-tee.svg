@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4000 1400" width="4000" height="1400">
+  <!-- STREETS Wordmark Tee — PRINT READY (transparent background) -->
+  <!-- Placement: center chest, 8-10 inches wide -->
+  <!-- Product: Comfort Colors 1717 Black -->
+  <text x="2000" y="700" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="600" font-weight="600" letter-spacing="80" fill="#FFFFFF">STREETS</text>
+  <text x="2000" y="1000" text-anchor="middle" font-family="'Courier New', monospace" font-size="88" letter-spacing="36" fill="#F97316">THE DEVELOPER INCOME PLAYBOOK</text>
+  <line x1="600" y1="1100" x2="3400" y2="1100" stroke="#555555" stroke-width="4"/>
+  <text x="2000" y="1260" text-anchor="middle" font-family="'Courier New', monospace" font-size="68" letter-spacing="20" fill="#888888">BY 4DA</text>
+</svg>

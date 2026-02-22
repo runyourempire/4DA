@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3600 4500" width="3600" height="4500">
+  <!-- "For the Streets" BACK PRINT — PRINT READY (transparent background) -->
+  <!-- Placement: full back print -->
+  <!-- Product: Comfort Colors 1717 Black -->
+  <!-- Top tagline block -->
+  <text x="1800" y="500" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="100" letter-spacing="44" fill="#888888">YOUR RIG</text>
+  <text x="1800" y="700" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="100" letter-spacing="44" fill="#888888">YOUR RULES</text>
+  <text x="1800" y="900" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="100" letter-spacing="44" fill="#888888">YOUR REVENUE</text>
+  <!-- Orange divider -->
+  <line x1="1100" y1="1080" x2="2500" y2="1080" stroke="#F97316" stroke-width="14"/>
+  <!-- "FOR THE" -->
+  <text x="1800" y="1700" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="200" letter-spacing="80" fill="#AAAAAA">FOR THE</text>
+  <!-- STREETS (hero) -->
+  <text x="1800" y="2500" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="620" font-weight="600" letter-spacing="40" fill="#FFFFFF">STREETS</text>
+  <!-- Orange accent bar under STREETS -->
+  <rect x="1200" y="2620" width="1200" height="20" fill="#F97316"/>
+  <!-- Engines tagline -->
+  <text x="1800" y="2950" text-anchor="middle" font-family="'Courier New', monospace" font-size="76" letter-spacing="20" fill="#888888">8 ENGINES . 7 MODULES . $0</text>
+  <!-- 4DA mark at bottom -->
+  <circle cx="1660" cy="3400" r="80" fill="none" stroke="#D4AF37" stroke-width="8" opacity="0.7"/>
+  <text x="1660" y="3430" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="96" font-weight="600" fill="#D4AF37">4</text>
+  <text x="1820" y="3430" text-anchor="middle" font-family="'Courier New', monospace" font-size="80" letter-spacing="14" fill="#888888">4DA.AI</text>
+</svg>

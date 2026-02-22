@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" width="1600" height="700">
+  <!-- "Privacy First" Sticker — Rectangle, ~3.5 x 1.5 inch -->
+  <rect x="10" y="10" width="1580" height="680" rx="48" fill="#0A0A0A" stroke="#22C55E" stroke-width="12"/>
+  <text x="800" y="310" text-anchor="middle" font-family="'Courier New', monospace" font-size="120" font-weight="500" fill="#22C55E">PRIVACY</text>
+  <text x="800" y="480" text-anchor="middle" font-family="'Courier New', monospace" font-size="120" font-weight="500" fill="#FFFFFF">FIRST</text>
+</svg>

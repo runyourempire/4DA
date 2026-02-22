@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 600" width="2400" height="600">
+  <!-- "For the Streets" FRONT (small chest) — PRINT READY -->
+  <!-- Pairs with 08-for-the-streets-back.svg -->
+  <!-- Placement: small left chest, 3-4 inches -->
+  <text x="1200" y="200" text-anchor="middle" font-family="'Courier New', monospace" font-size="80" letter-spacing="20" fill="#888888">YOUR RIG . YOUR RULES</text>
+  <text x="1200" y="340" text-anchor="middle" font-family="'Courier New', monospace" font-size="80" letter-spacing="20" fill="#888888">YOUR REVENUE</text>
+  <line x1="700" y1="400" x2="1700" y2="400" stroke="#F97316" stroke-width="6"/>
+  <text x="1200" y="520" text-anchor="middle" font-family="'Courier New', monospace" font-size="56" letter-spacing="10" fill="#D4AF37">STREETS by 4DA</text>
+</svg>

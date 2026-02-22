@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2200 600" width="2200" height="600">
+  <!-- assert!(data.stays_local()) Sticker — Rectangle, ~4 x 1 inch -->
+  <rect x="10" y="10" width="2180" height="580" rx="48" fill="#141414" stroke="#3A3A3A" stroke-width="8"/>
+  <text x="1100" y="370" text-anchor="middle" font-family="'Courier New', monospace" font-size="110">
+    <tspan fill="#D4AF37">assert!</tspan><tspan fill="#AAAAAA">(data.</tspan><tspan fill="#FFFFFF">stays_local</tspan><tspan fill="#AAAAAA">())</tspan>
+  </text>
+</svg>
