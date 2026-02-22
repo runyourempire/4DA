@@ -33,17 +33,24 @@ const SUN_PATH = existsSync(SUN_UPSCALED) ? SUN_UPSCALED : SUN_ORIGINAL;
 // Print specs: Printful requires minimum 150 DPI, we target 300 DPI
 const DPI = 300;
 
-// Each design mapped to its pixel dimensions (inches * DPI)
+// Printful canvas sizes (the full print area the file must match)
+// Standard DTG: 12"x16" = 3600x4800. New large: 15"x18" = 4500x5400.
+// We use 4500x5400 to be compatible with the largest print area.
+const CANVAS_W = 4500;
+const CANVAS_H = 5400;
+
+// Each design mapped to its artwork dimensions (how big the design renders).
+// The artwork gets centered on the full CANVAS_W x CANVAS_H transparent canvas.
 const TEE_SPECS = {
-  '01-4da-logo-tee':         { w: 4 * DPI, h: Math.round(2.5 * DPI) },
-  '02-solar-crown-tee':      { w: 8 * DPI, h: 8 * DPI },
-  '03-void-pulse-tee':       { w: 8 * DPI, h: 8 * DPI },
-  '04-dimensions-tee':       { w: 8 * DPI, h: 8 * DPI },
-  '05-code-fragment-tee':    { w: 12 * DPI, h: 16 * DPI },
-  '06-pasifa-schematic-tee': { w: 12 * DPI, h: 12 * DPI },
-  '07-streets-wordmark-tee': { w: 10 * DPI, h: Math.round(3.5 * DPI) },
-  '08-for-the-streets-back': { w: 12 * DPI, h: 16 * DPI },
-  '09-for-the-streets-front': { w: 4 * DPI, h: Math.round(1.5 * DPI) },
+  '01-4da-logo-tee':         { w: 3600, h: 2250 },
+  '02-solar-crown-tee':      { w: 3600, h: 3600 },
+  '03-void-pulse-tee':       { w: 3600, h: 3600 },
+  '04-dimensions-tee':       { w: 3600, h: 3600 },
+  '05-code-fragment-tee':    { w: 4200, h: 5400 },
+  '06-pasifa-schematic-tee': { w: 4200, h: 4200 },
+  '07-streets-wordmark-tee': { w: 4200, h: 1500 },
+  '08-for-the-streets-back': { w: 4500, h: 5400 },
+  '09-for-the-streets-front': { w: 2400, h: 900 },
 };
 
 const STICKER_SPECS = {
@@ -55,19 +62,18 @@ const STICKER_SPECS = {
 };
 
 /**
- * Convert an SVG file to PNG at specified dimensions.
- * Uses transparent background (essential for DTG printing on dark fabric).
+ * Convert an SVG file to PNG at specified design dimensions,
+ * then center it on the full Printful canvas (CANVAS_W x CANVAS_H).
+ *
+ * Printful requires the uploaded file to match their print area dimensions.
+ * The design is rendered at its natural size, then placed centered on the
+ * full transparent canvas so Printful accepts the file.
  */
-async function svgToPng(svgPath, outputPath, width, height) {
+async function svgToPng(svgPath, outputPath, designW, designH, canvasW = CANVAS_W, canvasH = CANVAS_H) {
   const svgBuffer = await readFile(svgPath);
 
   // Calculate density to render SVG close to target size without exceeding pixel limits.
-  // SVGs at density 72 render at their viewBox px dimensions. For large SVGs targeting
-  // large outputs, we render at native size then resize — avoids sharp's pixel limit.
-  // For small SVGs targeting large outputs, we boost density for quality.
   const svgMeta = await sharp(svgBuffer).metadata();
-  const scaleFactor = Math.max(width / svgMeta.width, height / svgMeta.height);
-  // Cap intermediate render at 6000px on longest side to stay within limits
   const maxIntermediate = 6000;
   const naturalMax = Math.max(svgMeta.width, svgMeta.height);
   const density = Math.min(
@@ -75,16 +81,28 @@ async function svgToPng(svgPath, outputPath, width, height) {
     DPI
   );
 
-  await sharp(svgBuffer, { density })
-    .resize(width, height, {
+  // Step 1: Render the design at its artwork dimensions
+  const designPng = await sharp(svgBuffer, { density })
+    .resize(designW, designH, {
       fit: 'contain',
       background: { r: 0, g: 0, b: 0, alpha: 0 },
     })
+    .png()
+    .toBuffer();
+
+  // Step 2: Place centered on the full Printful canvas
+  const left = Math.round((canvasW - designW) / 2);
+  const top = Math.round((canvasH - designH) / 2);
+
+  await sharp({
+    create: { width: canvasW, height: canvasH, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+  })
+    .composite([{ input: designPng, left, top }])
     .png({ compressionLevel: 6 })
     .toFile(outputPath);
 
   const meta = await sharp(outputPath).metadata();
-  console.log(`  [ok] ${basename(outputPath)} — ${meta.width}x${meta.height}px`);
+  console.log(`  [ok] ${basename(outputPath)} — ${meta.width}x${meta.height}px (design ${designW}x${designH} centered)`);
 }
 
 /**
@@ -96,7 +114,7 @@ async function svgToPng(svgPath, outputPath, width, height) {
  * When using the original 600px source:
  *   1. Upscale → remove black background → overlay system-font "4"
  */
-async function buildSunComposite(outputPath, size) {
+async function buildSunComposite(outputPath, size, canvasW = 0, canvasH = 0) {
   const isUpscaled = SUN_PATH.includes('upscaled');
   console.log(`\n  [sun] Building solar crown ${isUpscaled ? '(Topaz HiFi source)' : '(original 600px)'}...`);
 
@@ -140,11 +158,10 @@ async function buildSunComposite(outputPath, size) {
     .png()
     .toBuffer();
 
+  let finalPng;
   if (isUpscaled) {
-    // Topaz source already has the "4" baked in at high quality — just save
-    await sharp(sunPng)
-      .png({ compressionLevel: 6 })
-      .toFile(outputPath);
+    // Topaz source already has the "4" baked in at high quality
+    finalPng = sunPng;
   } else {
     // Original source: overlay a system-font "4"
     const fourSvg = `<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
@@ -164,10 +181,24 @@ async function buildSunComposite(outputPath, size) {
 
     console.log('  [sun] "4" overlay rendered (fallback mode)');
 
-    await sharp(sunPng)
+    finalPng = await sharp(sunPng)
       .composite([{ input: fourPng, blend: 'over' }])
+      .png()
+      .toBuffer();
+  }
+
+  // Place on Printful canvas if dimensions specified
+  if (canvasW > 0 && canvasH > 0) {
+    const left = Math.round((canvasW - size) / 2);
+    const top = Math.round((canvasH - size) / 2);
+    await sharp({
+      create: { width: canvasW, height: canvasH, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+    })
+      .composite([{ input: finalPng, left, top }])
       .png({ compressionLevel: 6 })
       .toFile(outputPath);
+  } else {
+    await sharp(finalPng).png({ compressionLevel: 6 }).toFile(outputPath);
   }
 
   const meta = await sharp(outputPath).metadata();
@@ -226,15 +257,19 @@ async function removeBlackBackground(inputPath, outputPath) {
   }
 
   // Step 2: Luminance-based black removal on remaining pixels
+  // Higher thresholds for upscaled assets — Topaz introduces dark noise (lum 10-40)
+  // that creates visible speckle on transparent backgrounds.
+  const BLACK_CUTOFF = 30;   // fully transparent below this
+  const FADE_CUTOFF = 60;    // gradient fade 30-60
   for (let i = 0; i < data.length; i += 4) {
     if (data[i + 3] === 0) continue; // already cleared by edge pass
     const r = data[i], g = data[i + 1], b = data[i + 2];
     const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
 
-    if (luminance < 10) {
+    if (luminance < BLACK_CUTOFF) {
       data[i + 3] = 0;
-    } else if (luminance < 40) {
-      data[i + 3] = Math.round(((luminance - 10) / 30) * 255);
+    } else if (luminance < FADE_CUTOFF) {
+      data[i + 3] = Math.round(((luminance - BLACK_CUTOFF) / (FADE_CUTOFF - BLACK_CUTOFF)) * 255);
     }
   }
 
@@ -274,10 +309,9 @@ async function main() {
     // Special case: solar crown uses hero-sun.jpg composite
     if (name === '02-solar-crown-tee') {
       if (existsSync(SUN_PATH)) {
-        await buildSunComposite(join(PNG_TEES, `${name}.png`), spec.w);
+        await buildSunComposite(join(PNG_TEES, `${name}.png`), spec.w, CANVAS_W, CANVAS_H);
       } else {
         console.log(`  [skip] ${name} — hero-sun.jpg not found at ${SUN_PATH}`);
-        // Fall back to SVG render
         await svgToPng(svgPath, join(PNG_TEES, `${name}.png`), spec.w, spec.h);
       }
       continue;
@@ -297,7 +331,8 @@ async function main() {
       continue;
     }
 
-    await svgToPng(svgPath, join(PNG_STICKERS, `${name}.png`), spec.w, spec.h);
+    // Stickers: canvas = design size (no extra padding needed)
+    await svgToPng(svgPath, join(PNG_STICKERS, `${name}.png`), spec.w, spec.h, spec.w, spec.h);
   }
 
   // ── Upscaled assets (Topaz) — remove black → transparent ──
