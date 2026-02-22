@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <!-- PASIFA Schematic — Technical diagram aesthetic. The scoring algorithm as art. -->
+  <!-- Blueprint/schematic style. For devs who appreciate systems thinking. -->
+  <rect width="500" height="500" fill="#0A0A0A"/>
+  <!-- Grid pattern (subtle) -->
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1A1A1A" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+  <rect width="500" height="500" fill="url(#grid)"/>
+  <!-- Title -->
+  <text x="250" y="45" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" letter-spacing="4" fill="#666666">PRIVATE AUTONOMOUS SYSTEM FOR INTELLIGENT FILE ANALYSIS</text>
+  <!-- Central scoring node -->
+  <circle cx="250" cy="250" r="60" fill="none" stroke="#D4AF37" stroke-width="2"/>
+  <circle cx="250" cy="250" r="55" fill="none" stroke="#D4AF37" stroke-width="0.5" opacity="0.5"/>
+  <text x="250" y="245" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#D4AF37">PASIFA</text>
+  <text x="250" y="262" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#666666">SCORING CORE</text>
+  <!-- Input nodes -->
+  <!-- Stack Detection -->
+  <circle cx="100" cy="120" r="35" fill="none" stroke="#F97316" stroke-width="1"/>
+  <text x="100" y="117" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#F97316">STACK</text>
+  <text x="100" y="130" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#666666">DETECT</text>
+  <line x1="132" y1="145" x2="200" y2="220" stroke="#F97316" stroke-width="1" opacity="0.5"/>
+  <!-- Signal Extraction -->
+  <circle cx="400" cy="120" r="35" fill="none" stroke="#F97316" stroke-width="1"/>
+  <text x="400" y="117" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#F97316">SIGNAL</text>
+  <text x="400" y="130" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#666666">EXTRACT</text>
+  <line x1="370" y1="145" x2="300" y2="220" stroke="#F97316" stroke-width="1" opacity="0.5"/>
+  <!-- Embedding -->
+  <circle cx="100" cy="380" r="35" fill="none" stroke="#F97316" stroke-width="1"/>
+  <text x="100" y="377" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#F97316">EMBED</text>
+  <text x="100" y="390" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#666666">LOCAL</text>
+  <line x1="132" y1="358" x2="200" y2="280" stroke="#F97316" stroke-width="1" opacity="0.5"/>
+  <!-- Confidence Gate -->
+  <circle cx="400" cy="380" r="35" fill="none" stroke="#F97316" stroke-width="1"/>
+  <text x="400" y="377" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#F97316">GATE</text>
+  <text x="400" y="390" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#666666">CONFIDENCE</text>
+  <line x1="370" y1="358" x2="300" y2="280" stroke="#F97316" stroke-width="1" opacity="0.5"/>
+  <!-- Output -->
+  <line x1="250" y1="310" x2="250" y2="410" stroke="#D4AF37" stroke-width="1.5"/>
+  <polygon points="242,410 250,425 258,410" fill="#D4AF37"/>
+  <text x="250" y="450" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#FFFFFF">RELEVANCE</text>
+  <text x="250" y="465" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#D4AF37">0.00 --- 1.00</text>
+  <!-- Corner markers -->
+  <text x="30" y="490" font-family="'JetBrains Mono', monospace" font-size="9" fill="#333333">4DA v1.0</text>
+  <text x="470" y="490" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="9" fill="#333333">CLASSIFIED</text>
+  <!-- Data flow arrows along connections -->
+  <text x="155" y="175" font-family="'JetBrains Mono', monospace" font-size="7" fill="#333333" transform="rotate(-35 155 175)">rust, react, py</text>
+  <text x="345" y="175" font-family="'JetBrains Mono', monospace" font-size="7" fill="#333333" transform="rotate(35 345 175)">keywords, entities</text>
+  <text x="155" y="330" font-family="'JetBrains Mono', monospace" font-size="7" fill="#333333" transform="rotate(35 155 330)">vec&lt;f32&gt;</text>
+  <text x="345" y="330" font-family="'JetBrains Mono', monospace" font-size="7" fill="#333333" transform="rotate(-35 345 330)">0/1/2+ signals</text>
+</svg>

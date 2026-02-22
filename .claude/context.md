@@ -1,126 +1,104 @@
-# 4DA Deep Initial Scan Implementation
+# 4DA Pre-Launch Hardening
 
-**Date**: 2026-02-05
-**Session**: Emperor-Grade First Scan Experience
-**Context Usage**: Moderate
+**Date**: 2026-02-22
+**Session**: Strategic Pre-Launch Preparation
+**Context Usage**: High (continued from compacted session)
 
 ---
 
 ## CURRENT STATUS
 
-- **Project**: 4DA - Privacy-Aware Semantic Intelligence System
-- **Phase**: Option A - Ship-Ready Polish
-- **Active Task**: Deep Initial Scan Implementation COMPLETE
-- **Progress**: Deep scan infrastructure built and integrated
+- **Project**: 4DA - Privacy-First Developer Intelligence
+- **Phase**: Pre-Launch Hardening — systematic quality audit
+- **Active Task**: Commit organization complete, all systems validated
+- **Progress**: 4 clean commits landed, all tests green
 
 ---
 
 ## COMPLETED THIS SESSION
 
-### Deep Initial Scan System
+### MCP Server Hardening
+| Change | Details |
+|--------|---------|
+| `mcp-4da-server/src/db.ts` | Fixed TypeScript error: `import type BetterSqlite3` for compile-time types + dynamic `await import` for runtime |
+| `mcp-4da-server/src/llm.ts` | Removed hardcoded `/mnt/d/4DA/data/settings.json`, replaced with portable `__dirname`-relative resolution |
+| `mcp-4da-server/package.json` | Added `!dist/__tests__` to files array — package dropped from 186 files/155kB to 178 files/136kB |
+| Audit result | 27/27 tools verified, zero hardcoded paths, zero TODO/FIXME, doctor command working |
 
-| Component | Changes |
-|-----------|---------|
-| `sources/hackernews.rs` | Added `fetch_items_deep()` - fetches from 5 endpoints (top, new, best, ask, show) |
-| `sources/arxiv.rs` | Added `fetch_items_deep()` - fetches from 16 arXiv categories |
-| `sources/reddit.rs` | Added `fetch_items_deep()` - fetches from 40+ tech subreddits |
-| `sources/mod.rs` | Added `fetch_items_deep()` trait method with default fallback |
-| `lib.rs` | Added `fetch_all_sources_deep()` function |
-| `lib.rs` | Added `run_deep_initial_scan` Tauri command |
-| `lib.rs` | Added `run_deep_initial_scan_impl()` implementation |
-| `lib.rs` | Added `process_source_items()` helper function |
-| `Onboarding.tsx` | Updated to use `run_deep_initial_scan` |
-| `Onboarding.tsx` | Updated UI messaging for comprehensive scan |
+### Void Engine Heartbeat Brightness
+| Change | Details |
+|--------|---------|
+| `VoidHeartbeat.tsx` | Opacity: dormant 0.15->0.85, stale 0.30->0.90, active 0.50->0.90 |
+| `VoidHeartbeat.tsx` | Shader idle: blue-black -> bright amber `vec3(0.55, 0.28, 0.06)` |
+| `VoidHeartbeat.tsx` | Shader active: gold -> blazing gold `vec3(1.0, 0.82, 0.30)` |
+| `VoidHeartbeat.tsx` | Staleness dimming: 70% -> 15%, glow radius: 8->16 base |
+| `void-colors.ts` | CSS fallback: idle #8C470F, active #FFD14D, stale #733C0F |
 
-### Deep Scan Coverage
+### Settings Module Decomposition
+| Change | Details |
+|--------|---------|
+| `settings.rs` (1414 lines) | Split into `settings/mod.rs` (927), `discovery.rs` (295), `license.rs` (218) |
+| `LocaleSection.tsx` | New component for locale auto-detection + manual override |
+| `SettingsModal.tsx` | Integrated LocaleSection into General tab |
 
-**Hacker News (5 endpoints):**
-- `/v0/topstories.json`
-- `/v0/newstories.json`
-- `/v0/beststories.json`
-- `/v0/askstories.json`
-- `/v0/showstories.json`
+### Skills & Agent Docs
+| Change | Details |
+|--------|---------|
+| `.claude/commands/mcp-maintain.md` | NEW: 8-step MCP maintenance audit (schema sync, types, paths, agent drift, README, build, deps) |
+| `.claude/commands/pre-launch.md` | Added YAML frontmatter for tool restrictions |
+| `4da-mcp-server-dev.md` | Complete rewrite: 4 tools -> 27 tools, schema registry pattern, current file tree |
+| `4da-mcp-tester.md` | Complete rewrite: 0 tests -> 71 tests, Vitest v3 patterns |
+| `4da-contract-validator.md` | Patched: tool count, extraction patterns, removed /mnt/d/ paths |
 
-**arXiv (16 categories):**
-- cs.AI, cs.LG, cs.CL, cs.CV, cs.SE, cs.PL, cs.DB, cs.DC
-- cs.CR, cs.NE, cs.IR, cs.RO, cs.HC
-- stat.ML, q-bio.QM, q-fin.ST
-
-**Reddit (40+ subreddits):**
-- Programming languages: rust, golang, python, typescript, javascript, java, cpp, etc.
-- Web/App: webdev, frontend, reactjs, nextjs, svelte, etc.
-- AI/ML: machinelearning, deeplearning, LocalLLaMA, ChatGPT, ClaudeAI
-- Data: datascience, dataengineering, datasets
-- DevOps: kubernetes, docker, aws, selfhosted, homelab
-- Systems: linux, sysadmin, netsec, cybersecurity
-- General: technology, startups, SideProject, opensource, tauri
-
-**GitHub + RSS**: Regular fetch (already comprehensive)
-
----
-
-## BUILD STATUS
-
-- **Rust**: Compiles clean (0 warnings)
-- **TypeScript**: Compiles clean
-- **New Tauri Command**: `run_deep_initial_scan` registered
+### Commits Landed
+| Hash | Message |
+|------|---------|
+| `3a0c533` | Harden MCP server: remove dev path, exclude tests from npm |
+| `fa44e6b` | Boost Void Engine Heartbeat brightness: warm ember at all states |
+| `53d2a6b` | Decompose settings.rs into module directory + locale auto-detection |
+| `a7b7fef` | Add /mcp-maintain skill + update agent docs to 27-tool reality |
 
 ---
 
-## EXPECTED RESULTS
+## TEST STATUS
 
-### Before (Regular Scan)
-- 15 items per source × 5 sources = **75 items total**
-- Limited coverage of what's happening in tech
-
-### After (Deep Initial Scan)
-- HN: ~200 unique items (5 endpoints × 50 per endpoint, deduplicated)
-- arXiv: ~100 papers (16 categories × items)
-- Reddit: ~200 posts (40+ subreddits)
-- Total: **300-500+ items** for comprehensive first impression
+- **Rust**: 565 tests passing (cargo test --lib)
+- **Frontend**: 177/177 tests passing (vitest)
+- **MCP Server**: 71/71 tests passing (vitest)
+- **PASIFA Benchmark**: 22/22 tests, 100% precision/recall
+- **Build**: Clean (Rust + TypeScript)
 
 ---
 
-## KEY IMPLEMENTATION DETAILS
+## KEY DECISIONS THIS SESSION
 
-### Source Trait Extension
-```rust
-async fn fetch_items_deep(&self, items_per_category: usize) -> SourceResult<Vec<SourceItem>> {
-    // Default: just use regular fetch
-    self.fetch_items().await
-}
-```
-
-### Deep Fetch Flow
-1. User clicks "Start Deep Scan" in onboarding
-2. Calls `run_deep_initial_scan` Tauri command
-3. Uses `fetch_all_sources_deep(db, app, 50)` - 50 items per category
-4. Each source fetches from multiple endpoints in parallel
-5. Items deduplicated by source_id hash
-6. Embedding batched in groups of 20 for progress feedback
-7. Full PASIFA relevance scoring applied
-8. Results sorted by combined_score
-
-### UI Updates
-- "Deep Intelligence Scan" title
-- Shows all source categories being scanned
-- Displays "2-5 minutes" timing estimate
-- Shows 8 top results (increased from 5)
-- Counts top picks (60%+ score)
+1. **better-sqlite3 import pattern**: Type-only import at compile time + dynamic `await import` at runtime for graceful native binding failure
+2. **Void Heartbeat tuning**: User wanted "glowing ember" — cranked to near-max brightness (0.85-1.0 opacity range), minimal staleness dimming (15%)
+3. **Settings decomposition**: settings.rs exceeded 1000-line Rust limit, split into focused modules
+4. **Slash command quality**: Both /pre-launch and /mcp-maintain audited via slash-command-auditor, all findings addressed
 
 ---
 
-## NEXT STEPS
+## REMAINING ITEMS
 
-1. Test the onboarding flow with deep scan
-2. Monitor scan timing (target: 2-5 min)
-3. Verify 300-500+ items fetched
-4. Check relevance score distribution
+- `site/streets.html` and `site/vercel.json` are modified but uncommitted (STREETS landing page updates)
+- LocaleSection triggers React `act(...)` warnings in SettingsModal tests (cosmetic, all tests still pass)
+- 10 files at size warning thresholds (none at error level)
+
+---
+
+## NEXT STEPS (High-Impact)
+
+1. **Run `/pre-launch` full audit** — validate all 4 sections (scoring, MCP, FRE, build) as an integrated gate
+2. **Fix LocaleSection act() warnings** — wrap async state update in SettingsModal tests
+3. **First-run experience walkthrough** — test the complete onboarding flow end-to-end with fresh database
+4. **STREETS landing page commit** — the site/ changes are sitting uncommitted
+5. **npm publish dry-run** — validate MCP server package is ready for registry
 
 ---
 
 ## RESUME COMMAND
 
 ```
-/compact Continue 4DA ship-ready polish. Deep initial scan implemented (300-500+ items from HN 5 endpoints, arXiv 16 categories, Reddit 40+ subs). Test the onboarding flow. @.claude/context.md
+/compact Continue 4DA pre-launch hardening. MCP server immaculate (27 tools, 71 tests, zero issues). Void Heartbeat at full brightness. Settings decomposed. /mcp-maintain and /pre-launch skills created and audited. All tests green (565 Rust + 177 frontend + 71 MCP). Next: run /pre-launch full audit, fix act() warnings, test onboarding flow. @.claude/context.md
 ```

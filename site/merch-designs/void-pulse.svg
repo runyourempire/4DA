@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Void Pulse — Abstract heartbeat visualization inspired by the Void Engine. -->
+  <!-- Concentric rings with pulse distortion. Amber/gold on black. -->
+  <defs>
+    <linearGradient id="pulseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8C470F"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#FFD14D"/>
+    </linearGradient>
+    <filter id="pulseGlow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="400" height="400" fill="#0A0A0A"/>
+  <!-- Concentric pulse rings -->
+  <g filter="url(#pulseGlow)" transform="translate(200,200)">
+    <!-- Outer rings (fading) -->
+    <circle r="170" fill="none" stroke="#8C470F" stroke-width="0.5" opacity="0.3"/>
+    <circle r="150" fill="none" stroke="#8C470F" stroke-width="0.8" opacity="0.4"/>
+    <circle r="130" fill="none" stroke="#A0580F" stroke-width="1" opacity="0.5"/>
+    <circle r="110" fill="none" stroke="#D4AF37" stroke-width="1.2" opacity="0.6"/>
+    <circle r="90" fill="none" stroke="#D4AF37" stroke-width="1.5" opacity="0.7"/>
+    <circle r="70" fill="none" stroke="#FFD14D" stroke-width="2" opacity="0.8"/>
+    <circle r="50" fill="none" stroke="#FFD14D" stroke-width="2.5" opacity="0.9"/>
+    <!-- Core ember -->
+    <circle r="28" fill="#8C470F" opacity="0.8"/>
+    <circle r="18" fill="#D4AF37" opacity="0.9"/>
+    <circle r="8" fill="#FFD14D"/>
+    <!-- Pulse wave distortions (horizontal) -->
+    <line x1="-180" y1="0" x2="-30" y2="0" stroke="#FFD14D" stroke-width="1.5" opacity="0.6"/>
+    <polyline points="-30,0 -20,-25 -10,30 0,-15 10,20 20,-10 30,0" fill="none" stroke="#FFD14D" stroke-width="2" opacity="0.9"/>
+    <line x1="30" y1="0" x2="180" y2="0" stroke="#FFD14D" stroke-width="1.5" opacity="0.6"/>
+  </g>
+  <!-- "4DA" small text below -->
+  <text x="200" y="375" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="12" letter-spacing="3" fill="#666666">VOID ENGINE</text>
+</svg>
