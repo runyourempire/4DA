@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- 4DA Sun Badge — Vector interpretation of the solar corona logo. -->
+  <!-- Circular badge with radial glow and "4" centered. For all products. -->
+  <defs>
+    <radialGradient id="corona" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD14D"/>
+      <stop offset="30%" stop-color="#F97316"/>
+      <stop offset="60%" stop-color="#D4530A"/>
+      <stop offset="85%" stop-color="#8C2D0A"/>
+      <stop offset="100%" stop-color="#0A0A0A"/>
+    </radialGradient>
+    <radialGradient id="innerGlow" cx="50%" cy="50%" r="35%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#FFD14D" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#F97316" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Solar flare effects -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="400" height="400" fill="#0A0A0A"/>
+  <!-- Outer corona ring -->
+  <circle cx="200" cy="200" r="160" fill="url(#corona)" opacity="0.9"/>
+  <!-- Corona tendrils (simplified) -->
+  <g opacity="0.6" filter="url(#glow)">
+    <ellipse cx="200" cy="50" rx="15" ry="35" fill="#F97316" transform="rotate(0 200 200)"/>
+    <ellipse cx="200" cy="50" rx="12" ry="30" fill="#F97316" transform="rotate(45 200 200)"/>
+    <ellipse cx="200" cy="50" rx="18" ry="40" fill="#D4530A" transform="rotate(90 200 200)"/>
+    <ellipse cx="200" cy="50" rx="14" ry="32" fill="#F97316" transform="rotate(135 200 200)"/>
+    <ellipse cx="200" cy="50" rx="16" ry="38" fill="#F97316" transform="rotate(180 200 200)"/>
+    <ellipse cx="200" cy="50" rx="13" ry="28" fill="#D4530A" transform="rotate(225 200 200)"/>
+    <ellipse cx="200" cy="50" rx="20" ry="42" fill="#F97316" transform="rotate(270 200 200)"/>
+    <ellipse cx="200" cy="50" rx="11" ry="26" fill="#F97316" transform="rotate(315 200 200)"/>
+  </g>
+  <!-- Inner sun body -->
+  <circle cx="200" cy="200" r="110" fill="url(#corona)"/>
+  <!-- Core glow -->
+  <circle cx="200" cy="200" r="90" fill="url(#innerGlow)"/>
+  <!-- The "4" -->
+  <text x="200" y="230" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="140" font-weight="600" fill="#FFFFFF" filter="url(#glow)">4</text>
+</svg>

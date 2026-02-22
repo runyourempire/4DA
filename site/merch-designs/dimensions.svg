@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <!-- "4 Dimensions" — Abstract geometric design showing the 4 dimensions of autonomy. -->
+  <!-- Clean, architectural. Works on tees, hoodies, desk mats. -->
+  <rect width="500" height="500" fill="#0A0A0A"/>
+  <!-- Dimension labels around the edges -->
+  <text x="250" y="50" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" letter-spacing="4" fill="#666666">D1: INTELLIGENCE</text>
+  <text x="470" y="260" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" letter-spacing="2" fill="#666666" transform="rotate(90 470 260)">D2: PRIVACY</text>
+  <text x="250" y="470" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" letter-spacing="4" fill="#666666">D3: AUTONOMY</text>
+  <text x="30" y="260" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" letter-spacing="2" fill="#666666" transform="rotate(-90 30 260)">D4: REVENUE</text>
+  <!-- Geometric frame -->
+  <rect x="80" y="80" width="340" height="340" fill="none" stroke="#2A2A2A" stroke-width="1"/>
+  <rect x="100" y="100" width="300" height="300" fill="none" stroke="#2A2A2A" stroke-width="0.5"/>
+  <!-- Diagonal cross lines -->
+  <line x1="80" y1="80" x2="420" y2="420" stroke="#2A2A2A" stroke-width="0.5"/>
+  <line x1="420" y1="80" x2="80" y2="420" stroke="#2A2A2A" stroke-width="0.5"/>
+  <!-- Inner diamond -->
+  <polygon points="250,120 380,250 250,380 120,250" fill="none" stroke="#D4AF37" stroke-width="1.5"/>
+  <!-- Center circle -->
+  <circle cx="250" cy="250" r="45" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+  <!-- The "4" -->
+  <text x="250" y="268" text-anchor="middle" font-family="Inter, sans-serif" font-size="48" font-weight="600" fill="#FFFFFF">4</text>
+  <!-- Corner node dots -->
+  <circle cx="250" cy="120" r="4" fill="#D4AF37"/>
+  <circle cx="380" cy="250" r="4" fill="#D4AF37"/>
+  <circle cx="250" cy="380" r="4" fill="#D4AF37"/>
+  <circle cx="120" cy="250" r="4" fill="#D4AF37"/>
+  <!-- Midpoint connectors -->
+  <circle cx="315" cy="185" r="2" fill="#666666"/>
+  <circle cx="315" cy="315" r="2" fill="#666666"/>
+  <circle cx="185" cy="315" r="2" fill="#666666"/>
+  <circle cx="185" cy="185" r="2" fill="#666666"/>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="600" height="200">
+  <!-- STREETS Wordmark — Bold, statement typography. Front print for tees. -->
+  <rect width="600" height="200" fill="#0A0A0A"/>
+  <text x="300" y="110" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="96" font-weight="600" letter-spacing="12" fill="#FFFFFF">STREETS</text>
+  <text x="300" y="150" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" letter-spacing="5" fill="#F97316">THE DEVELOPER INCOME PLAYBOOK</text>
+  <line x1="100" y1="165" x2="500" y2="165" stroke="#2A2A2A" stroke-width="1"/>
+  <text x="300" y="185" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" letter-spacing="3" fill="#666666">BY 4DA</text>
+</svg>
