@@ -439,7 +439,7 @@ The backend is Rust (Tauri 2.0). Vector similarity search uses sqlite-vec. Local
 are generated via Ollama, so the entire pipeline can run offline. OCR is handled by the
 `ocrs` crate (pure Rust, no C dependencies). PDF extraction uses `pdf-extract` + `lopdf`.
 
-The scoring algorithm (PASIFA -- Private Autonomous System for Intelligent File Analysis)
+The scoring algorithm (PASIFA -- Privacy Aware Semantic Intelligence 4 File Analysis)
 uses confidence-weighted thresholds that auto-tune over time based on your behavior, with
 a 30-day exponential decay so it adapts as your projects change.
 

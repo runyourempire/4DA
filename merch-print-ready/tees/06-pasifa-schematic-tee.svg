@@ -10,8 +10,8 @@
   <!-- Subtle grid background (will be very faint on black shirt) -->
   <rect width="3600" height="3600" fill="url(#grid)" opacity="0.3"/>
   <!-- Title -->
-  <text x="1800" y="250" text-anchor="middle" font-family="'Courier New', monospace" font-size="64" letter-spacing="28" fill="#888888">PRIVATE AUTONOMOUS SYSTEM FOR</text>
-  <text x="1800" y="340" text-anchor="middle" font-family="'Courier New', monospace" font-size="64" letter-spacing="28" fill="#888888">INTELLIGENT FILE ANALYSIS</text>
+  <text x="1800" y="250" text-anchor="middle" font-family="'Courier New', monospace" font-size="64" letter-spacing="28" fill="#888888">PRIVACY AWARE SEMANTIC</text>
+  <text x="1800" y="340" text-anchor="middle" font-family="'Courier New', monospace" font-size="64" letter-spacing="28" fill="#888888">INTELLIGENCE 4 FILE ANALYSIS</text>
   <!-- Central scoring node -->
   <circle cx="1800" cy="1800" r="430" fill="none" stroke="#D4AF37" stroke-width="14"/>
   <circle cx="1800" cy="1800" r="395" fill="none" stroke="#D4AF37" stroke-width="4" opacity="0.5"/>

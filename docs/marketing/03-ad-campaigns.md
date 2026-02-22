@@ -541,7 +541,7 @@ Wanted to share something I have been working on. 4DA is a Tauri 2.0 desktop app
 
 **What it does:** Monitors 11 sources (HN, arXiv, Reddit, GitHub, etc.), generates embeddings of your local codebase, and scores every piece of content by relevance. Rejects 99%+ as noise.
 
-The scoring algorithm (PASIFA -- Private Autonomous System for Intelligent File Analysis) uses confidence-weighted thresholds that auto-tune over time.
+The scoring algorithm (PASIFA -- Privacy Aware Semantic Intelligence 4 File Analysis) uses confidence-weighted thresholds that auto-tune over time.
 
 Would love feedback from the Rust community on the architecture choices. Free to download and use.
 

@@ -5,7 +5,7 @@
 
 ## What Was Done
 
-PASIFA (Private Autonomous System for Intelligent File Analysis) is fully operational:
+PASIFA (Privacy Aware Semantic Intelligence 4 File Analysis) is fully operational:
 
 1. **README indexing** from discovered projects — feeds into KNN semantic search
 2. **Semantic ACE boost** via `compute_semantic_ace_boost()` in `scoring.rs` — embeds ACE topics and computes cosine similarity (falls back to keyword matching if embeddings unavailable)
