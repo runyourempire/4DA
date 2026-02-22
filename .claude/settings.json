@@ -7,6 +7,21 @@
           {
             "type": "command",
             "command": "node .claude/scripts/analyze-prompt.cjs"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/scripts/wisdom-auto.cjs"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/scripts/wisdom-gate.cjs"
           }
         ]
       }
@@ -38,6 +53,10 @@
           {
             "type": "command",
             "command": "bash .claude/scripts/session-stop.sh"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/scripts/wisdom-digest.cjs"
           }
         ]
       }

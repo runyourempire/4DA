@@ -368,14 +368,15 @@ function buildRecommendation(signals, agent, reason, score, isImplementationTask
     msg += `This appears to be an implementation task. Follow the protocol:\n`;
     msg += `\n`;
     msg += `PHASE 1 (Orientation - NO CODE):\n`;
-    msg += `  1. Read .ai/AI_ENGINEERING_CONTRACT.md\n`;
+    msg += `  1. Consult .ai/WISDOM.md wisdom gates for this action type\n`;
     msg += `  2. Check .ai/INVARIANTS.md for relevant constraints\n`;
     msg += `  3. Review .ai/FAILURE_MODES.md for risky areas\n`;
-    msg += `  4. State goal, list files to modify, identify invariants\n`;
-    msg += `  5. Propose approach and WAIT for approval\n`;
+    msg += `  4. Check MCP memory for prior art (recall_decisions, recall_learnings)\n`;
+    msg += `  5. State goal, list files to modify, identify invariants\n`;
+    msg += `  6. Propose approach and WAIT for approval\n`;
     msg += `\n`;
     msg += `PHASE 2 (Execution - CODE ONLY):\n`;
-    msg += `  After approval: Implement, validate, produce report\n`;
+    msg += `  After approval: Implement, validate, record consequences\n`;
   }
 
   msg += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
