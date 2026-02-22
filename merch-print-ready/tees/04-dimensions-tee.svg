@@ -2,31 +2,44 @@
   <!-- 4 Dimensions Tee — PRINT READY (transparent background) -->
   <!-- Placement: center chest, 8 inches -->
   <!-- Product: Bella+Canvas 3001 Black -->
-  <!-- Dimension labels -->
-  <text x="1500" y="200" text-anchor="middle" font-family="'Courier New', monospace" font-size="68" letter-spacing="28" fill="#888888">D1: INTELLIGENCE</text>
-  <text x="2820" y="1560" text-anchor="middle" font-family="'Courier New', monospace" font-size="68" letter-spacing="14" fill="#888888" transform="rotate(90 2820 1560)">D2: PRIVACY</text>
-  <text x="1500" y="2880" text-anchor="middle" font-family="'Courier New', monospace" font-size="68" letter-spacing="28" fill="#888888">D3: AUTONOMY</text>
-  <text x="180" y="1560" text-anchor="middle" font-family="'Courier New', monospace" font-size="68" letter-spacing="14" fill="#888888" transform="rotate(-90 180 1560)">D4: REVENUE</text>
-  <!-- Geometric frame -->
-  <rect x="400" y="400" width="2200" height="2200" fill="none" stroke="#555555" stroke-width="6"/>
-  <rect x="520" y="520" width="1960" height="1960" fill="none" stroke="#444444" stroke-width="3"/>
-  <!-- Diagonal cross -->
-  <line x1="400" y1="400" x2="2600" y2="2600" stroke="#444444" stroke-width="3"/>
-  <line x1="2600" y1="400" x2="400" y2="2600" stroke="#444444" stroke-width="3"/>
-  <!-- Inner diamond -->
-  <polygon points="1500,600 2400,1500 1500,2400 600,1500" fill="none" stroke="#D4AF37" stroke-width="10"/>
+
+  <!-- Dimension labels — cleaner, more legible -->
+  <text x="1500" y="180" text-anchor="middle" font-family="'Courier New', monospace" font-size="60" letter-spacing="20" fill="#777777">D1 : INTELLIGENCE</text>
+  <text x="2860" y="1560" text-anchor="middle" font-family="'Courier New', monospace" font-size="60" letter-spacing="12" fill="#777777" transform="rotate(90 2860 1560)">D2 : PRIVACY</text>
+  <text x="1500" y="2900" text-anchor="middle" font-family="'Courier New', monospace" font-size="60" letter-spacing="20" fill="#777777">D3 : AUTONOMY</text>
+  <text x="140" y="1560" text-anchor="middle" font-family="'Courier New', monospace" font-size="60" letter-spacing="12" fill="#777777" transform="rotate(-90 140 1560)">D4 : REVENUE</text>
+
+  <!-- Outer frame — crisp -->
+  <rect x="350" y="350" width="2300" height="2300" fill="none" stroke="#444444" stroke-width="4"/>
+
+  <!-- Diagonal cross lines — subtle structure -->
+  <line x1="350" y1="350" x2="2650" y2="2650" stroke="#333333" stroke-width="2"/>
+  <line x1="2650" y1="350" x2="350" y2="2650" stroke="#333333" stroke-width="2"/>
+
+  <!-- Inner diamond — gold accent, strong -->
+  <polygon points="1500,500 2500,1500 1500,2500 500,1500" fill="none" stroke="#D4AF37" stroke-width="12"/>
+
   <!-- Center circle -->
-  <circle cx="1500" cy="1500" r="340" fill="none" stroke="#FFFFFF" stroke-width="14"/>
-  <!-- The "4" -->
-  <text x="1500" y="1640" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="360" font-weight="600" fill="#FFFFFF">4</text>
-  <!-- Diamond vertex dots -->
-  <circle cx="1500" cy="600" r="28" fill="#D4AF37"/>
-  <circle cx="2400" cy="1500" r="28" fill="#D4AF37"/>
-  <circle cx="1500" cy="2400" r="28" fill="#D4AF37"/>
-  <circle cx="600" cy="1500" r="28" fill="#D4AF37"/>
-  <!-- Midpoint dots -->
-  <circle cx="1950" cy="1050" r="14" fill="#888888"/>
-  <circle cx="1950" cy="1950" r="14" fill="#888888"/>
-  <circle cx="1050" cy="1950" r="14" fill="#888888"/>
-  <circle cx="1050" cy="1050" r="14" fill="#888888"/>
+  <circle cx="1500" cy="1500" r="320" fill="none" stroke="#FFFFFF" stroke-width="14"/>
+
+  <!-- The "4" — bold and clean -->
+  <text x="1500" y="1640" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="380" font-weight="700" fill="#FFFFFF">4</text>
+
+  <!-- Diamond vertex dots — gold -->
+  <circle cx="1500" cy="500" r="24" fill="#D4AF37"/>
+  <circle cx="2500" cy="1500" r="24" fill="#D4AF37"/>
+  <circle cx="1500" cy="2500" r="24" fill="#D4AF37"/>
+  <circle cx="500" cy="1500" r="24" fill="#D4AF37"/>
+
+  <!-- Midpoint dots — subtle -->
+  <circle cx="2000" cy="1000" r="10" fill="#666666"/>
+  <circle cx="2000" cy="2000" r="10" fill="#666666"/>
+  <circle cx="1000" cy="2000" r="10" fill="#666666"/>
+  <circle cx="1000" cy="1000" r="10" fill="#666666"/>
+
+  <!-- Corner coordinates — technical detail -->
+  <text x="400" y="320" font-family="'Courier New', monospace" font-size="36" fill="#333333">[0,0]</text>
+  <text x="2400" y="320" text-anchor="end" font-family="'Courier New', monospace" font-size="36" fill="#333333">[1,0]</text>
+  <text x="400" y="2700" font-family="'Courier New', monospace" font-size="36" fill="#333333">[0,1]</text>
+  <text x="2400" y="2700" text-anchor="end" font-family="'Courier New', monospace" font-size="36" fill="#333333">[1,1]</text>
 </svg>

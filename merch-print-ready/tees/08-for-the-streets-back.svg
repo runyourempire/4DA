@@ -1,23 +1,59 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3600 4500" width="3600" height="4500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3600 4800" width="3600" height="4800">
   <!-- "For the Streets" BACK PRINT — PRINT READY (transparent background) -->
-  <!-- Placement: full back print -->
+  <!-- Placement: full back print, 12 x 16 inches at 300 DPI -->
   <!-- Product: Comfort Colors 1717 Black -->
-  <!-- Top tagline block -->
-  <text x="1800" y="500" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="100" letter-spacing="44" fill="#888888">YOUR RIG</text>
-  <text x="1800" y="700" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="100" letter-spacing="44" fill="#888888">YOUR RULES</text>
-  <text x="1800" y="900" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="100" letter-spacing="44" fill="#888888">YOUR REVENUE</text>
-  <!-- Orange divider -->
-  <line x1="1100" y1="1080" x2="2500" y2="1080" stroke="#F97316" stroke-width="14"/>
-  <!-- "FOR THE" -->
-  <text x="1800" y="1700" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="200" letter-spacing="80" fill="#AAAAAA">FOR THE</text>
-  <!-- STREETS (hero) -->
-  <text x="1800" y="2500" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="620" font-weight="600" letter-spacing="40" fill="#FFFFFF">STREETS</text>
-  <!-- Orange accent bar under STREETS -->
-  <rect x="1200" y="2620" width="1200" height="20" fill="#F97316"/>
-  <!-- Engines tagline -->
-  <text x="1800" y="2950" text-anchor="middle" font-family="'Courier New', monospace" font-size="76" letter-spacing="20" fill="#888888">8 ENGINES . 7 MODULES . $0</text>
-  <!-- 4DA mark at bottom -->
-  <circle cx="1660" cy="3400" r="80" fill="none" stroke="#D4AF37" stroke-width="8" opacity="0.7"/>
-  <text x="1660" y="3430" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="96" font-weight="600" fill="#D4AF37">4</text>
-  <text x="1820" y="3430" text-anchor="middle" font-family="'Courier New', monospace" font-size="80" letter-spacing="14" fill="#888888">4DA.AI</text>
+
+  <!-- Accent line at top -->
+  <rect x="1500" y="300" width="600" height="6" fill="#F97316"/>
+
+  <!-- "YOUR" stack — bold, spaced, commanding -->
+  <text x="1800" y="700" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="140" font-weight="bold" letter-spacing="60" fill="#666666">YOUR RIG</text>
+  <text x="1800" y="900" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="140" font-weight="bold" letter-spacing="60" fill="#888888">YOUR RULES</text>
+  <text x="1800" y="1100" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="140" font-weight="bold" letter-spacing="60" fill="#AAAAAA">YOUR REVENUE</text>
+
+  <!-- Divider — full width orange line -->
+  <line x1="600" y1="1320" x2="3000" y2="1320" stroke="#F97316" stroke-width="8"/>
+
+  <!-- "FOR THE" — lighter, sets up the hero -->
+  <text x="1800" y="1800" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="260" letter-spacing="100" fill="#555555">FOR THE</text>
+
+  <!-- STREETS — the hero word, massive -->
+  <text x="1800" y="2600" text-anchor="middle" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="660" font-weight="bold" letter-spacing="30" fill="#FFFFFF">STREETS</text>
+
+  <!-- Orange underline accent -->
+  <rect x="650" y="2720" width="2300" height="12" rx="6" fill="#F97316"/>
+
+  <!-- Tagline -->
+  <text x="1800" y="3050" text-anchor="middle" font-family="'Courier New', monospace" font-size="72" letter-spacing="16" fill="#666666">THE DEVELOPER INCOME PLAYBOOK</text>
+
+  <!-- Module stats — clean grid -->
+  <g font-family="'Courier New', monospace" fill="#555555">
+    <text x="900" y="3400" text-anchor="middle" font-size="100" fill="#FFFFFF">8</text>
+    <text x="900" y="3500" text-anchor="middle" font-size="52" letter-spacing="8">ENGINES</text>
+
+    <!-- Dot separator -->
+    <circle cx="1380" cy="3440" r="8" fill="#F97316"/>
+
+    <text x="1800" y="3400" text-anchor="middle" font-size="100" fill="#FFFFFF">7</text>
+    <text x="1800" y="3500" text-anchor="middle" font-size="52" letter-spacing="8">MODULES</text>
+
+    <!-- Dot separator -->
+    <circle cx="2220" cy="3440" r="8" fill="#F97316"/>
+
+    <text x="2700" y="3400" text-anchor="middle" font-size="100" fill="#F97316">$0</text>
+    <text x="2700" y="3500" text-anchor="middle" font-size="52" letter-spacing="8">FOREVER</text>
+  </g>
+
+  <!-- Bottom divider -->
+  <line x1="1200" y1="3700" x2="2400" y2="3700" stroke="#333333" stroke-width="3"/>
+
+  <!-- 4DA brand mark — clean and minimal -->
+  <g transform="translate(1800, 4100)">
+    <circle r="80" fill="none" stroke="#D4AF37" stroke-width="6"/>
+    <text x="0" y="28" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="90" font-weight="600" fill="#D4AF37">4</text>
+  </g>
+  <text x="1800" y="4320" text-anchor="middle" font-family="'Courier New', monospace" font-size="56" letter-spacing="20" fill="#444444">4DA.AI</text>
+
+  <!-- Bottom accent line -->
+  <rect x="1500" y="4500" width="600" height="6" fill="#F97316"/>
 </svg>
