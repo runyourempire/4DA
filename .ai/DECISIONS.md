@@ -259,6 +259,25 @@
 
 ---
 
+## Wisdom Layer
+
+### AD-018: Wisdom Layer as Principles Document, Not Code Framework
+- **Decision:** Implement the wisdom layer as `.ai/WISDOM.md` — a living document of 7 principles, 5 zero zones, and practical wisdom gates. Not a TypeScript framework, not a database schema, not an enforcement engine.
+- **Rationale:**
+  - Principles that live in a document get read. Code that enforces principles gets worked around.
+  - 4DA's development reality is one human + one AI partner, not an enterprise with adversarial conditions
+  - The MCP memory server already provides consequence tracking — no new system needed
+  - Zero zones map directly to existing INVARIANTS, connecting wisdom to architecture already in place
+  - The anti-paralysis clause (W-6) prevents the wisdom layer from becoming the overhead it exists to prevent
+- **Considered:**
+  - Full TypeScript wisdom framework (v2 archive pattern): Rejected — enterprise-grade governance for solo development creates friction without proportional benefit
+  - Database-backed consequence ledger with SQL triggers: Rejected — MCP memory server already provides this; adding SQL enforcement is complexity that violates W-7
+  - No wisdom layer: Rejected — AI-assisted development at this velocity requires explicit principles to prevent drift, trust erosion, and repeated mistakes
+- **Date:** 2026-02-22
+- **Status:** Final
+
+---
+
 ## Pending Decisions
 
 *Decisions under active consideration*
