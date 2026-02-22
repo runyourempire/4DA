@@ -419,10 +419,9 @@ What you'll learn:
 
 | Tier | What's Included | Price | Target |
 |------|----------------|-------|--------|
-| **Free** | Module S (Sovereign Setup) + Module overview | $0 | Lead magnet, builds trust |
-| **STREETS Core** | All 7 modules + 2026 playbook | $149 one-time | Self-starters |
-| **STREETS Pro** | Core + annual updates + community Discord + monthly office hours | $29/mo or $249/yr | Serious builders |
-| **STREETS Cohort** | Pro + 8-week live cohort + 1-on-1 session + accountability group | $499 per cohort | Maximum accountability |
+| **STREETS Playbook** | All 7 modules + 2026 playbook — free inside 4DA | $0 forever | Every developer — builds trust, proves value |
+| **Community** | Playbook + Discord + monthly office hours + case studies + templates | $29/mo or $249/yr | Developers who want accountability and networking |
+| **Cohort** | Community (annual) + 8-week live program + 1-on-1 strategy session + accountability group | $499 per cohort | Maximum accountability and acceleration |
 
 ### Annual Update Model
 
@@ -433,17 +432,17 @@ Every January:
 - New revenue engine additions as markets emerge
 
 This creates:
-- Recurring revenue (Pro tier renewals)
+- Recurring revenue (Community tier renewals)
 - Content marketing (annual "State of Developer Income" report)
 - Community engagement (members share what worked)
 - Natural partnership with 4DA (4DA's trend data informs the annual update)
 
 ### Distribution Strategy
 
-**Primary:** Sell from 4DA ecosystem
+**Primary:** Distribute through 4DA ecosystem
+- All 7 STREETS modules free inside 4DA — no email, no account, no paywall
 - In-app CTA: "See opportunities. Learn to act on them."
-- 4DA Pro users get STREETS Core at 50% off (bundle value)
-- STREETS buyers get 3 months of 4DA Pro free (cross-sell)
+- Community and Cohort upsell after playbook value is proven
 
 **Secondary:** Developer communities
 - Dev.to series based on course modules
@@ -496,7 +495,7 @@ Together, they're the developer independence stack.
 - STREETS is both a product AND a marketing vehicle for 4DA
 - Every STREETS case study mentions 4DA as the radar
 - Every 4DA user is a potential STREETS customer
-- The cross-sell flywheel: 4DA → STREETS → better use of 4DA → upgrade to Pro → more income → more investment in tooling
+- The value flywheel: 4DA download → free STREETS playbook → better use of 4DA → upgrade to Pro → Community for accountability → more income → more investment in tooling
 
 ### For the Annual Update
 - Use 4DA's own trend analysis and semantic shift detection to identify what changes year-over-year

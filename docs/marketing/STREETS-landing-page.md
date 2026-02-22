@@ -8,12 +8,12 @@
 
 ```html
 <title>STREETS -- The Developer Income Playbook | Your Rig. Your Rules. Your Revenue.</title>
-<meta name="description" content="8 revenue engines for developers who earn $0 from their private infrastructure. Turn your local LLMs, API keys, and full-stack skills into $10K/mo. Free module. No fluff.">
+<meta name="description" content="8 revenue engines for developers who earn $0 from their private infrastructure. Turn your local LLMs, API keys, and full-stack skills into $10K/mo. All 7 modules free inside 4DA. No fluff.">
 <meta name="keywords" content="developer income, passive income developers, micro-SaaS, API products, developer side income, monetize coding skills, developer playbook, LLM monetization, automation as a service">
 
 <!-- Open Graph -->
 <meta property="og:title" content="STREETS -- You're sitting on a money-printing machine. Literally.">
-<meta property="og:description" content="8 revenue engines. 7 modules. Time-to-first-dollar as fast as 1 week. The developer income playbook for the private infrastructure era. Module S is free.">
+<meta property="og:description" content="8 revenue engines. 7 modules. Time-to-first-dollar as fast as 1 week. The developer income playbook for the private infrastructure era. All 7 modules free inside 4DA.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://streets.4da.ai">
 <meta property="og:image" content="https://streets.4da.ai/og-image.png">
@@ -38,10 +38,9 @@
     "url": "https://4da.ai"
   },
   "offers": [
-    { "@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Module S (Sovereign Setup) -- free, no email required" },
-    { "@type": "Offer", "price": "149", "priceCurrency": "USD", "description": "Core -- all 7 modules + 2026 playbook" },
-    { "@type": "Offer", "price": "29", "priceCurrency": "USD", "description": "Pro -- monthly, includes community + office hours" },
-    { "@type": "Offer", "price": "499", "priceCurrency": "USD", "description": "Cohort -- 8-week live cohort + 1-on-1" }
+    { "@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "STREETS Playbook -- all 7 modules free inside 4DA, no email, no account" },
+    { "@type": "Offer", "price": "29", "priceCurrency": "USD", "description": "Community -- monthly, Discord + office hours + case studies + templates" },
+    { "@type": "Offer", "price": "499", "priceCurrency": "USD", "description": "Cohort -- 8-week live program + 1-on-1 strategy session" }
   ]
 }
 </script>
@@ -52,7 +51,7 @@
 ## NAVIGATION
 
 ```
-STREETS    |    Modules    Engines    Pricing    Free Module    |    [Get Module S Free]
+STREETS    |    Modules    Engines    Community    Free Playbook    |    [Download 4DA -- All 7 Modules Free]
 ```
 
 ---
@@ -109,13 +108,13 @@ SUB-HEAD:     The developer income playbook. 8 engines. 7 modules. Time-to-first
 Your local LLMs. Your API keys. Your full-stack skills. Your private infrastructure. In 2026, every developer owns the equivalent of a small software company -- and earns exactly $0 from it. STREETS is the playbook that changes that.
 
 **[PRIMARY CTA -- White background, #0A0A0A text, 15px, 500 weight]**
-`Get Module S Free`
+`Download 4DA -- All 7 Modules Free`
 
 **[SECONDARY CTA -- Transparent, white border, white text]**
-`Get Full Access -- $149`
+`Download 4DA -- All 7 Modules Free`
 
 **[TRUST LINE -- JetBrains Mono, 13px, #666666]**
-`No email required for free module  --  7 modules  --  8 revenue engines  --  Updated for 2026`
+`All 7 modules free inside 4DA  --  No email  --  No account  --  8 revenue engines  --  Updated for 2026`
 
 ---
 
@@ -200,7 +199,7 @@ STREETS is an acronym. Each letter is a module. Each module is a phase. Complete
 ---
 
 ### S -- Sovereign Setup
-**FREE MODULE -- No email required**
+**FREE -- No email required**
 
 Your foundation. Configure your machine, your tools, and your infrastructure as a revenue-generating platform -- not just a development environment. Audit what you own. Map it to income potential. Set up the operational layer that every other module builds on.
 
@@ -420,33 +419,30 @@ You already have: a scored intelligence feed, auto-detected technology profile, 
 
 ---
 
-### Cross-Sell Offers
+### The 4DA + STREETS Flywheel
 
-**[OFFER CARD 1 -- Gold border, premium feel]**
+**[FLYWHEEL CARD -- Gold border, premium feel]**
 
-**4DA Pro users: STREETS Core at 50% off.**
-You already invested in intelligence. Now invest in execution.
-~~$149~~ **$75** for all 7 modules + 2026 playbook.
-`Use code: 4DA-STREETS at checkout`
+**The playbook is free. The intelligence is free. The combination is unstoppable.**
+Every 4DA user gets all 7 STREETS modules at no cost. No email. No account. No paywall. "For the streets" means free access -- because the playbook only works if developers actually use it.
 
-**[OFFER CARD 2 -- Orange border]**
+4DA surfaces the signals. STREETS teaches you to act on them. The more you execute, the sharper your intelligence becomes. The sharper your intelligence, the better your execution. That's the flywheel.
 
-**STREETS buyers: 3 months of 4DA Pro, free.**
-Every STREETS purchase includes 3 months of 4DA Pro -- AI briefings, Developer DNA, Score Autopsy, and 26 MCP intelligence tools. The radar, on us.
+**Want accountability and community?** The Community ($29/mo) and Cohort ($499) tiers add networking, office hours, and live strategy sessions -- but the playbook itself is always free.
 
 ---
 
-## SECTION 7: MODULE S PREVIEW (Free Lead Magnet)
+## SECTION 7: MODULE S PREVIEW (All Modules Free)
 
 **[SECTION LABEL]**
-`FREE MODULE`
+`FREE PLAYBOOK`
 
 **[HEADING]**
 ## Module S: Sovereign Setup
-### See for yourself. No email. No catch.
+### Where it all starts. No email. No catch.
 
 **[BODY]**
-Module S is the foundation of STREETS, and it's free. Not a teaser. Not a summary. The complete first module -- because the best way to prove STREETS works is to let you use it.
+Module S is the foundation of STREETS -- and like all 7 modules, it's completely free inside 4DA. Not a teaser. Not a summary. The complete playbook -- because the best way to prove STREETS works is to let you use it.
 
 **[PREVIEW CONTENT -- Styled as "Table of Contents" with partial reveals]**
 
@@ -464,15 +460,15 @@ Module S is the foundation of STREETS, and it's free. Not a teaser. Not a summar
 
 **[CTA -- Large, prominent]**
 
-`Get Module S Free -- No Email Required`
+`Download 4DA -- Start Module S Now`
 
-*Download the complete first module right now. Decide if STREETS is worth your time based on what you actually read, not what we tell you.*
+*All 7 modules are free inside 4DA. Start with Module S and decide for yourself based on what you actually read, not what we tell you.*
 
 ---
 
-**[TEASE BOX -- What's in the other 6 modules, blurred/faded styling]**
+**[MODULE BOX -- What's in the other 6 modules, clear styling -- all free]**
 
-**What the other 6 modules cover:**
+**What the other 6 modules cover (all free inside 4DA):**
 
 | Module | Core Deliverable |
 |---|---|
@@ -491,64 +487,52 @@ Module S is the foundation of STREETS, and it's free. Not a teaser. Not a summar
 `PRICING`
 
 **[HEADING]**
-## The ROI math writes itself.
+## The playbook is free. For real.
 
 **[SUBHEADING]**
-One consulting gig pays for STREETS. One micro-SaaS customer pays for STREETS. One weekend digital product pays for STREETS. The question isn't whether you can afford it. It's how long you want to keep earning $0 from your infrastructure.
+All 7 STREETS modules live inside 4DA. No email. No account. No paywall. "For the streets" means free access. Community and Cohort are for developers who want accountability, networking, and live strategy -- but the playbook itself costs nothing.
 
 ---
 
-**[PRICING GRID -- 4 columns on desktop, 1 on mobile. "Core" is recommended.]**
+**[PRICING GRID -- 3 columns on desktop, 1 on mobile. "Playbook" is highlighted.]**
 
 ---
 
-### Free
+### STREETS Playbook (HIGHLIGHTED)
 **$0**
 *Forever. No email. No account.*
 
-- Module S: Sovereign Setup (complete)
-- Infrastructure audit framework
-- Revenue potential calculator
-- The First $100 Challenge
-- Community read-only access
-
-`Get Module S Free`
-
----
-
-### Core (RECOMMENDED)
-**$149**
-*One-time payment. Lifetime access.*
-
-- All 7 STREETS modules
+- All 7 STREETS modules (complete)
 - All 8 revenue engine playbooks
 - 2026 edition with current market data
 - 30-day launch plan templates
 - Automation blueprint library
 - The $10K/month stacking framework
-- 3 months of 4DA Pro included
+- Infrastructure audit framework
+- Revenue potential calculator
+- The First $100 Challenge
 
-`Get Full Access`
+`Download 4DA -- All 7 Modules Free`
 
-*Most popular. One consulting gig covers this.*
+*The full playbook. Not a teaser. Not a summary. Every module, every engine, every framework.*
 
 ---
 
-### Pro
+### Community
 **$29/month** or **$249/year** (save $99)
-*Everything in Core, plus ongoing value.*
+*Accountability, networking, and ongoing value.*
 
-- Everything in Core
-- Annual playbook updates (2027, 2028, ...)
+- Everything in the free Playbook
 - Private community access (Discord)
 - Monthly office hours (live Q&A)
 - Engine-specific case study library (updated quarterly)
 - Revenue tracking templates
+- Annual playbook updates (2027, 2028, ...)
 - Priority support
 
-`Start Pro Monthly`
+`Join Community`
 
-*Best for developers actively building and iterating.*
+*Best for developers actively building and iterating who want accountability.*
 
 ---
 
@@ -556,7 +540,7 @@ One consulting gig pays for STREETS. One micro-SaaS customer pays for STREETS. O
 **$499**
 *8-week structured program. Limited seats.*
 
-- Everything in Pro (annual)
+- Everything in Community (annual)
 - 8-week live cohort (2 sessions/week)
 - 1-on-1 strategy session (60 minutes)
 - Accountability partner matching
@@ -571,7 +555,7 @@ One consulting gig pays for STREETS. One micro-SaaS customer pays for STREETS. O
 ---
 
 **[ANCHORING NOTE -- small text below pricing grid]**
-*To put $149 in perspective: the average developer consulting rate is $150-250/hr. STREETS Core costs less than one hour of the consulting rate it teaches you to command.*
+*The playbook is free because the best way to prove STREETS works is to let you use it. Community and Cohort exist for developers who want to accelerate through accountability and networking -- not because the content is locked behind a paywall.*
 
 ---
 
@@ -598,10 +582,10 @@ A: STREETS is built exclusively for developers. Every example uses developer too
 A: The STREETS framework assumes not every engine will work for every developer. That's why Module R teaches the 48-hour validation framework -- you validate before you invest serious time. And Module S (Stacking Streams) specifically covers portfolio thinking: diversification protects you from any single engine underperforming.
 
 **Q: Is the 2026 edition going to be outdated next year?**
-A: The principles and frameworks in STREETS are durable. The market data, tool recommendations, and engine-specific tactics are updated annually. Core buyers get the 2026 edition permanently. Pro subscribers get every annual update automatically.
+A: The principles and frameworks in STREETS are durable. The market data, tool recommendations, and engine-specific tactics are updated annually. The free playbook inside 4DA always reflects the latest edition. Community members get early access to annual updates and exclusive case studies.
 
 **Q: Can I get a refund?**
-A: Yes. 30-day money-back guarantee on Core and Pro. If you complete Module S and Module T and don't believe the remaining modules are worth your time, email us. No questions, no hoops.
+A: The playbook is free, so there's nothing to refund. For Community and Cohort, yes -- 30-day money-back guarantee. If the community isn't providing value, email us. No questions, no hoops.
 
 ---
 
@@ -713,24 +697,22 @@ Every month you wait, three things happen: your hardware loses value, the market
 The 2026 edition reflects this year's market: current AI capabilities, current platform economics, current pricing data. It will be updated for 2027. But the developers who start in February 2026 will be 12 months ahead of the ones who start in February 2027.
 
 **[PRIMARY CTA -- Large, white bg, dark text]**
-`Get Module S Free -- Start in 5 Minutes`
+`Download 4DA -- All 7 Modules Free`
 
 **[SECONDARY CTA -- Orange border, orange text]**
-`Get Full Access -- $149 (Includes 3 Months 4DA Pro)`
+`Join the Community -- $29/month`
 
 **[TERTIARY CTA -- Text link style]**
 `Join the next cohort -- March 2026 -- 24 seats`
 
 **[TRUST LINE]**
-`30-day money-back guarantee  --  No recurring fees on Core  --  Updated annually  --  Module S free forever`
+`All 7 modules free forever  --  No email  --  No account  --  Updated annually  --  Community and Cohort for accountability`
 
 ---
 
 **[P.S. SECTION -- Below the fold, smaller text, personal tone]**
 
-**P.S.** -- I built 4DA because developers deserve better intelligence. I built STREETS because intelligence without action is just interesting reading. The developers who tested early drafts of this material didn't have different skills than you. They had different *frameworks*. Module S is free because I'd rather you prove that to yourself than take my word for it. Download it. Run the audit. If the number surprises you, the other 6 modules will too.
-
-**P.P.S.** -- If you're a 4DA Pro user, check your email. Your 50% discount code is already there.
+**P.S.** -- I built 4DA because developers deserve better intelligence. I built STREETS because intelligence without action is just interesting reading. The developers who tested early drafts of this material didn't have different skills than you. They had different *frameworks*. All 7 modules are free because I'd rather you prove that to yourself than take my word for it. Download 4DA. Run the audit. If the number surprises you, the other 6 modules will too. "For the streets" means free access.
 
 ---
 
@@ -739,7 +721,7 @@ The 2026 edition reflects this year's market: current AI capabilities, current p
 ```
 STREETS by 4DA
 
-Modules    Engines    Pricing    Free Module    FAQ
+Modules    Engines    Community    Free Playbook    FAQ
 
 4DA.ai    GitHub    Community
 
@@ -756,13 +738,13 @@ Modules    Engines    Pricing    Free Module    FAQ
 ## Cialdini's 6 Principles -- Where and How
 
 ### 1. Reciprocity
-- **Module S given completely free, no email required.** This is the strongest reciprocity play on the page. By giving genuine, complete value upfront (not a teaser), we create psychological obligation. The "First $100 Challenge" inside Module S is designed to deliver a tangible result before asking for any payment.
-- **3 months of 4DA Pro included with STREETS purchase.** Additional unexpected value increases reciprocity response.
+- **All 7 modules given completely free, no email required.** This is the strongest reciprocity play on the page. By giving the entire playbook free (not just a teaser module), we create extraordinary psychological obligation. The "First $100 Challenge" inside Module S is designed to deliver a tangible result before asking for any Community or Cohort investment.
+- **"For the streets" positioning.** Giving away the full playbook when competitors charge $149-499 for similar content creates massive reciprocity and word-of-mouth distribution.
 
 ### 2. Commitment and Consistency
 - **The Infrastructure Audit (Section 2)** asks readers to mentally acknowledge what they already own. Once they've agreed "yes, I have a decent machine / yes, I have local LLMs / yes, I have full-stack skills," it becomes psychologically inconsistent to claim they *can't* monetize those assets.
 - **Progressive module structure** (S -> T -> R -> E -> E -> T -> S) creates a commitment ladder -- each module completed increases investment in the next.
-- **The First $100 Challenge** in Module S is a small commitment that, once completed, makes the $149 Core purchase feel consistent with established behavior.
+- **The First $100 Challenge** in Module S is a small commitment that, once completed, makes joining the Community ($29/mo) feel consistent with established behavior -- the developer has already proven the playbook works and wants accountability to keep going.
 
 ### 3. Social Proof
 - **Testimonial framework** is designed for future population. Templates are structured to highlight specific results, timeframes, and engine numbers -- maximizing believability.
@@ -824,16 +806,16 @@ Modules    Engines    Pricing    Free Module    FAQ
 - Hypothesis: Option B may perform better with analytical developers; Option A with those who respond to metaphor.
 
 **Test 2: Hero CTA Button Text**
-- A: "Get Module S Free" (specific, value-clear)
+- A: "Download 4DA -- All 7 Modules Free" (specific, value-clear)
 - B: "Run Your Infrastructure Audit" (action-oriented, curiosity-driven)
 - C: "Start the First $100 Challenge" (outcome-focused)
 - Hypothesis: C may drive higher click-through because it implies a concrete, achievable result.
 
 **Test 3: Pricing Anchor**
-- A: Show all 4 tiers (current)
-- B: Show only Core and Pro (reduce choice paralysis)
-- C: Show Cohort first as anchor, then Core and Pro feel like bargains
-- Hypothesis: C may increase Core conversions by anchoring at $499.
+- A: Show all 3 tiers (current -- Playbook free, Community, Cohort)
+- B: Show only Playbook and Community (reduce choice paralysis)
+- C: Show Cohort first as anchor, then Community feels like a bargain
+- Hypothesis: C may increase Community conversions by anchoring at $499.
 
 ## Emotional Angle Tests
 
@@ -842,11 +824,11 @@ Modules    Engines    Pricing    Free Module    FAQ
 - B: "One year from now, you'll have 4 active revenue streams..." (aspiration)
 - Hypothesis: Split may vary by age/career stage. Test with demographic segmentation if possible.
 
-**Test 5: Free Module Gate**
-- A: No email required (current -- maximizes downloads, minimizes lead capture)
-- B: Email required (standard lead magnet -- enables nurture sequence)
-- C: No email for PDF, email for interactive version + calculator
-- Hypothesis: A builds more trust and aligns with 4DA's "free means free" positioning. B captures more leads. C is a compromise worth testing.
+**Test 5: Free Playbook Discovery**
+- A: Download via 4DA app (current -- maximizes app installs, content lives in-app)
+- B: Also available as PDF download on website (broader reach, no app required)
+- C: Web preview of Module S + full playbook inside 4DA app
+- Hypothesis: A creates the strongest flywheel (users in 4DA engage with both intelligence and playbook). C is a compromise worth testing for users hesitant to install.
 
 ## Structural Tests
 
@@ -879,7 +861,7 @@ The copy is written to match the 4DA landing page voice: confident, specific, te
 ## Design Recommendations
 - Hero: Match 4DA hero structure (centered, label -> headline -> subheadline -> CTAs -> trust line)
 - Cards: Use same `feature-card` styling from 4DA for engine cards and module cards
-- Pricing: Extend 4DA's pricing grid to 4 columns (or 2x2 on mobile)
+- Pricing: Extend 4DA's pricing grid to 3 columns (stack on mobile)
 - FAQ: Identical accordion pattern to 4DA
 - Typography: All headings in Inter 600, labels in JetBrains Mono uppercase, body in Inter 400
 - Color additions: Gold (#D4AF37) for premium/Cohort tier, Orange (#F97316) remains primary accent
@@ -891,10 +873,10 @@ The copy is written to match the 4DA landing page voice: confident, specific, te
 - Each section is designed to be independently scannable via headings and callout boxes
 
 ## Conversion Architecture
-1. **Primary path:** Hero CTA -> Module S download -> Email nurture -> Core purchase
-2. **Fast path:** Hero secondary CTA -> Pricing section -> Core purchase
+1. **Primary path:** Hero CTA -> 4DA download -> Full playbook access -> Community upsell after value delivered
+2. **Community path:** Hero secondary CTA -> Pricing section -> Community signup
 3. **Premium path:** Engines section -> Cohort CTA -> Application
-4. **Cross-sell path:** 4DA Pro notification -> Discount code -> Core purchase
+4. **Flywheel path:** 4DA usage -> STREETS playbook engagement -> Community for accountability -> Cohort for acceleration
 
 ---
 
