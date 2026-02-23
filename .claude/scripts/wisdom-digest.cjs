@@ -73,10 +73,13 @@ function getModifiedFiles() {
       cwd: PROJECT_ROOT, encoding: 'utf8', timeout: 5000,
     }).trim();
     if (!output) return [];
-    return output.split('\n').filter(Boolean).map(line => ({
-      status: line.substring(0, 2).trim(),
-      file: line.substring(3),
-    }));
+    return output.split('\n').filter(Boolean).map(line => {
+      // Git porcelain: XY PATH (3 chars prefix), but Windows git sometimes
+      // produces X PATH (2 chars) for staged-only files. Use regex for safety.
+      const match = line.match(/^\s*(\S+)\s+(.*)/);
+      if (!match) return null;
+      return { status: match[1], file: match[2] };
+    }).filter(Boolean);
   } catch (e) { return []; }
 }
 
