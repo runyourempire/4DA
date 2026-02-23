@@ -292,6 +292,19 @@
 - **Date:** 2026-02-23
 - **Status:** Final
 
+### AD-020: Pure Rust Dependencies Over C/System Library Bindings
+- **Decision:** When choosing between a Rust crate with C/system library bindings and a pure Rust alternative, prefer pure Rust if quality is comparable. Document exceptions explicitly with build instructions.
+- **Rationale:**
+  - C binding dependencies (tesseract, whisper-rs, system OpenSSL) cause build failures on Windows, require vcpkg/system lib setup, and add cross-platform fragility
+  - Three independent experiences confirmed this: tesseract→ocrs (Decision #16), tesseract+whisper removal (Decision #15), better-sqlite3 native binding failure handling (Decision #32)
+  - Pure Rust crates (ocrs, pdf-extract, lopdf, docx-rs, calamine) eliminated entire categories of build problems
+  - This is the first pattern promoted via `/crystallize` — 3+ MCP memory entries confirmed the recurring lesson
+- **Considered:**
+  - Allow C bindings freely: Rejected — build failures and platform fragility outweigh marginal quality improvements
+  - Ban C bindings absolutely: Rejected — sometimes no pure Rust alternative exists (e.g., SQLite itself). Exceptions are documented, not banned.
+- **Date:** 2026-02-23 (crystallized from MCP memory)
+- **Status:** Final
+
 ---
 
 ## Pending Decisions
