@@ -276,6 +276,22 @@
 - **Date:** 2026-02-22
 - **Status:** Final
 
+### AD-019: AI Engineering Contract Absorbed into Wisdom Layer
+- **Decision:** Merge the behavioral rules from `AI_ENGINEERING_CONTRACT.md` into `WISDOM.md` v2.0.0. The contract is superseded; WISDOM.md is the single behavioral authority for the human-AI partnership.
+- **Rationale:**
+  - Two behavioral documents with overlapping scope created authority ambiguity — "which one wins?" had no answer
+  - The Wisdom Layer has 3 autonomous enforcement hooks (PreToolUse gate, UserPromptSubmit processing, Stop capture); the contract had zero enforcement mechanisms
+  - Key contract concepts are fully absorbed: Two-Phase Protocol into the Development Covenant's Operating Rhythm, Forbidden Actions into the Covenant and Zero Zones, Validation Artifacts into Gate 3's completion evidence
+  - A clear authority stack (INVARIANTS > WISDOM > DECISIONS > FAILURE_MODES > CLAUDE.md) eliminates precedence ambiguity permanently
+  - Unification creates a single source of truth with both principles and teeth
+- **Considered:**
+  - Keep both documents: Rejected — overlapping behavioral authority with no precedence rule; contract had no enforcement hooks
+  - Delete contract entirely: Rejected — file serves as historical reference for decisions that informed WISDOM.md
+  - Create a constitution above both: Rejected — governance meta-layers add complexity without proportional benefit (W-7); 4DA is a solo dev + AI partnership, not an enterprise requiring adversarial governance frameworks
+  - Adopt v0.2 archive Control Plane Constitution: Rejected — ~2000 lines of enterprise-grade governance (authority degradation tokens, risk budgets, hive mind protocol, prompt compiler) designed for multi-agent adversarial environments that don't apply to a collaborative solo-dev partnership
+- **Date:** 2026-02-23
+- **Status:** Final
+
 ---
 
 ## Pending Decisions
