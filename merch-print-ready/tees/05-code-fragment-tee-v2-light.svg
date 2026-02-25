@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3600 4600" width="3600" height="4600">
+  <!-- Code Fragment Tee v2 LIGHT — PRINT READY (transparent background) -->
+  <!-- Warm paper-tone editor for white/light tees -->
+  <!-- Distinct gray background (#E2E2E2) ensures visibility on white fabric -->
+  <!-- Strong border, bold syntax colors, visible footer -->
+  <!-- Placement: full front, 12x15 inches -->
+  <!-- Product: Bella+Canvas 3001 White / Comfort Colors 1717 White -->
+
+  <!-- Drop shadow effect — subtle depth so it doesn't look flat -->
+  <rect x="108" y="108" width="3400" height="4000" rx="36" fill="#00000020"/>
+
+  <!-- Terminal window frame — warm gray with strong dark border -->
+  <rect x="100" y="100" width="3400" height="4000" rx="36" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="6"/>
+  <!-- Inner fill — warm light gray, distinct from white fabric -->
+  <rect x="103" y="320" width="3394" height="3777" fill="#E8E4DF"/>
+
+  <!-- Title bar area — darker header strip -->
+  <rect x="103" y="103" width="3394" height="217" rx="33" fill="#2A2A2A"/>
+
+  <!-- Window dots -->
+  <circle cx="260" cy="212" r="28" fill="#EF4444"/>
+  <circle cx="350" cy="212" r="28" fill="#F97316"/>
+  <circle cx="440" cy="212" r="28" fill="#22C55E"/>
+
+  <!-- Title bar text -->
+  <text x="1800" y="225" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', 'Fira Code', 'Courier New', monospace" font-size="56" fill="#888888">relevance.rs</text>
+
+  <!-- Code content — JetBrains Mono, strong colors for light bg -->
+  <g font-family="'JetBrains Mono', 'SF Mono', 'Fira Code', 'Courier New', monospace" font-size="76">
+    <!-- Line numbers — visible gray -->
+    <g fill="#999999">
+      <text x="210" y="480" text-anchor="end">1</text>
+      <text x="210" y="630" text-anchor="end">2</text>
+      <text x="210" y="780" text-anchor="end">3</text>
+      <text x="210" y="930" text-anchor="end">4</text>
+      <text x="210" y="1080" text-anchor="end">5</text>
+      <text x="210" y="1230" text-anchor="end">6</text>
+      <text x="210" y="1380" text-anchor="end">7</text>
+      <text x="210" y="1530" text-anchor="end">8</text>
+      <text x="210" y="1680" text-anchor="end">9</text>
+      <text x="198" y="1830" text-anchor="end">10</text>
+      <text x="198" y="1980" text-anchor="end">11</text>
+      <text x="198" y="2130" text-anchor="end">12</text>
+      <text x="198" y="2280" text-anchor="end">13</text>
+      <text x="198" y="2430" text-anchor="end">14</text>
+      <text x="198" y="2580" text-anchor="end">15</text>
+      <text x="198" y="2730" text-anchor="end">16</text>
+      <text x="198" y="2880" text-anchor="end">17</text>
+      <text x="198" y="3030" text-anchor="end">18</text>
+      <text x="198" y="3180" text-anchor="end">19</text>
+    </g>
+
+    <!-- Gutter line -->
+    <line x1="240" y1="380" x2="240" y2="3250" stroke="#C8C4BF" stroke-width="2"/>
+
+    <!-- Code: doc comments — rich green -->
+    <text x="300" y="480" fill="#2E7D32">/// Score what matters.</text>
+    <text x="300" y="630" fill="#2E7D32">/// Ignore the noise.</text>
+
+    <!-- Code: function signature -->
+    <text x="300" y="780"><tspan fill="#7B1FA2">pub fn </tspan><tspan fill="#6A4C00">score_relevance</tspan><tspan fill="#1A1A1A">(</tspan></text>
+    <text x="300" y="930"><tspan fill="#1A1A1A">    item: </tspan><tspan fill="#0277BD">&amp;ContentItem</tspan><tspan fill="#1A1A1A">,</tspan></text>
+    <text x="300" y="1080"><tspan fill="#1A1A1A">    ctx:  </tspan><tspan fill="#0277BD">&amp;DevContext</tspan><tspan fill="#1A1A1A">,</tspan></text>
+    <text x="300" y="1230"><tspan fill="#1A1A1A">) -> </tspan><tspan fill="#0277BD">f64</tspan><tspan fill="#1A1A1A"> {</tspan></text>
+
+    <!-- Code: body -->
+    <text x="300" y="1380"><tspan fill="#7B1FA2">    let </tspan><tspan fill="#C62828">stack</tspan><tspan fill="#1A1A1A"> = ctx.</tspan><tspan fill="#6A4C00">detect</tspan><tspan fill="#1A1A1A">();</tspan></text>
+    <text x="300" y="1530"><tspan fill="#7B1FA2">    let </tspan><tspan fill="#C62828">signal</tspan><tspan fill="#1A1A1A"> = item.</tspan><tspan fill="#6A4C00">extract</tspan><tspan fill="#1A1A1A">();</tspan></text>
+    <text x="300" y="1680"><tspan fill="#7B1FA2">    let </tspan><tspan fill="#C62828">score</tspan><tspan fill="#1A1A1A"> = </tspan><tspan fill="#6A4C00">pasifa</tspan><tspan fill="#1A1A1A">(</tspan></text>
+    <text x="300" y="1830"><tspan fill="#1A1A1A">        stack, signal, ctx</tspan></text>
+    <text x="300" y="1980"><tspan fill="#1A1A1A">    );</tspan></text>
+
+    <!-- Blank line -->
+    <text x="300" y="2130" fill="#D0CCC7">.</text>
+
+    <!-- Code: the killer line -->
+    <text x="300" y="2280"><tspan fill="#2E7D32">    // Privacy first. Always.</tspan></text>
+    <text x="300" y="2430"><tspan fill="#1A1A1A">    </tspan><tspan fill="#6A4C00">assert!</tspan><tspan fill="#1A1A1A">(data.</tspan><tspan fill="#C62828">stays_local</tspan><tspan fill="#1A1A1A">());</tspan></text>
+
+    <!-- Blank line -->
+    <text x="300" y="2580" fill="#D0CCC7">.</text>
+
+    <!-- Code: return -->
+    <text x="300" y="2730"><tspan fill="#1A1A1A">    confidence.</tspan><tspan fill="#C62828">score</tspan></text>
+    <text x="300" y="2880"><tspan fill="#1A1A1A">}</tspan></text>
+  </g>
+
+  <!-- Footer: brand mark — VISIBLE, dark on warm gray -->
+  <line x1="200" y1="3920" x2="3400" y2="3920" stroke="#C8C4BF" stroke-width="2"/>
+  <text x="1800" y="3990" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', monospace" font-size="52" fill="#555555" letter-spacing="16">4DA  //  ALL SIGNAL. NO FEED.</text>
+</svg>

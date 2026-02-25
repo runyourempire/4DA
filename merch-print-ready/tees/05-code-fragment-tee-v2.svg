@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3600 4600" width="3600" height="4600">
+  <!-- Code Fragment Tee v2 — PRINT READY (transparent background) -->
+  <!-- Changes: taller canvas for breathing room, brighter 4DA footer, -->
+  <!-- tighter code spacing, stronger window chrome, refined colors -->
+  <!-- Placement: full front, 12x15 inches -->
+  <!-- Product: Bella+Canvas 3001 Black -->
+
+  <!-- Terminal window frame — slightly rounded, subtle shadow effect -->
+  <rect x="100" y="100" width="3400" height="4000" rx="36" fill="#111111" stroke="#333333" stroke-width="4"/>
+
+  <!-- Window dots -->
+  <circle cx="260" cy="240" r="28" fill="#EF4444" opacity="0.9"/>
+  <circle cx="350" cy="240" r="28" fill="#F97316" opacity="0.9"/>
+  <circle cx="440" cy="240" r="28" fill="#22C55E" opacity="0.9"/>
+
+  <!-- Title bar -->
+  <text x="1800" y="255" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', 'Fira Code', 'Courier New', monospace" font-size="60" fill="#666666">relevance.rs</text>
+
+  <!-- Separator -->
+  <line x1="100" y1="320" x2="3500" y2="320" stroke="#2A2A2A" stroke-width="2"/>
+
+  <!-- Code content — JetBrains Mono, tighter line height -->
+  <g font-family="'JetBrains Mono', 'SF Mono', 'Fira Code', 'Courier New', monospace" font-size="76">
+    <!-- Line numbers — dimmer, aligned -->
+    <g fill="#3A3A3A">
+      <text x="210" y="480" text-anchor="end">1</text>
+      <text x="210" y="630" text-anchor="end">2</text>
+      <text x="210" y="780" text-anchor="end">3</text>
+      <text x="210" y="930" text-anchor="end">4</text>
+      <text x="210" y="1080" text-anchor="end">5</text>
+      <text x="210" y="1230" text-anchor="end">6</text>
+      <text x="210" y="1380" text-anchor="end">7</text>
+      <text x="210" y="1530" text-anchor="end">8</text>
+      <text x="210" y="1680" text-anchor="end">9</text>
+      <text x="198" y="1830" text-anchor="end">10</text>
+      <text x="198" y="1980" text-anchor="end">11</text>
+      <text x="198" y="2130" text-anchor="end">12</text>
+      <text x="198" y="2280" text-anchor="end">13</text>
+      <text x="198" y="2430" text-anchor="end">14</text>
+      <text x="198" y="2580" text-anchor="end">15</text>
+      <text x="198" y="2730" text-anchor="end">16</text>
+      <text x="198" y="2880" text-anchor="end">17</text>
+      <text x="198" y="3030" text-anchor="end">18</text>
+      <text x="198" y="3180" text-anchor="end">19</text>
+    </g>
+
+    <!-- Gutter line -->
+    <line x1="240" y1="380" x2="240" y2="3250" stroke="#1F1F1F" stroke-width="2"/>
+
+    <!-- Code: doc comments -->
+    <text x="300" y="480" fill="#6A737D">/// Score what matters.</text>
+    <text x="300" y="630" fill="#6A737D">/// Ignore the noise.</text>
+
+    <!-- Code: function signature -->
+    <text x="300" y="780"><tspan fill="#C678DD">pub fn </tspan><tspan fill="#61AFEF">score_relevance</tspan><tspan fill="#ABB2BF">(</tspan></text>
+    <text x="300" y="930"><tspan fill="#ABB2BF">    item: </tspan><tspan fill="#E5C07B">&amp;ContentItem</tspan><tspan fill="#ABB2BF">,</tspan></text>
+    <text x="300" y="1080"><tspan fill="#ABB2BF">    ctx:  </tspan><tspan fill="#E5C07B">&amp;DevContext</tspan><tspan fill="#ABB2BF">,</tspan></text>
+    <text x="300" y="1230"><tspan fill="#ABB2BF">) -> </tspan><tspan fill="#E5C07B">f64</tspan><tspan fill="#ABB2BF"> {</tspan></text>
+
+    <!-- Code: body -->
+    <text x="300" y="1380"><tspan fill="#C678DD">    let </tspan><tspan fill="#E06C75">stack</tspan><tspan fill="#ABB2BF"> = ctx.</tspan><tspan fill="#61AFEF">detect</tspan><tspan fill="#ABB2BF">();</tspan></text>
+    <text x="300" y="1530"><tspan fill="#C678DD">    let </tspan><tspan fill="#E06C75">signal</tspan><tspan fill="#ABB2BF"> = item.</tspan><tspan fill="#61AFEF">extract</tspan><tspan fill="#ABB2BF">();</tspan></text>
+    <text x="300" y="1680"><tspan fill="#C678DD">    let </tspan><tspan fill="#E06C75">score</tspan><tspan fill="#ABB2BF"> = </tspan><tspan fill="#61AFEF">pasifa</tspan><tspan fill="#ABB2BF">(</tspan></text>
+    <text x="300" y="1830"><tspan fill="#ABB2BF">        stack, signal, ctx</tspan></text>
+    <text x="300" y="1980"><tspan fill="#ABB2BF">    );</tspan></text>
+
+    <!-- Blank line -->
+    <text x="300" y="2130" fill="#2A2A2A">.</text>
+
+    <!-- Code: the killer line -->
+    <text x="300" y="2280"><tspan fill="#6A737D">    // Privacy first. Always.</tspan></text>
+    <text x="300" y="2430"><tspan fill="#ABB2BF">    </tspan><tspan fill="#61AFEF">assert!</tspan><tspan fill="#ABB2BF">(data.</tspan><tspan fill="#E06C75">stays_local</tspan><tspan fill="#ABB2BF">());</tspan></text>
+
+    <!-- Blank line -->
+    <text x="300" y="2580" fill="#2A2A2A">.</text>
+
+    <!-- Code: return -->
+    <text x="300" y="2730"><tspan fill="#ABB2BF">    confidence.</tspan><tspan fill="#E06C75">score</tspan></text>
+    <text x="300" y="2880"><tspan fill="#ABB2BF">}</tspan></text>
+  </g>
+
+  <!-- Footer: brand mark — visible but not loud -->
+  <line x1="200" y1="3920" x2="3400" y2="3920" stroke="#1F1F1F" stroke-width="2"/>
+  <text x="1800" y="3990" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', monospace" font-size="52" fill="#333333" letter-spacing="16">4DA  //  ALL SIGNAL. NO FEED.</text>
+</svg>

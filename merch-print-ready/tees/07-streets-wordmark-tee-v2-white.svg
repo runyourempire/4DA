@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4500 3000" width="4500" height="3000">
+  <!-- STREETS Wordmark Tee v2 WHITE — PRINT READY (transparent background) -->
+  <!-- Optimized for white/light fabric: dark hero text, stronger gold, -->
+  <!-- visible establishment mark. -->
+  <!-- Placement: center chest, 15x10 inches -->
+  <!-- Product: Comfort Colors 1717 White / Bella+Canvas 3001 White -->
+
+  <!-- Parent brand — gold, slightly more present on white fabric -->
+  <text x="2250" y="780" text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="80" font-weight="300" letter-spacing="48"
+    fill="#B8860B" opacity="0.85">4DA</text>
+
+  <!-- Hero word — massive, black, commanding on white -->
+  <text x="2250" y="1500" text-anchor="middle"
+    font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif"
+    font-size="820" font-weight="900" letter-spacing="40" fill="#1A1A1A">STREETS</text>
+
+  <!-- Accent underline — gold, slightly thicker for visibility on white -->
+  <rect x="300" y="1600" width="3900" height="8" fill="#B8860B" opacity="0.8"/>
+
+  <!-- Tagline — orange, strong -->
+  <text x="2250" y="1780" text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="72" font-weight="300" letter-spacing="28" fill="#E06500" opacity="0.9">THE DEVELOPER INCOME PLAYBOOK</text>
+
+  <!-- Establishment mark — visible on white, not ghostly -->
+  <text x="2250" y="1940" text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="48" font-weight="300" letter-spacing="20"
+    fill="#888888" opacity="0.75">EST. 2026</text>
+</svg>

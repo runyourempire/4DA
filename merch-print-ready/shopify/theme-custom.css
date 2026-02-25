@@ -1,0 +1,418 @@
+/* ═══════════════════════════════════════════════════════════
+   4DA SYSTEMS — Shopify Theme Override
+   Matches 4da.ai visual identity: Matte Black Minimalism
+
+   Usage: Shopify Admin → Online Store → Themes → Edit Code
+   → Add to assets/custom.css or paste into theme.liquid <style>
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── CSS Variables (4DA Design System) ── */
+:root {
+  --4da-bg-primary: #0A0A0A;
+  --4da-bg-secondary: #141414;
+  --4da-bg-tertiary: #1F1F1F;
+  --4da-text-primary: #FFFFFF;
+  --4da-text-secondary: #A0A0A0;
+  --4da-text-muted: #666666;
+  --4da-accent-orange: #F97316;
+  --4da-accent-gold: #D4AF37;
+  --4da-border: #2A2A2A;
+  --4da-radius: 12px;
+  --4da-radius-sm: 6px;
+  --4da-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --4da-font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ── Global Reset ── */
+body,
+.shopify-section,
+.main-content,
+#MainContent,
+#shopify-section-header,
+#shopify-section-footer {
+  background-color: var(--4da-bg-primary) !important;
+  color: var(--4da-text-primary) !important;
+  font-family: var(--4da-font-sans) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Typography ── */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--4da-font-sans) !important;
+  color: var(--4da-text-primary) !important;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+h1, .h1 {
+  font-size: clamp(32px, 5vw, 56px);
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+h2, .h2 {
+  font-size: clamp(24px, 3vw, 36px);
+}
+
+p, li, span, a, label, input, textarea, select {
+  font-family: var(--4da-font-sans) !important;
+}
+
+body, p {
+  color: var(--4da-text-secondary);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+a {
+  color: var(--4da-text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--4da-accent-orange);
+}
+
+/* ── Monospace Labels ── */
+.product__type,
+.product__vendor,
+.collection__count,
+.price__badge,
+.tag,
+[data-tag] {
+  font-family: var(--4da-font-mono) !important;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--4da-text-muted);
+}
+
+/* ── Header / Navigation ── */
+.header-wrapper,
+.site-header,
+header,
+.section-header,
+#shopify-section-header {
+  background-color: rgba(10, 10, 10, 0.85) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--4da-border) !important;
+}
+
+.header__heading-link,
+.site-header__logo,
+.header-wrapper a {
+  color: var(--4da-text-primary) !important;
+}
+
+.header nav a,
+.site-nav a,
+.site-nav--has-dropdown > a {
+  color: var(--4da-text-muted) !important;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+}
+
+.header nav a:hover,
+.site-nav a:hover {
+  color: var(--4da-text-primary) !important;
+}
+
+/* ── Product Cards ── */
+.product-card,
+.card,
+.grid-product,
+.collection-product-card,
+.product-card-wrapper {
+  background-color: var(--4da-bg-secondary) !important;
+  border: 1px solid var(--4da-border) !important;
+  border-radius: var(--4da-radius) !important;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.product-card:hover,
+.card:hover,
+.grid-product:hover,
+.product-card-wrapper:hover {
+  transform: translateY(-2px);
+  border-color: #3A3A3A !important;
+}
+
+.product-card__title,
+.card__heading,
+.grid-product__title {
+  color: var(--4da-text-primary) !important;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* ── Prices ── */
+.price,
+.price-item,
+.product__price,
+.price__regular,
+.money {
+  color: var(--4da-text-primary) !important;
+  font-family: var(--4da-font-mono) !important;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+/* ── Buttons ── */
+.btn,
+.button,
+button[type="submit"],
+.shopify-payment-button button,
+.product-form__submit,
+.cart__submit,
+input[type="submit"] {
+  background-color: var(--4da-text-primary) !important;
+  color: var(--4da-bg-primary) !important;
+  border: none !important;
+  border-radius: var(--4da-radius-sm) !important;
+  font-family: var(--4da-font-sans) !important;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  padding: 14px 28px !important;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover,
+.button:hover,
+button[type="submit"]:hover,
+.product-form__submit:hover,
+.cart__submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+/* Secondary / outline buttons */
+.btn--secondary,
+.button--secondary {
+  background-color: transparent !important;
+  color: var(--4da-text-primary) !important;
+  border: 1px solid var(--4da-border) !important;
+}
+
+.btn--secondary:hover,
+.button--secondary:hover {
+  border-color: var(--4da-text-muted) !important;
+}
+
+/* ── Product Page ── */
+.product__title,
+.product-single__title {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--4da-text-primary) !important;
+}
+
+.product__description,
+.product-single__description {
+  color: var(--4da-text-secondary) !important;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.product__description ul li,
+.product-single__description ul li {
+  color: var(--4da-text-secondary);
+  padding: 4px 0;
+}
+
+/* Variant selectors */
+.variant-input,
+.single-option-selector,
+.product-form__input label,
+.variant-wrapper select {
+  background-color: var(--4da-bg-secondary) !important;
+  color: var(--4da-text-primary) !important;
+  border: 1px solid var(--4da-border) !important;
+  border-radius: var(--4da-radius-sm) !important;
+  font-family: var(--4da-font-sans) !important;
+  padding: 10px 16px;
+}
+
+/* Size selector pills */
+.swatch,
+.variant-input-wrap .variant__button-label,
+.size-swatch {
+  background-color: var(--4da-bg-tertiary) !important;
+  color: var(--4da-text-secondary) !important;
+  border: 1px solid var(--4da-border) !important;
+  border-radius: var(--4da-radius-sm) !important;
+  transition: all 0.15s ease;
+}
+
+.swatch.active,
+.swatch:hover,
+.variant__button-label.active {
+  background-color: var(--4da-text-primary) !important;
+  color: var(--4da-bg-primary) !important;
+  border-color: var(--4da-text-primary) !important;
+}
+
+/* ── Collection Page ── */
+.collection-hero,
+.collection-header {
+  background-color: var(--4da-bg-primary) !important;
+  padding: 48px 24px;
+}
+
+.collection-hero__title,
+.collection-header__title {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+/* ── Cart ── */
+.cart,
+.cart-drawer,
+.cart__items,
+.drawer {
+  background-color: var(--4da-bg-primary) !important;
+  color: var(--4da-text-primary) !important;
+}
+
+.cart-item,
+.cart__row {
+  border-bottom: 1px solid var(--4da-border) !important;
+  padding: 20px 0;
+}
+
+.cart__footer,
+.cart-drawer__footer {
+  background-color: var(--4da-bg-secondary) !important;
+  border-top: 1px solid var(--4da-border) !important;
+}
+
+/* ── Forms & Inputs ── */
+input, textarea, select {
+  background-color: var(--4da-bg-secondary) !important;
+  color: var(--4da-text-primary) !important;
+  border: 1px solid var(--4da-border) !important;
+  border-radius: var(--4da-radius-sm) !important;
+  padding: 12px 16px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--4da-text-muted) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05) !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--4da-text-muted) !important;
+}
+
+/* ── Footer ── */
+.footer,
+.site-footer,
+#shopify-section-footer {
+  background-color: var(--4da-bg-primary) !important;
+  border-top: 1px solid var(--4da-border) !important;
+  padding: 48px 24px;
+}
+
+.footer a,
+.site-footer a {
+  color: var(--4da-text-muted) !important;
+  font-size: 14px;
+}
+
+.footer a:hover,
+.site-footer a:hover {
+  color: var(--4da-text-primary) !important;
+}
+
+/* ── Announcement Bar ── */
+.announcement-bar,
+.shopify-section--announcement-bar {
+  background-color: var(--4da-bg-secondary) !important;
+  border-bottom: 1px solid var(--4da-border) !important;
+}
+
+.announcement-bar__message {
+  color: var(--4da-text-secondary) !important;
+  font-family: var(--4da-font-mono) !important;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ── Badges / Tags ── */
+.badge,
+.tag,
+.product__badge {
+  background-color: var(--4da-bg-tertiary) !important;
+  color: var(--4da-text-muted) !important;
+  font-family: var(--4da-font-mono) !important;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--4da-border);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--4da-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--4da-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--4da-text-muted);
+}
+
+/* ── Utility: Orange Accent ── */
+.accent-orange {
+  color: var(--4da-accent-orange);
+}
+
+.accent-gold {
+  color: var(--4da-accent-gold);
+}
+
+/* ── Image handling ── */
+.product__media img,
+.product-card img,
+.featured-image img {
+  border-radius: var(--4da-radius);
+}
+
+/* ── Responsive ── */
+@media (max-width: 749px) {
+  .product__title,
+  .product-single__title {
+    font-size: 28px;
+  }
+
+  .collection-hero {
+    padding: 32px 16px;
+  }
+}

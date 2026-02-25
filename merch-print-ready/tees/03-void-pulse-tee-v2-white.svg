@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3600 4200" width="3600" height="4200">
+  <!-- Void Pulse Tee v2 WHITE — PRINT READY (transparent background) -->
+  <!-- Redesigned for white/light fabric: stronger strokes, darker elements, -->
+  <!-- bolder gold, visible labels. Not a recolor — a proper rethink. -->
+  <!-- Placement: center chest, 12x14 inches -->
+  <!-- Product: Bella+Canvas 3001 White / Comfort Colors 1717 White -->
+
+  <!-- Concentric rings — thicker, darker gold, higher opacity for white fabric -->
+  <g transform="translate(1800,1700)">
+    <!-- Outer rings — must be visible on white -->
+    <circle r="1200" fill="none" stroke="#8B7328" stroke-width="5" opacity="0.5"/>
+    <circle r="1000" fill="none" stroke="#997A1E" stroke-width="8" opacity="0.6"/>
+    <circle r="800" fill="none" stroke="#B8860B" stroke-width="12" opacity="0.75"/>
+    <circle r="600" fill="none" stroke="#A07A10" stroke-width="18" opacity="0.85"/>
+    <circle r="400" fill="none" stroke="#8B6914" stroke-width="22" opacity="0.9"/>
+
+    <!-- Core — warm, rich, grounded against white -->
+    <circle r="220" fill="#7A5C10" opacity="0.85"/>
+    <circle r="150" fill="#B8860B"/>
+    <circle r="80" fill="#D4AF37"/>
+    <circle r="30" fill="#1A1A1A"/>
+
+    <!-- Pulse wave (EKG) — THE HERO ELEMENT — black on white = maximum impact -->
+    <!-- Flat line left — darker gold, visible -->
+    <line x1="-1250" y1="0" x2="-350" y2="0" stroke="#A07A10" stroke-width="6" opacity="0.55"/>
+    <!-- Active pulse — bold black, high contrast -->
+    <polyline points="-350,0 -260,-280 -170,350 -80,-200 10,260 100,-120 190,80 280,0"
+      fill="none" stroke="#1A1A1A" stroke-width="14" stroke-linejoin="round" stroke-linecap="round"/>
+    <!-- Flat line right — darker gold, visible -->
+    <line x1="280" y1="0" x2="1250" y2="0" stroke="#A07A10" stroke-width="6" opacity="0.55"/>
+  </g>
+
+  <!-- Label — dark, readable on white fabric -->
+  <text x="1800" y="3450" text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="64" font-weight="300" letter-spacing="24" fill="#333333" opacity="0.8">VOID ENGINE</text>
+
+  <!-- Gold accent line — thicker for visibility -->
+  <rect x="1400" y="3500" width="800" height="3" fill="#B8860B" opacity="0.7"/>
+
+  <!-- Brand mark — visible on white -->
+  <text x="1800" y="3620" text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="40" font-weight="400" letter-spacing="12" fill="#666666">4DA</text>
+</svg>

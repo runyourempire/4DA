@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4500 3000" width="4500" height="3000">
+  <!-- STREETS Wordmark Tee v2 — PRINT READY (transparent background) -->
+  <!-- Hierarchy: 4DA parent brand → STREETS hero → tagline → est. mark -->
+  <!-- Placement: center chest, 15x10 inches -->
+  <!-- Product: Comfort Colors 1717 Black / White -->
+
+  <!-- Parent brand — small, wide tracking, clearly above hero -->
+  <text x="2250" y="780" text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="80" font-weight="300" letter-spacing="48"
+    fill="#D4AF37" opacity="0.7">4DA</text>
+
+  <!-- Hero word — massive, commanding -->
+  <text x="2250" y="1500" text-anchor="middle"
+    font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif"
+    font-size="820" font-weight="900" letter-spacing="40" fill="#FFFFFF">STREETS</text>
+
+  <!-- Accent underline — gold, offset -->
+  <rect x="300" y="1600" width="3900" height="6" fill="#D4AF37" opacity="0.7"/>
+
+  <!-- Tagline — small, quiet, intentional -->
+  <text x="2250" y="1780" text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="72" font-weight="300" letter-spacing="28" fill="#F97316" opacity="0.85">THE DEVELOPER INCOME PLAYBOOK</text>
+
+  <!-- Establishment mark — bottom center, understated, collectible feel -->
+  <text x="2250" y="1940" text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="48" font-weight="300" letter-spacing="20"
+    fill="#FFFFFF" opacity="0.4">EST. 2026</text>
+</svg>

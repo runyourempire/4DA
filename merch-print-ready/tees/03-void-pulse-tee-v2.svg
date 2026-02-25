@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3600 4200" width="3600" height="4200">
+  <!-- Void Pulse Tee v2 — PRINT READY (transparent background) -->
+  <!-- Rework: much bolder strokes, high opacity, no blur filter, -->
+  <!-- pulse line is the hero, reduced rings, premium typography -->
+  <!-- Placement: center chest, 12x14 inches -->
+  <!-- Product: Bella+Canvas 3001 Black -->
+
+  <!-- Concentric rings — fewer, bolder, higher contrast -->
+  <g transform="translate(1800,1700)">
+    <!-- Outer glow rings — visible on dark fabric -->
+    <circle r="1200" fill="none" stroke="#8B6914" stroke-width="3" opacity="0.35"/>
+    <circle r="1000" fill="none" stroke="#B8860B" stroke-width="6" opacity="0.45"/>
+    <circle r="800" fill="none" stroke="#D4AF37" stroke-width="10" opacity="0.6"/>
+    <circle r="600" fill="none" stroke="#D4AF37" stroke-width="16" opacity="0.75"/>
+    <circle r="400" fill="none" stroke="#E8C547" stroke-width="20" opacity="0.85"/>
+
+    <!-- Core — bright, solid, unmissable -->
+    <circle r="220" fill="#8B6914" opacity="0.8"/>
+    <circle r="150" fill="#D4AF37"/>
+    <circle r="80" fill="#FFD700"/>
+    <circle r="30" fill="#FFFFFF"/>
+
+    <!-- Pulse wave (EKG) — THE HERO ELEMENT -->
+    <!-- Flat line left -->
+    <line x1="-1250" y1="0" x2="-350" y2="0" stroke="#D4AF37" stroke-width="6" opacity="0.4"/>
+    <!-- Active pulse — big, bold, unmissable -->
+    <polyline points="-350,0 -260,-280 -170,350 -80,-200 10,260 100,-120 190,80 280,0"
+      fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linejoin="round" stroke-linecap="round"/>
+    <!-- Flat line right -->
+    <line x1="280" y1="0" x2="1250" y2="0" stroke="#D4AF37" stroke-width="6" opacity="0.4"/>
+  </g>
+
+  <!-- Label — clean, intentional typography -->
+  <text x="1800" y="3450" text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="64" font-weight="300" letter-spacing="24" fill="#FFFFFF" opacity="0.6">VOID ENGINE</text>
+
+  <!-- Gold accent line -->
+  <rect x="1400" y="3500" width="800" height="2" fill="#D4AF37" opacity="0.5"/>
+
+  <!-- Brand mark -->
+  <text x="1800" y="3620" text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="40" font-weight="300" letter-spacing="12" fill="#444444">4DA</text>
+</svg>
