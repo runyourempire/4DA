@@ -648,9 +648,9 @@ Hero (ATTENTION) -> Problem (PROBLEM) -> Agitation (AGITATION)
 - FSL license badge ("Source available. Converts to Apache 2.0 in 2 years.")
 - Platform badges (Windows, macOS, Linux)
 
-**Tier 2 (Gather early):**
-- Direct quotes from early beta users (even 3-5 testimonials with real names/GitHub handles)
-- "What developers are saying" with tweets/posts from early adopters
+**Tier 2 (Gather post-launch):**
+- Provable product metrics (benchmark test count, scoring accuracy, noise rejection rate)
+- Technical depth content (architecture deep-dives, benchmark results)
 - Download count when it reaches a meaningful number
 
 **Tier 3 (Build over time):**

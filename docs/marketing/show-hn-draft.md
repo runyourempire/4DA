@@ -1,7 +1,7 @@
 # Show HN Draft -- Ready to Paste
 
 **Post on:** Tuesday or Wednesday, 9-10am ET
-**Have ready:** 3-5 people to upvote and leave genuine comments in the first 30 minutes. Be at your computer for 6+ hours after posting. Respond to EVERY comment within 1 hour.
+**Have ready:** Be at your computer for 6+ hours after posting. Respond to EVERY comment within 1 hour. Let the product speak for itself.
 
 ---
 

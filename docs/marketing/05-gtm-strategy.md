@@ -300,7 +300,7 @@ Show HN: 4DA -- Privacy-first developer intelligence (11 sources, 5-axis scoring
 
 **Timing:** Tuesday or Wednesday, 9-10am ET (peak HN traffic for Show HN).
 
-**Preparation:** Have 3-5 friends/colleagues ready to upvote and leave genuine comments in the first 30 minutes. Respond to EVERY comment within 1 hour. Be in front of your computer for 6+ hours after posting.
+**Preparation:** Respond to EVERY comment within 1 hour. Be in front of your computer for 6+ hours after posting. Let the product speak for itself -- no coordinated upvoting.
 
 #### Product Hunt
 
@@ -311,7 +311,7 @@ Show HN: 4DA -- Privacy-first developer intelligence (11 sources, 5-axis scoring
 - 5 screenshots (relevance view, Developer DNA, briefing, score autopsy, settings)
 - 1 demo video (60-90 seconds)
 - Maker comment explaining the "why"
-- 3-5 hunter comments from beta testers
+- Maker comment with provable product metrics and benchmarks
 
 **Timing:** Launch on a Tuesday or Wednesday (highest traffic). Avoid Mondays (competition from well-funded launches) and Fridays (low traffic).
 
@@ -352,7 +352,7 @@ Show HN: 4DA -- Privacy-first developer intelligence (11 sources, 5-axis scoring
 - [ ] Publish first blog post: "Why I built a developer intelligence tool" (Dev.to + personal blog)
 - [ ] Send "launching next week" email to waitlist
 - [ ] Share demo video on Twitter/X and LinkedIn
-- [ ] DM 10-20 developer influencers with early access offer
+- [ ] Prepare outreach drafts for developer influencers (send post-launch, not before)
 - [ ] Prepare GitHub README for launch (ensure it sells, not just documents)
 - [ ] Test all download links and installation flows on all 3 platforms
 
@@ -408,8 +408,8 @@ Show HN: 4DA -- Privacy-first developer intelligence (11 sources, 5-axis scoring
 **Week 3:**
 - [ ] Publish blog post: "How I bootstrapped a desktop app as a solo dev"
 - [ ] Announce Discord/GitHub Discussions community
-- [ ] Start collecting testimonials from early users
-- [ ] Add testimonials to landing page
+- [ ] Compile provable product metrics and benchmark data for social proof
+- [ ] Add benchmark data and performance metrics to landing page
 
 **Week 4:**
 - [ ] Publish "30-day launch retrospective" (build in public)
@@ -508,7 +508,7 @@ These are the specific moments when a user is most likely to upgrade:
 - Default the pricing toggle to "Annual" (show monthly as the alternative)
 - Show annual as "$8.25/mo billed annually" (smaller number, monthly framing)
 - At month 3 of monthly billing, offer "Switch to annual and save $45/year"
-- Annual users get early access to new Pro features (exclusivity incentive)
+- Annual users get priority access to new Pro features (exclusivity incentive)
 
 ### Pricing Anchoring
 

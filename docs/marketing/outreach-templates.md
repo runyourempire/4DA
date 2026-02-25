@@ -181,7 +181,7 @@ https://github.com/runyourempire/4DA
 
 ---
 
-## Section 2: Influencer Outreach Templates
+## Section 2: Influencer Outreach Templates (Post-Launch)
 
 ---
 
@@ -192,7 +192,7 @@ https://github.com/runyourempire/4DA
 ```
 Hi [NAME] -- big fan of your [SPECIFIC_WORK]. Built 4DA: scores dev content
 from 11 sources against your codebase. Rust + Tauri, runs locally, 99% noise
-rejected. Would love to give you early access if you're curious. No strings.
+rejected. Would love to hear your take if you try it. No strings.
 4da.app
 ```
 
@@ -201,13 +201,13 @@ rejected. Would love to give you early access if you're curious. No strings.
 ```
 [NAME] -- built something I think you'd find interesting. 4DA scores HN/Reddit/
 arXiv/GitHub content against your actual Cargo.toml/package.json. Privacy-first,
-15MB binary, free. Happy to share early access. 4da.app
+15MB binary, free. Would appreciate your take. 4da.app
 ```
 
 ```
 Hi [NAME], your [SPECIFIC_POST/TWEET] resonated. Built 4DA to solve that exact
 problem -- 5-axis relevance scoring against your codebase. Rust + Tauri, fully
-local, free tier. Early access if interested? 4da.app
+local, free tier. Check it out if interested. 4da.app
 ```
 
 ---
@@ -230,7 +230,7 @@ actually matters to your work.
 
 Runs 100% locally. Zero telemetry. Free tier is a complete product.
 
-Would love to give you early access + a Pro license if you want to try it.
+Would love to offer you a complimentary Pro license if you want to try it.
 No obligation to post about it -- genuinely just want feedback from someone
 who thinks about [THEIR_AREA].
 
@@ -245,7 +245,7 @@ who thinks about [THEIR_AREA].
 
 #### Subject Line Options
 
-1. `4DA: Rust-based dev intelligence app -- early access + Pro for review`
+1. `4DA: Rust-based dev intelligence app -- complimentary Pro for review`
 2. `15MB alternative to daily.dev that scores content against your codebase`
 3. `Built a 5-axis content scoring engine in Rust -- want to review it?`
 
@@ -258,8 +258,8 @@ I'm [YOUR_NAME], building 4DA -- a developer intelligence desktop app built
 with Rust and Tauri 2.0 that scores content from 11 sources against your
 actual codebase.
 
-I'd love to offer you early access and a complimentary Pro license to review
-on your channel. No editorial requirements -- honest take, good or bad.
+I'd love to offer you a complimentary Pro license to review on your channel.
+No editorial requirements -- honest take, good or bad.
 
 **Why this makes good video content:**
 
@@ -284,7 +284,7 @@ on your channel. No editorial requirements -- honest take, good or bad.
 
 **What I can provide:**
 
-- Early access build for [PLATFORM]
+- Download link for [PLATFORM]
 - Complimentary Pro license (permanent, not time-limited)
 - Architecture walkthrough call if useful for your script
 - Screenshots, diagrams, or B-roll assets
@@ -421,7 +421,7 @@ Before sending any template, replace all bracketed placeholders:
 | AI/ML podcasts | C (AI/Privacy) | Local LLMs, MCP, zero telemetry |
 | Privacy podcasts | C (AI/Privacy) | Architectural privacy, no cloud, BYOK |
 | Indie hacker podcasts | B (Founder) | Bootstrapping, pricing, licensing |
-| Twitter Tier 1 (50K+) | 1 (Short DM) | Respect their time, offer access |
-| Twitter Tier 2 (5-50K) | 2 (Medium DM) | More context, offer access + feedback ask |
+| Twitter Tier 1 (50K+) | 1 (Short DM) | Respect their time, offer Pro license |
+| Twitter Tier 2 (5-50K) | 2 (Medium DM) | More context, offer Pro license + feedback ask |
 | YouTube reviewers | 3 (YouTube Email) | Visual demo potential, provide everything |
 | Newsletter editors | 4 (Newsletter Email) | Stats-forward, angle matching, easy copy-paste |

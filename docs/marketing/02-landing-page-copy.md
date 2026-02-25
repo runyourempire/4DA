@@ -77,35 +77,29 @@ Frame by scale:
 - 500--5,000: "500+ developers switched from noise to signal"
 - 5,000+: "Trusted by X,000 developers"
 
-### Testimonial Templates
+### Capability Proof Cards (Replace Testimonials)
 
-These are structured around the top four objections developers have when evaluating a new tool.
+Instead of fabricated social proof, use provable product facts that address the same objections:
 
-**Template 1 -- The Discovery Story (addresses "does it actually work?")**
-> "I found out about a breaking change in [dependency] three days before it hit my production. 4DA surfaced the GitHub issue automatically because it knew my Cargo.toml. That alone paid for itself."
->
-> -- [Name], [Role] at [Company]
+**Card 1 -- Discovery Proof (addresses "does it actually work?")**
+> Automatic Context Discovery: Reads your Cargo.toml, package.json, go.mod, and pyproject.toml. Builds a graduated domain profile from your actual stack -- no manual configuration required.
 
-**Template 2 -- The Time Savings Story (addresses "is it worth the setup?")**
-> "I used to spend 45 minutes every morning skimming HN, Reddit, and arXiv. Now I open 4DA, read the 3--5 items that actually matter to my stack, and start coding. My mornings back."
->
-> -- [Name], Senior Engineer at [Company]
+**Card 2 -- Signal Quality Proof (addresses "is it worth the setup?")**
+> Multi-Signal Confirmation Gate: Every item is scored across 5 independent axes. An item needs 2+ confirming signals to surface. Typical rejection rate: 99%+ of incoming content.
 
-**Template 3 -- The Privacy Story (addresses "why not just use X?")**
-> "Every other 'personalized feed' wants my browsing data. 4DA reads my package.json and git history locally and never phones home. It knows what I work on without knowing who I am."
->
-> -- [Name], OSS Maintainer
+**Card 3 -- Privacy Proof (addresses "why not just use X?")**
+> Privacy by Architecture: Raw data never leaves your machine. BYOK for AI features. Zero telemetry. Full offline mode with Ollama. Architecturally unable to see your data.
 
-**Template 4 -- The MCP Integration Story (addresses power users)**
-> "I added the MCP server to my Claude Code setup and now I can ask 'what's new in the Rust ecosystem that affects my project?' and get an answer grounded in real-time scored intelligence. Game changer for context-aware development."
->
-> -- [Name], Staff Engineer at [Company]
+**Card 4 -- Integration Proof (addresses power users)**
+> MCP Intelligence Server: 26 tools exposing scored intelligence, signal chains, knowledge gaps, and decision memory to Claude Code, Cursor, and any MCP-compatible host.
 
-### "Used by developers at..." Framework
+### Social Proof Strategy
 
-When logos are available, display 5--8 in a muted grayscale row. Until then:
-
-> Used by Rust developers, React engineers, ML researchers, and open-source maintainers who refuse to let algorithms decide what they see.
+Use real metrics when available. Until launch:
+- Show GitHub stars count (real number, however small)
+- Show benchmark test count (84 scoring tests, 606 total)
+- Show source count and scoring accuracy data
+- Never fabricate quotes or attribute statements to non-existent users
 
 ### Rationale
 
@@ -788,7 +782,7 @@ The full landing page rendered with all sections will be long. This is intention
 
 - **OG image** (1200x630): Dark #0A0A0A background, "All signal. No feed." headline, 4DA logo, orange accent line
 - **Screenshot set** for carousel: Relevance Analysis, Developer DNA, Daily Briefing, Score Autopsy
-- **Testimonials**: Collect real quotes from early users and beta testers to replace templates
+- **Proof cards**: Use provable product metrics (benchmark test count, scoring accuracy, noise rejection data) instead of testimonials
 - **Badges**: GitHub stars via shields.io, npm download count, Discord/community member count
 - **Favicon and app icon**: Ensure the hero-sun.jpg asset works at 16x16 and 32x32
 

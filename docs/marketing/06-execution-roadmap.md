@@ -58,21 +58,21 @@
 
 ---
 
-#### Week 2: Warm-Up and Early Access
+#### Week 2: Warm-Up and Content Seeding
 
-**Theme:** Start generating buzz. Share build-in-public content. Offer early access to influencers.
+**Theme:** Start generating buzz. Share build-in-public content. Prepare post-launch outreach assets.
 
 **Content deliverables:**
 - [ ] Publish 1 build-in-public tweet per day (Mon-Fri) showing features, architecture, design decisions
 - [ ] Write second blog post draft: "How 4DA's 5-axis scoring works -- a technical deep-dive"
 - [ ] Create Twitter/X thread: "I built a developer intelligence tool. Here is the architecture." (10-15 tweets)
-- [ ] Finalize Show HN post (get 2-3 people to review it)
+- [ ] Finalize Show HN post (run simulated persona validation across all 4 target personas)
 - [ ] Create Product Hunt "coming soon" page
 
 **Distribution actions:**
 - [ ] Post architecture thread on Twitter/X
 - [ ] Share demo video on Twitter/X and LinkedIn
-- [ ] DM 10 developer influencers offering early access (free Pro for 3 months in exchange for honest feedback)
+- [ ] Prepare content assets and outreach drafts for post-launch influencer engagement
 - [ ] Submit blog post to Dev.to and Hashnode
 - [ ] Send podcast pitch emails to 5 shows
 
@@ -80,7 +80,7 @@
 - [ ] Engage in 5+ relevant Reddit threads (genuinely helpful comments, no self-promotion yet)
 - [ ] Engage in relevant Tauri/Rust Discord channels (build relationships, not promotion)
 - [ ] Create GitHub Discussions template for feedback collection
-- [ ] Ask 3-5 early access users to test on all 3 platforms (Windows, macOS, Linux)
+- [ ] Run internal cross-platform testing on all 3 platforms (Windows, macOS, Linux) using simulated persona workflows
 
 **Paid actions:**
 - None this week
@@ -88,8 +88,8 @@
 **Metrics to check:**
 - Email signups (target: 150 cumulative)
 - Twitter/X thread impressions
-- Early access user feedback
-- Any bugs reported on non-primary platforms
+- Internal testing feedback across persona workflows
+- Any bugs found during cross-platform testing
 
 ---
 
@@ -106,7 +106,7 @@
 - [ ] Tweet "launching tomorrow" with demo GIF
 - [ ] Ensure all download links work on all platforms
 - [ ] Pre-load Show HN post in a text file (ready to paste)
-- [ ] Notify early access users to be ready to comment
+- [ ] Prepare genuine talking points for post-launch community engagement
 
 **Tuesday (LAUNCH DAY):**
 - [ ] 6:00 AM ET: Post Show HN
@@ -187,7 +187,7 @@
 - [ ] Open GitHub Discussions for feature requests
 - [ ] Respond to every GitHub issue within 24 hours
 - [ ] Engage with anyone who tweets about 4DA
-- [ ] Start collecting testimonials from users who gave positive feedback
+- [ ] Start collecting provable product metrics and benchmark data for social proof
 
 **Paid actions (if budget allows):**
 - [ ] Start Reddit Ads on r/programming ($5/day, 7-day test)
@@ -225,8 +225,8 @@
 **Community actions:**
 - [ ] Ship first post-launch update (based on user feedback -- ship fast to build trust)
 - [ ] Announce the update on Twitter/X and GitHub
-- [ ] Ask 3 happy users for written testimonials
-- [ ] Add testimonials to landing page
+- [ ] Compile provable product metrics (noise rejection rate, scoring accuracy, performance benchmarks)
+- [ ] Add benchmark data and product metrics to landing page
 
 **Paid actions (if budget allows):**
 - [ ] Evaluate Reddit Ads from Week 4 -- continue or pause
@@ -275,22 +275,22 @@
 
 #### Week 7: Social Proof and Trust Building
 
-**Theme:** Leverage early user love to build credibility.
+**Theme:** Build credibility through provable metrics and technical depth.
 
 **Content deliverables:**
-- [ ] Create "wall of love" section on landing page (testimonial screenshots)
+- [ ] Create "proof of work" section on landing page (benchmark data, scoring accuracy metrics, architecture diagrams)
 - [ ] Blog post: "4DA architecture: How we built a 5-axis scoring engine in Rust"
 - [ ] Newsletter issue #4
 - [ ] 5 daily tweets
 
 **Distribution actions:**
 - [ ] Post architecture blog to HN (not Show HN -- regular submission)
-- [ ] Share testimonial screenshots on Twitter/X
+- [ ] Share benchmark data and architecture insights on Twitter/X
 - [ ] Second podcast appearance (if booked)
 
 **Community actions:**
-- [ ] Feature a "user of the week" in newsletter (interview a power user)
-- [ ] Create a "showcase" channel in Discord/GitHub Discussions for users to share their Developer DNA
+- [ ] Feature a technical deep-dive in newsletter (architecture spotlight, scoring breakdown)
+- [ ] Create a "showcase" channel in Discord/GitHub Discussions for sharing Developer DNA profiles
 - [ ] Respond to every review/mention with a personal thank you
 
 **Paid actions (if budget allows):**
@@ -298,7 +298,7 @@
 - [ ] Evaluate all paid channels, kill underperformers
 
 **Metrics to check:**
-- Testimonial collection rate
+- Product metric collection completeness
 - GitHub star growth rate
 - Newsletter growth rate
 - Sponsor newsletter CTR and conversions
@@ -353,13 +353,13 @@
 
 **Distribution actions:**
 - [ ] A/B test landing page headline (current vs alternative)
-- [ ] Add case study to landing page (real user, real numbers)
+- [ ] Add benchmark case study to landing page (real metrics from internal testing personas)
 - [ ] Test different CTA copy on pricing section
 
 **Community actions:**
-- [ ] Survey Free users: "What would make you upgrade to Pro?"
-- [ ] Interview 3 Pro users: "What made you decide to pay?"
-- [ ] Publish survey results as a blog post (transparency)
+- [ ] Analyze internal usage patterns across simulated personas to identify Pro upgrade triggers
+- [ ] Document the value proposition for each persona's upgrade path
+- [ ] Publish conversion analysis as a blog post (transparency)
 
 **Paid actions (if budget allows):**
 - [ ] Retarget landing page visitors who did not download (Twitter/X pixel, Reddit pixel)
@@ -392,7 +392,7 @@
 **Community actions:**
 - [ ] Host second office hours / AMA
 - [ ] Start a "feature request vote" board (GitHub Discussions or Canny)
-- [ ] Partner with 1-2 dev tool YouTube channels for a review
+- [ ] Prepare outreach materials for dev tool YouTube channels (for post-launch review pitches)
 
 **Paid actions (if budget allows):**
 - [ ] Sponsor a relevant podcast episode ($200-500)
@@ -422,14 +422,14 @@
 - [ ] Pitch conference lightning talks for upcoming dev conferences
 
 **Community actions:**
-- [ ] Recognize top community contributors (GitHub, Discord)
-- [ ] Ship most-requested community feature
-- [ ] Announce it publicly with credit to the users who requested it
+- [ ] Recognize any early community contributors (GitHub, Discord)
+- [ ] Ship the highest-impact feature identified from internal persona analysis
+- [ ] Announce it publicly with technical rationale
 
 **Paid actions (if budget allows):**
 - [ ] Scale best-performing paid channel by 2x
 - [ ] Kill worst-performing paid channel
-- [ ] Test a new ad creative based on user testimonials
+- [ ] Test a new ad creative based on provable product metrics
 
 **Metrics to check:**
 - Content performance ranking (which pieces drove the most downloads?)
@@ -502,7 +502,7 @@
 | 4 | Momentum | Learnings, follow-up content, comparisons |
 | 5 | Use cases | "How I use 4DA for X" stories |
 | 6 | SEO | Evergreen "best X for Y" articles |
-| 7 | Social proof | Testimonials, reviews, architecture deep-dive |
+| 7 | Social proof | Product metrics, benchmarks, architecture deep-dive |
 | 8 | Virality | Developer DNA sharing experiment |
 | 9 | Conversion | Onboarding optimization, Pro value content |
 | 10 | Partnerships | Guest posts, integrations, tutorials |
@@ -556,14 +556,14 @@ Create these categories:
 
 **Tier 1: High-reach developer influencers (50K+ followers)**
 
-Target these individuals for early access and honest review. Do NOT pay them -- offer free Pro and genuine relationship.
+Prepare content and outreach materials for post-launch engagement. Do NOT pay them -- offer free Pro and genuine relationship when the product launches.
 
 | Type | Where to find them | Outreach approach |
 |------|-------------------|-------------------|
-| Rust YouTubers | Search "Rust programming" on YouTube, sort by recent | DM on Twitter, offer early access |
-| Dev tool reviewers | Search "developer tools" on YouTube | Email with personalized pitch |
-| Tech Twitter personalities | Lists of dev tool influencers | Quote-tweet their content first, then DM |
-| Newsletter authors | TLDR, Pointer, Bytes, Rust Weekly | Email the editor, offer exclusive preview |
+| Rust YouTubers | Search "Rust programming" on YouTube, sort by recent | Prepare content for post-launch outreach |
+| Dev tool reviewers | Search "developer tools" on YouTube | Prepare personalized pitch drafts |
+| Tech Twitter personalities | Lists of dev tool influencers | Quote-tweet their content first, build relationship pre-launch |
+| Newsletter authors | TLDR, Pointer, Bytes, Rust Weekly | Prepare pitch emails for launch-day sends |
 | Podcast hosts | Changelog, Rustacean Station, devtools.fm, Syntax | Pitch email with personal story angle |
 
 **Tier 2: Mid-reach developers (5-50K followers)**
@@ -769,7 +769,7 @@ Everything in Tier 2, plus:
 **Probability:** 25%
 
 **Contingency plan:**
-1. Test all 3 platforms with 2+ people BEFORE launch
+1. Run internal cross-platform testing with simulated persona workflows BEFORE launch
 2. If broken at launch: add banner to download page with ETA for fix
 3. Prioritize the fix above all marketing activities
 4. Post the fix as a follow-up comment on HN/PH/Reddit

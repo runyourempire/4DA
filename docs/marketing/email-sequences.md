@@ -191,11 +191,11 @@ Your ACE scanner built a technology profile from your codebase. The scoring engi
 
 That is the free tier working as designed. All 11 sources. Full 5-axis scoring. Behavior learning. The MCP server. The CLI. No expiration. No catch.
 
-**What developers are saying:**
+**What the scoring engine does:**
 
-> "I found out about a breaking change in a dependency three days before it hit my production. 4DA surfaced the GitHub issue because it knew my Cargo.toml."
-
-> "I used to spend 45 minutes every morning skimming HN and Reddit. Now I open 4DA, read the 3-5 items that matter, and start coding."
+- Scans your Cargo.toml, package.json, go.mod — builds your tech profile automatically
+- Scores every item across 5 independent axes with a multi-signal confirmation gate
+- Rejects 99%+ of incoming content. What survives is signal.
 
 **What Pro adds:**
 
