@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <defs>
+    <filter id="mug-shadow" x="-5%" y="-5%" width="115%" height="115%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+    <linearGradient id="mug-body" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1A1A1A"/>
+      <stop offset="35%" stop-color="#1E1E1E"/>
+      <stop offset="65%" stop-color="#1C1C1C"/>
+      <stop offset="100%" stop-color="#181818"/>
+    </linearGradient>
+    <linearGradient id="mug-inside" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#0F0F0F"/>
+      <stop offset="100%" stop-color="#0C0C0C"/>
+    </linearGradient>
+    <linearGradient id="mug-handle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1C1C1C"/>
+      <stop offset="100%" stop-color="#161616"/>
+    </linearGradient>
+    <clipPath id="mug-body-clip">
+      <path d="
+        M 105 120
+        Q 100 122 95 200
+        Q 92 280 100 310
+        Q 105 325 130 330
+        L 270 330
+        Q 295 325 300 310
+        Q 308 280 305 200
+        Q 302 122 295 120
+        Z
+      "/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="400" fill="#0A0A0A"/>
+
+  <g filter="url(#mug-shadow)">
+    <!-- Mug body -->
+    <path d="
+      M 105 120
+      Q 100 122 95 200
+      Q 92 280 100 310
+      Q 105 325 130 330
+      L 270 330
+      Q 295 325 300 310
+      Q 308 280 305 200
+      Q 302 122 295 120
+      Z
+    " fill="url(#mug-body)"/>
+
+    <!-- Mug rim (top ellipse) -->
+    <ellipse cx="200" cy="120" rx="100" ry="18" fill="#1C1C1C" stroke="#282828" stroke-width="0.8"/>
+
+    <!-- Mug inside -->
+    <ellipse cx="200" cy="120" rx="88" ry="14" fill="url(#mug-inside)"/>
+
+    <!-- Rim highlight -->
+    <ellipse cx="200" cy="120" rx="100" ry="18" fill="none" stroke="#2A2A2A" stroke-width="0.5"/>
+
+    <!-- Handle (right side) -->
+    <path d="
+      M 300 165
+      Q 340 170 355 200
+      Q 365 230 355 260
+      Q 340 285 305 285
+    " fill="none" stroke="url(#mug-handle)" stroke-width="18" stroke-linecap="round"/>
+    <!-- Handle inner cutout -->
+    <path d="
+      M 305 178
+      Q 330 182 340 205
+      Q 348 228 340 250
+      Q 332 268 310 272
+    " fill="#0A0A0A" stroke="none"/>
+    <!-- Handle edge detail -->
+    <path d="
+      M 300 165
+      Q 340 170 355 200
+      Q 365 230 355 260
+      Q 340 285 305 285
+    " fill="none" stroke="#282828" stroke-width="0.6"/>
+
+    <!-- Base edge -->
+    <ellipse cx="200" cy="330" rx="85" ry="8" fill="#161616" stroke="#232323" stroke-width="0.5"/>
+
+    <!-- === Void Pulse Design on mug front === -->
+    <g clip-path="url(#mug-body-clip)">
+      <!-- Concentric rings (slightly elliptical to follow mug curve) -->
+      <ellipse cx="195" cy="220" rx="72" ry="68" fill="none" stroke="#D4AF37" stroke-width="0.6" opacity="0.12"/>
+      <ellipse cx="195" cy="220" rx="60" ry="56" fill="none" stroke="#D4AF37" stroke-width="0.7" opacity="0.18"/>
+      <ellipse cx="195" cy="220" rx="48" ry="45" fill="none" stroke="#D4AF37" stroke-width="0.8" opacity="0.25"/>
+      <ellipse cx="195" cy="220" rx="36" ry="34" fill="none" stroke="#D4AF37" stroke-width="1" opacity="0.35"/>
+      <ellipse cx="195" cy="220" rx="24" ry="23" fill="none" stroke="#F59E0B" stroke-width="1.2" opacity="0.5"/>
+      <ellipse cx="195" cy="220" rx="12" ry="11" fill="none" stroke="#F59E0B" stroke-width="1.5" opacity="0.7"/>
+
+      <!-- Heartbeat/pulse line -->
+      <polyline points="
+        120,220 140,220 150,220 160,220
+        168,220 173,200 178,245 183,210 188,225
+        195,220
+        202,220 207,215 212,228 217,218 222,220
+        230,220 250,220 270,220
+      " stroke="#F59E0B" stroke-width="1" fill="none" opacity="0.8"/>
+
+      <!-- Center amber dot with glow -->
+      <circle cx="195" cy="220" r="6" fill="#F59E0B" opacity="0.3"/>
+      <circle cx="195" cy="220" r="3.5" fill="#F59E0B" opacity="0.6"/>
+      <circle cx="195" cy="220" r="2" fill="#FBBF24"/>
+    </g>
+
+    <!-- Subtle ceramic texture lines -->
+    <line x1="130" y1="140" x2="125" y2="320" stroke="#232323" stroke-width="0.3" opacity="0.5"/>
+    <line x1="270" y1="140" x2="275" y2="320" stroke="#232323" stroke-width="0.3" opacity="0.5"/>
+  </g>
+
+  <!-- Product label -->
+  <text x="200" y="380" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="11" letter-spacing="2" fill="#666666">VOID PULSE CERAMIC MUG</text>
+</svg>

@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" fill="none">
+  <defs>
+    <filter id="tote-shadow" x="-5%" y="-3%" width="112%" height="112%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+    <linearGradient id="tote-body" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1A1A1A"/>
+      <stop offset="50%" stop-color="#1E1E1E"/>
+      <stop offset="100%" stop-color="#1A1A1A"/>
+    </linearGradient>
+    <linearGradient id="tote-handle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1C1C1C"/>
+      <stop offset="100%" stop-color="#191919"/>
+    </linearGradient>
+    <!-- Subtle canvas weave pattern -->
+    <pattern id="tote-weave" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="none"/>
+      <rect x="0" y="0" width="2" height="2" fill="#1D1D1D" opacity="0.3"/>
+      <rect x="2" y="2" width="2" height="2" fill="#1D1D1D" opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="480" fill="#0A0A0A"/>
+
+  <g filter="url(#tote-shadow)">
+    <!-- Handles (behind bag body) -->
+    <!-- Left handle -->
+    <path d="
+      M 135 115
+      Q 132 80 140 50
+      Q 148 30 160 25
+      Q 172 22 180 30
+      Q 185 40 183 55
+      L 178 115
+    " fill="none" stroke="url(#tote-handle)" stroke-width="10" stroke-linecap="round"/>
+    <!-- Left handle edge detail -->
+    <path d="
+      M 135 115
+      Q 132 80 140 50
+      Q 148 30 160 25
+      Q 172 22 180 30
+      Q 185 40 183 55
+      L 178 115
+    " fill="none" stroke="#282828" stroke-width="0.6"/>
+
+    <!-- Right handle -->
+    <path d="
+      M 222 115
+      Q 218 80 220 50
+      Q 225 30 238 25
+      Q 250 22 258 30
+      Q 265 40 267 55
+      L 265 115
+    " fill="none" stroke="url(#tote-handle)" stroke-width="10" stroke-linecap="round"/>
+    <!-- Right handle edge detail -->
+    <path d="
+      M 222 115
+      Q 218 80 220 50
+      Q 225 30 238 25
+      Q 250 22 258 30
+      Q 265 40 267 55
+      L 265 115
+    " fill="none" stroke="#282828" stroke-width="0.6"/>
+
+    <!-- Handle stitching (dashed lines along handles) -->
+    <path d="
+      M 133 115
+      Q 130 80 138 50
+      Q 146 30 160 25
+    " fill="none" stroke="#252525" stroke-width="0.4" stroke-dasharray="2 1.5"/>
+    <path d="
+      M 180 115
+      Q 187 80 185 55
+      Q 183 35 180 30
+    " fill="none" stroke="#252525" stroke-width="0.4" stroke-dasharray="2 1.5"/>
+    <path d="
+      M 220 115
+      Q 216 80 218 50
+      Q 223 30 238 25
+    " fill="none" stroke="#252525" stroke-width="0.4" stroke-dasharray="2 1.5"/>
+    <path d="
+      M 267 115
+      Q 269 80 269 55
+      Q 267 35 258 30
+    " fill="none" stroke="#252525" stroke-width="0.4" stroke-dasharray="2 1.5"/>
+
+    <!-- Bag body (slightly wider at top) -->
+    <path d="
+      M 85 115
+      L 88 410
+      Q 90 425 110 428
+      L 290 428
+      Q 310 425 312 410
+      L 315 115
+      Z
+    " fill="url(#tote-body)"/>
+
+    <!-- Canvas weave texture overlay -->
+    <path d="
+      M 85 115
+      L 88 410
+      Q 90 425 110 428
+      L 290 428
+      Q 310 425 312 410
+      L 315 115
+      Z
+    " fill="url(#tote-weave)"/>
+
+    <!-- Top opening edge -->
+    <path d="M 85 115 L 315 115" stroke="#282828" stroke-width="1.2"/>
+    <!-- Folded top edge detail -->
+    <path d="M 85 115 L 85 122 L 315 122 L 315 115" fill="#1A1A1A" stroke="none"/>
+    <path d="M 85 122 L 315 122" stroke="#252525" stroke-width="0.6"/>
+
+    <!-- Side seams -->
+    <line x1="88" y1="120" x2="90" y2="425" stroke="#252525" stroke-width="0.6"/>
+    <line x1="312" y1="120" x2="310" y2="425" stroke="#252525" stroke-width="0.6"/>
+
+    <!-- Bottom seam -->
+    <path d="M 110 428 Q 200 432 290 428" stroke="#252525" stroke-width="0.6" fill="none"/>
+
+    <!-- Handle attachment reinforcement (rectangles) -->
+    <rect x="130" y="115" width="52" height="18" rx="2" fill="#1A1A1A" stroke="#252525" stroke-width="0.5"/>
+    <rect x="218" y="115" width="52" height="18" rx="2" fill="#1A1A1A" stroke="#252525" stroke-width="0.5"/>
+
+    <!-- Reinforcement stitching -->
+    <rect x="133" y="118" width="46" height="12" rx="1" fill="none" stroke="#282828" stroke-width="0.4" stroke-dasharray="2 1"/>
+    <rect x="221" y="118" width="46" height="12" rx="1" fill="none" stroke="#282828" stroke-width="0.4" stroke-dasharray="2 1"/>
+
+    <!-- X stitch on reinforcement patches -->
+    <line x1="136" y1="120" x2="176" y2="128" stroke="#282828" stroke-width="0.3"/>
+    <line x1="176" y1="120" x2="136" y2="128" stroke="#282828" stroke-width="0.3"/>
+    <line x1="224" y1="120" x2="264" y2="128" stroke="#282828" stroke-width="0.3"/>
+    <line x1="264" y1="120" x2="224" y2="128" stroke="#282828" stroke-width="0.3"/>
+
+    <!-- === Design: "FOR THE STREETS" typography === -->
+    <text x="200" y="250" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="12" letter-spacing="5" fill="#A0A0A0">FOR THE</text>
+    <text x="200" y="290" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="36" font-weight="600" letter-spacing="3" fill="#FFFFFF">STREETS</text>
+
+    <!-- Separator line -->
+    <line x1="160" y1="305" x2="240" y2="305" stroke="#333333" stroke-width="0.8"/>
+
+    <!-- 4DA.AI small text below -->
+    <text x="200" y="325" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" letter-spacing="3" fill="#666666">4DA.AI</text>
+  </g>
+
+  <!-- Product label -->
+  <text x="200" y="462" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="11" letter-spacing="2" fill="#666666">STREETS CANVAS TOTE</text>
+</svg>

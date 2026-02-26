@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 500">
+  <rect width="420" height="500" fill="#0A0A0A"/>
+  <!-- T-shirt silhouette -->
+  <path d="M168,75 C168,60 185,50 210,50 C235,50 252,60 252,75 L300,75 L355,105 L355,200 C355,203 353,205 350,205 L300,185 L300,435 C300,442 295,447 288,447 L132,447 C125,447 120,442 120,435 L120,185 L70,205 C67,205 65,203 65,200 L65,105 L120,75 Z" fill="#1C1C1C"/>
+  <!-- Collar -->
+  <path d="M172,77 C178,63 192,55 210,55 C228,55 242,63 248,77" fill="none" stroke="#282828" stroke-width="2" stroke-linecap="round"/>
+  <!-- Shoulder seams -->
+  <line x1="120" y1="75" x2="168" y2="75" stroke="#232323" stroke-width="0.5" opacity="0.6"/>
+  <line x1="252" y1="75" x2="300" y2="75" stroke="#232323" stroke-width="0.5" opacity="0.6"/>
+  <!-- Sleeve hems -->
+  <line x1="65" y1="198" x2="120" y2="183" stroke="#232323" stroke-width="0.5" opacity="0.3"/>
+  <line x1="300" y1="183" x2="355" y2="198" stroke="#232323" stroke-width="0.5" opacity="0.3"/>
+  <!-- Bottom hem -->
+  <line x1="132" y1="445" x2="288" y2="445" stroke="#232323" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- DESIGN: Solar Crown - full chest graphic -->
+  <defs>
+    <radialGradient id="solar-corona" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD14D"/>
+      <stop offset="30%" stop-color="#F97316"/>
+      <stop offset="60%" stop-color="#D4530A"/>
+      <stop offset="85%" stop-color="#8C2D0A"/>
+      <stop offset="100%" stop-color="#1C1C1C"/>
+    </radialGradient>
+    <radialGradient id="solar-innerGlow" cx="50%" cy="50%" r="35%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#FFD14D" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#F97316" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="solar-glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(70,120) scale(0.35)">
+    <circle cx="200" cy="200" r="160" fill="url(#solar-corona)" opacity="0.9"/>
+    <g opacity="0.6" filter="url(#solar-glow)">
+      <ellipse cx="200" cy="50" rx="15" ry="35" fill="#F97316" transform="rotate(0 200 200)"/>
+      <ellipse cx="200" cy="50" rx="12" ry="30" fill="#F97316" transform="rotate(45 200 200)"/>
+      <ellipse cx="200" cy="50" rx="18" ry="40" fill="#D4530A" transform="rotate(90 200 200)"/>
+      <ellipse cx="200" cy="50" rx="14" ry="32" fill="#F97316" transform="rotate(135 200 200)"/>
+      <ellipse cx="200" cy="50" rx="16" ry="38" fill="#F97316" transform="rotate(180 200 200)"/>
+      <ellipse cx="200" cy="50" rx="13" ry="28" fill="#D4530A" transform="rotate(225 200 200)"/>
+      <ellipse cx="200" cy="50" rx="20" ry="42" fill="#F97316" transform="rotate(270 200 200)"/>
+      <ellipse cx="200" cy="50" rx="11" ry="26" fill="#F97316" transform="rotate(315 200 200)"/>
+    </g>
+    <circle cx="200" cy="200" r="110" fill="url(#solar-corona)"/>
+    <circle cx="200" cy="200" r="90" fill="url(#solar-innerGlow)"/>
+    <text x="200" y="230" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="140" font-weight="600" fill="#FFFFFF" filter="url(#solar-glow)">4</text>
+  </g>
+</svg>

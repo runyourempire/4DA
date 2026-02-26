@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 500">
+  <rect width="420" height="500" fill="#0A0A0A"/>
+  <!-- T-shirt silhouette -->
+  <path d="M168,75 C168,60 185,50 210,50 C235,50 252,60 252,75 L300,75 L355,105 L355,200 C355,203 353,205 350,205 L300,185 L300,435 C300,442 295,447 288,447 L132,447 C125,447 120,442 120,435 L120,185 L70,205 C67,205 65,203 65,200 L65,105 L120,75 Z" fill="#1C1C1C"/>
+  <!-- Collar -->
+  <path d="M172,77 C178,63 192,55 210,55 C228,55 242,63 248,77" fill="none" stroke="#282828" stroke-width="2" stroke-linecap="round"/>
+  <!-- Shoulder seams -->
+  <line x1="120" y1="75" x2="168" y2="75" stroke="#232323" stroke-width="0.5" opacity="0.6"/>
+  <line x1="252" y1="75" x2="300" y2="75" stroke="#232323" stroke-width="0.5" opacity="0.6"/>
+  <!-- Sleeve hems -->
+  <line x1="65" y1="198" x2="120" y2="183" stroke="#232323" stroke-width="0.5" opacity="0.3"/>
+  <line x1="300" y1="183" x2="355" y2="198" stroke="#232323" stroke-width="0.5" opacity="0.3"/>
+  <!-- Bottom hem -->
+  <line x1="132" y1="445" x2="288" y2="445" stroke="#232323" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- DESIGN: Code Fragment - terminal with Rust code -->
+  <g transform="translate(80,110) scale(0.32)">
+    <rect x="40" y="40" width="420" height="420" rx="8" fill="#141414" stroke="#2A2A2A" stroke-width="1"/>
+    <circle cx="65" cy="62" r="5" fill="#EF4444" opacity="0.8"/>
+    <circle cx="82" cy="62" r="5" fill="#F97316" opacity="0.8"/>
+    <circle cx="99" cy="62" r="5" fill="#22C55E" opacity="0.8"/>
+    <text x="250" y="66" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#666666">relevance.rs</text>
+    <g font-family="'JetBrains Mono', monospace" font-size="12">
+      <text x="55" y="105" fill="#333333">1</text>
+      <text x="55" y="125" fill="#333333">2</text>
+      <text x="55" y="145" fill="#333333">3</text>
+      <text x="55" y="165" fill="#333333">4</text>
+      <text x="55" y="185" fill="#333333">5</text>
+      <text x="55" y="205" fill="#333333">6</text>
+      <text x="55" y="225" fill="#333333">7</text>
+      <text x="55" y="245" fill="#333333">8</text>
+      <text x="55" y="265" fill="#333333">9</text>
+      <text x="48" y="285" fill="#333333">10</text>
+      <text x="48" y="305" fill="#333333">11</text>
+      <text x="48" y="325" fill="#333333">12</text>
+      <text x="48" y="345" fill="#333333">13</text>
+      <text x="48" y="365" fill="#333333">14</text>
+      <text x="48" y="385" fill="#333333">15</text>
+      <text x="48" y="405" fill="#333333">16</text>
+      <text x="48" y="425" fill="#333333">17</text>
+      <text x="80" y="105" fill="#F97316">/// Score what matters. Ignore the noise.</text>
+      <text x="80" y="125" fill="#D4AF37">pub fn</text><text x="130" y="125" fill="#FFFFFF"> score_relevance(</text>
+      <text x="80" y="145" fill="#A0A0A0">    item: </text><text x="145" y="145" fill="#D4AF37">&amp;ContentItem</text><text x="280" y="145" fill="#A0A0A0">,</text>
+      <text x="80" y="165" fill="#A0A0A0">    context: </text><text x="165" y="165" fill="#D4AF37">&amp;DevContext</text><text x="290" y="165" fill="#A0A0A0">,</text>
+      <text x="80" y="185" fill="#A0A0A0">) -> </text><text x="120" y="185" fill="#D4AF37">f64</text><text x="155" y="185" fill="#A0A0A0"> {</text>
+      <text x="80" y="205" fill="#A0A0A0">    </text><text x="95" y="205" fill="#D4AF37">let</text><text x="125" y="205" fill="#FFFFFF"> stack = context.detect_stack();</text>
+      <text x="80" y="225" fill="#A0A0A0">    </text><text x="95" y="225" fill="#D4AF37">let</text><text x="125" y="225" fill="#FFFFFF"> signal = item.extract_signal();</text>
+      <text x="80" y="245" fill="#A0A0A0">    </text><text x="95" y="245" fill="#D4AF37">let</text><text x="125" y="245" fill="#FFFFFF"> confidence = pasifa(</text>
+      <text x="80" y="265" fill="#FFFFFF">        stack, signal, context</text>
+      <text x="80" y="285" fill="#FFFFFF">    );</text>
+      <text x="80" y="305" fill="#A0A0A0"> </text>
+      <text x="80" y="325" fill="#F97316">    // Privacy first. Always.</text>
+      <text x="80" y="345" fill="#A0A0A0">    </text><text x="95" y="345" fill="#D4AF37">assert!</text><text x="155" y="345" fill="#A0A0A0">(</text><text x="165" y="345" fill="#FFFFFF">data.stays_local()</text><text x="340" y="345" fill="#A0A0A0">);</text>
+      <text x="80" y="365" fill="#A0A0A0"> </text>
+      <text x="80" y="385" fill="#A0A0A0">    confidence.</text><text x="180" y="385" fill="#FFFFFF">score</text>
+      <text x="80" y="405" fill="#A0A0A0">}</text>
+      <text x="80" y="425" fill="#333333">// 4DA -- Four Dimensional Autonomy</text>
+    </g>
+  </g>
+</svg>
