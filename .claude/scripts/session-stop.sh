@@ -2,13 +2,17 @@
 # Session stop hook - Archive complete session transcript
 set -e
 
-SESSIONS_DIR="/mnt/d/4DA/.claude/sessions"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SESSIONS_DIR="$SCRIPT_DIR/../sessions"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
 # Read hook input
 INPUT=$(cat)
 SESSION_ID=$(echo "$INPUT" | grep -o '"session_id":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
 TRANSCRIPT_PATH=$(echo "$INPUT" | grep -o '"transcript_path":"[^"]*"' | cut -d'"' -f4 || echo "")
+
+# Ensure transcripts directory exists
+mkdir -p "$SESSIONS_DIR/transcripts"
 
 # Archive transcript if it exists
 if [ -n "$TRANSCRIPT_PATH" ] && [ -f "$TRANSCRIPT_PATH" ]; then
