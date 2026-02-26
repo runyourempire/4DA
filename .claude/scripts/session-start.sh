@@ -2,12 +2,16 @@
 # Session start hook - Initialize session tracking
 set -e
 
-SESSIONS_DIR="/mnt/d/4DA/.claude/sessions"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SESSIONS_DIR="$SCRIPT_DIR/../sessions"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
 # Read hook input
 INPUT=$(cat)
 SESSION_ID=$(echo "$INPUT" | grep -o '"session_id":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
+
+# Ensure transcripts directory exists
+mkdir -p "$SESSIONS_DIR/transcripts"
 
 # Create session metadata file
 SESSION_FILE="$SESSIONS_DIR/transcripts/session_${TIMESTAMP}_${SESSION_ID}.meta"

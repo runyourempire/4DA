@@ -14,8 +14,8 @@ const path = require('path');
 // Configuration
 const CONFIG = {
   threshold: 4,                    // Score threshold for recommendation
-  stateFile: '/mnt/d/4DA/.claude/analyzer-state.json',
-  logFile: '/mnt/d/4DA/.claude/sessions/analyzer.log',
+  stateFile: path.join(__dirname, '..', 'analyzer-state.json'),
+  logFile: path.join(__dirname, '..', 'sessions', 'analyzer.log'),
   enableLogging: true,
 };
 
