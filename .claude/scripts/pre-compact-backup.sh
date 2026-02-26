@@ -4,7 +4,8 @@
 
 set -e
 
-BACKUP_DIR="/mnt/d/4DA/.claude/backups"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BACKUP_DIR="$SCRIPT_DIR/../backups"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
 # Create backup directory if needed
@@ -31,7 +32,7 @@ if [ -n "$TRANSCRIPT_PATH" ] && [ -f "$TRANSCRIPT_PATH" ]; then
 fi
 
 # Update current-state.md with compaction notice
-STATE_FILE="/mnt/d/4DA/.claude/rules/current-state.md"
+STATE_FILE="$SCRIPT_DIR/../rules/current-state.md"
 if [ -f "$STATE_FILE" ]; then
     # Add compaction marker
     sed -i "s/\*Last updated:.*/\*Last updated: Compaction at $TIMESTAMP ($TRIGGER)\*/" "$STATE_FILE"

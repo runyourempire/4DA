@@ -3,7 +3,8 @@
 # Usage: ./.claude/scripts/save-transcript-now.sh [optional-note]
 set -e
 
-SESSIONS_DIR="/mnt/d/4DA/.claude/sessions"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SESSIONS_DIR="$SCRIPT_DIR/../sessions"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 NOTE="${1:-manual-save}"
 
