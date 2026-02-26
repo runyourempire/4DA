@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 350" fill="none">
+  <defs>
+    <filter id="deskmat-shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <pattern id="deskmat-grid" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="skewX(-5)">
+      <rect width="20" height="20" fill="none"/>
+      <line x1="0" y1="20" x2="20" y2="20" stroke="#1F1F1F" stroke-width="0.3"/>
+      <line x1="20" y1="0" x2="20" y2="20" stroke="#1F1F1F" stroke-width="0.3"/>
+    </pattern>
+    <linearGradient id="deskmat-surface" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#1A1A1A"/>
+      <stop offset="100%" stop-color="#1C1C1C"/>
+    </linearGradient>
+    <linearGradient id="deskmat-rubber" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#111111"/>
+      <stop offset="100%" stop-color="#0D0D0D"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="500" height="350" fill="#0A0A0A"/>
+
+  <g filter="url(#deskmat-shadow)">
+    <!-- Rubber base (visible as a border/thickness) -->
+    <path d="
+      M 60 100
+      L 440 80
+      L 455 270
+      L 45 290
+      Z
+    " fill="url(#deskmat-rubber)"/>
+
+    <!-- Mat surface (perspective: narrower at top, wider at bottom) -->
+    <path d="
+      M 65 98
+      L 435 78
+      L 450 265
+      L 50 285
+      Z
+    " fill="url(#deskmat-surface)"/>
+
+    <!-- Grid pattern overlay -->
+    <path d="
+      M 65 98
+      L 435 78
+      L 450 265
+      L 50 285
+      Z
+    " fill="url(#deskmat-grid)" opacity="0.5"/>
+
+    <!-- Stitched edge -->
+    <path d="
+      M 65 98
+      L 435 78
+      L 450 265
+      L 50 285
+      Z
+    " fill="none" stroke="#282828" stroke-width="1" stroke-dasharray="4 3"/>
+
+    <!-- Inner stitched border -->
+    <path d="
+      M 72 101
+      L 430 82
+      L 445 262
+      L 57 281
+      Z
+    " fill="none" stroke="#232323" stroke-width="0.5" stroke-dasharray="3 2"/>
+
+    <!-- === PASIFA Schematic on mat surface === -->
+
+    <!-- Central scoring core circle -->
+    <ellipse cx="250" cy="172" rx="32" ry="28" fill="#141414" stroke="#D4AF37" stroke-width="1.5"/>
+    <text x="250" y="168" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="6" font-weight="600" letter-spacing="1" fill="#D4AF37">PASIFA</text>
+    <text x="250" y="178" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="4.5" fill="#A0A0A0">SCORING CORE</text>
+
+    <!-- Input node 1: STACK DETECT (top left) -->
+    <ellipse cx="140" cy="120" rx="30" ry="14" fill="#141414" stroke="#F97316" stroke-width="1" opacity="0.9"/>
+    <text x="140" y="122" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="5" fill="#F97316">STACK DETECT</text>
+    <!-- Connection line to core -->
+    <line x1="170" y1="125" x2="220" y2="160" stroke="#F97316" stroke-width="0.6" opacity="0.5" stroke-dasharray="2 2"/>
+
+    <!-- Input node 2: SIGNAL EXTRACT (top right) -->
+    <ellipse cx="360" cy="115" rx="30" ry="14" fill="#141414" stroke="#F97316" stroke-width="1" opacity="0.9"/>
+    <text x="360" y="117" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="5" fill="#F97316">SIGNAL EXTRACT</text>
+    <line x1="330" y1="120" x2="280" y2="158" stroke="#F97316" stroke-width="0.6" opacity="0.5" stroke-dasharray="2 2"/>
+
+    <!-- Input node 3: EMBED LOCAL (bottom left) -->
+    <ellipse cx="130" cy="225" rx="30" ry="14" fill="#141414" stroke="#F97316" stroke-width="1" opacity="0.9"/>
+    <text x="130" y="227" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="5" fill="#F97316">EMBED LOCAL</text>
+    <line x1="160" y1="218" x2="222" y2="190" stroke="#F97316" stroke-width="0.6" opacity="0.5" stroke-dasharray="2 2"/>
+
+    <!-- Input node 4: GATE CONFIDENCE (bottom right) -->
+    <ellipse cx="370" cy="220" rx="32" ry="14" fill="#141414" stroke="#F97316" stroke-width="1" opacity="0.9"/>
+    <text x="370" y="222" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="5" fill="#F97316">GATE CONFIDENCE</text>
+    <line x1="340" y1="215" x2="280" y2="188" stroke="#F97316" stroke-width="0.6" opacity="0.5" stroke-dasharray="2 2"/>
+
+    <!-- Output: RELEVANCE scale at bottom -->
+    <line x1="250" y1="200" x2="250" y2="248" stroke="#D4AF37" stroke-width="0.6" opacity="0.5" stroke-dasharray="2 2"/>
+    <rect x="190" y="248" width="120" height="16" rx="3" fill="#141414" stroke="#282828" stroke-width="0.8"/>
+    <!-- Scale bar -->
+    <rect x="196" y="254" width="108" height="4" rx="2" fill="#1A1A1A"/>
+    <rect x="196" y="254" width="75" height="4" rx="2" fill="#D4AF37" opacity="0.6"/>
+    <text x="194" y="270" font-family="'JetBrains Mono', monospace" font-size="4" fill="#666666">0.00</text>
+    <text x="245" y="262" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="4" fill="#A0A0A0">RELEVANCE</text>
+    <text x="300" y="270" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="4" fill="#666666">1.00</text>
+
+    <!-- Data flow arrows (small triangles) -->
+    <polygon points="218,158 222,162 218,162" fill="#F97316" opacity="0.6"/>
+    <polygon points="282,156 278,160 282,160" fill="#F97316" opacity="0.6"/>
+    <polygon points="220,188 224,192 220,192" fill="#F97316" opacity="0.6"/>
+    <polygon points="282,186 278,190 282,190" fill="#F97316" opacity="0.6"/>
+  </g>
+
+  <!-- Product label -->
+  <text x="250" y="330" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="11" letter-spacing="2" fill="#666666">PASIFA SCHEMATIC DESK MAT</text>
+</svg>

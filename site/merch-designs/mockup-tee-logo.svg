@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 500">
+  <rect width="420" height="500" fill="#0A0A0A"/>
+  <!-- T-shirt silhouette -->
+  <path d="M168,75 C168,60 185,50 210,50 C235,50 252,60 252,75 L300,75 L355,105 L355,200 C355,203 353,205 350,205 L300,185 L300,435 C300,442 295,447 288,447 L132,447 C125,447 120,442 120,435 L120,185 L70,205 C67,205 65,203 65,200 L65,105 L120,75 Z" fill="#1C1C1C"/>
+  <!-- Collar -->
+  <path d="M172,77 C178,63 192,55 210,55 C228,55 242,63 248,77" fill="none" stroke="#282828" stroke-width="2" stroke-linecap="round"/>
+  <!-- Shoulder seams -->
+  <line x1="120" y1="75" x2="168" y2="75" stroke="#232323" stroke-width="0.5" opacity="0.6"/>
+  <line x1="252" y1="75" x2="300" y2="75" stroke="#232323" stroke-width="0.5" opacity="0.6"/>
+  <!-- Sleeve hems -->
+  <line x1="65" y1="198" x2="120" y2="183" stroke="#232323" stroke-width="0.5" opacity="0.3"/>
+  <line x1="300" y1="183" x2="355" y2="198" stroke="#232323" stroke-width="0.5" opacity="0.3"/>
+  <!-- Bottom hem -->
+  <line x1="132" y1="445" x2="288" y2="445" stroke="#232323" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- DESIGN: 4DA Logo - small chest print -->
+  <g transform="translate(120,140) scale(0.45)">
+    <text x="200" y="82" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="72" font-weight="600" letter-spacing="-3" fill="#FFFFFF">4DA</text>
+    <text x="200" y="108" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" letter-spacing="4" fill="#666666">FOUR DIMENSIONAL AUTONOMY</text>
+  </g>
+</svg>
