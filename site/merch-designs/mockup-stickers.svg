@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 420" fill="none">
+  <defs>
+    <filter id="sticker-shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="sticker-shadow-sm" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0.5" dy="1" stdDeviation="2" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="420" height="420" fill="#0A0A0A"/>
+
+  <!-- Sticker 1: Circle badge "4DA" with gold border — top left area -->
+  <g transform="translate(95, 100) rotate(-8, 0, 0)" filter="url(#sticker-shadow)">
+    <!-- Die-cut white border -->
+    <circle cx="0" cy="0" r="52" fill="#1A1A1A" stroke="#2A2A2A" stroke-width="2"/>
+    <!-- Gold ring -->
+    <circle cx="0" cy="0" r="46" fill="none" stroke="#D4AF37" stroke-width="2.5"/>
+    <!-- Inner circle -->
+    <circle cx="0" cy="0" r="38" fill="#141414"/>
+    <!-- 4DA text -->
+    <text x="0" y="7" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="22" font-weight="700" letter-spacing="-1" fill="#FFFFFF">4DA</text>
+    <!-- Subtitle -->
+    <text x="0" y="20" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="5" letter-spacing="1.5" fill="#D4AF37">AUTONOMY</text>
+  </g>
+
+  <!-- Sticker 2: Circle — Void Pulse concentric rings — top right -->
+  <g transform="translate(300, 85) rotate(12, 0, 0)" filter="url(#sticker-shadow)">
+    <!-- Die-cut border -->
+    <circle cx="0" cy="0" r="48" fill="#111111" stroke="#222222" stroke-width="2"/>
+    <!-- Concentric rings -->
+    <circle cx="0" cy="0" r="36" fill="none" stroke="#D4AF37" stroke-width="1" opacity="0.2"/>
+    <circle cx="0" cy="0" r="28" fill="none" stroke="#D4AF37" stroke-width="1" opacity="0.35"/>
+    <circle cx="0" cy="0" r="20" fill="none" stroke="#D4AF37" stroke-width="1.2" opacity="0.5"/>
+    <circle cx="0" cy="0" r="12" fill="none" stroke="#F59E0B" stroke-width="1.5" opacity="0.7"/>
+    <!-- Heartbeat line -->
+    <polyline points="-30,0 -15,0 -10,-12 -5,15 0,-8 5,0 10,0 15,-5 20,0 30,0" stroke="#F59E0B" stroke-width="1.2" fill="none" opacity="0.9"/>
+    <!-- Center dot -->
+    <circle cx="0" cy="0" r="3" fill="#F59E0B"/>
+  </g>
+
+  <!-- Sticker 3: Rounded rectangle — "PRIVACY FIRST" — center left -->
+  <g transform="translate(80, 245) rotate(5, 0, 0)" filter="url(#sticker-shadow)">
+    <!-- Die-cut border -->
+    <rect x="-65" y="-22" width="130" height="44" rx="8" fill="#111111" stroke="#222222" stroke-width="2"/>
+    <!-- Green accent line top -->
+    <rect x="-58" y="-16" width="116" height="2" rx="1" fill="#22C55E" opacity="0.6"/>
+    <!-- Lock icon -->
+    <g transform="translate(-40, 3)">
+      <rect x="-5" y="-2" width="10" height="8" rx="1.5" fill="#22C55E"/>
+      <path d="M -3 -2 L -3 -5 Q -3 -8 0 -8 Q 3 -8 3 -5 L 3 -2" fill="none" stroke="#22C55E" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+    <!-- Text -->
+    <text x="5" y="6" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="14" font-weight="600" letter-spacing="2" fill="#22C55E">PRIVACY</text>
+    <text x="5" y="16" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="8" letter-spacing="3" fill="#A0A0A0">FIRST</text>
+  </g>
+
+  <!-- Sticker 4: Pill shape — "STREETS" in orange on dark -->
+  <g transform="translate(290, 230) rotate(-6, 0, 0)" filter="url(#sticker-shadow-sm)">
+    <!-- Die-cut pill -->
+    <rect x="-55" y="-18" width="110" height="36" rx="18" fill="#1A1A1A" stroke="#2A2A2A" stroke-width="2"/>
+    <!-- Orange accent bar -->
+    <rect x="-48" y="-12" width="96" height="24" rx="12" fill="#1C1C1C" stroke="#F97316" stroke-width="1"/>
+    <!-- Text -->
+    <text x="0" y="5" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="14" font-weight="600" letter-spacing="4" fill="#F97316">STREETS</text>
+  </g>
+
+  <!-- Sticker 5: Code rectangle — assert!(data.stays_local()) — bottom center -->
+  <g transform="translate(200, 340) rotate(-3, 0, 0)" filter="url(#sticker-shadow)">
+    <!-- Die-cut border -->
+    <rect x="-100" y="-22" width="200" height="44" rx="6" fill="#111111" stroke="#222222" stroke-width="2"/>
+    <!-- Terminal dot indicators -->
+    <circle cx="-85" cy="-10" r="3" fill="#EF4444" opacity="0.7"/>
+    <circle cx="-75" cy="-10" r="3" fill="#F59E0B" opacity="0.7"/>
+    <circle cx="-65" cy="-10" r="3" fill="#22C55E" opacity="0.7"/>
+    <!-- Code text -->
+    <text x="0" y="8" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#A0A0A0">
+      <tspan fill="#F97316">assert!</tspan><tspan fill="#666666">(</tspan><tspan fill="#FFFFFF">data</tspan><tspan fill="#666666">.</tspan><tspan fill="#22C55E">stays_local</tspan><tspan fill="#666666">())</tspan>
+    </text>
+  </g>
+
+  <!-- Product label -->
+  <text x="210" y="405" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="11" letter-spacing="2" fill="#666666">STICKER PACK (5 PCS)</text>
+</svg>
