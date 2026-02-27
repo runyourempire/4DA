@@ -98,8 +98,8 @@ const result = await invoke<ReturnType>('command_name', {
 | `src-tauri/src/commands.rs` | Tauri commands | `#[tauri::command]` |
 | `src-tauri/src/commands/*.rs` | Command modules | `#[tauri::command]` |
 | `src/App.tsx` + `src/components/*.tsx` | Frontend invokes | `invoke<` |
-| `mcp-4da-server/src/schema-registry.ts` | MCP tool registry | `TOOL_REGISTRY` (27 tools) |
-| `mcp-4da-server/src/schemas/*.json` | MCP tool schemas | 27 JSON schema files |
+| `mcp-4da-server/src/schema-registry.ts` | MCP tool registry | `TOOL_REGISTRY` (30 tools) |
+| `mcp-4da-server/src/schemas/*.json` | MCP tool schemas | 30 JSON schema files |
 | `mcp-4da-server/src/types.ts` | MCP types | interfaces |
 
 ---
@@ -160,7 +160,7 @@ ls mcp-4da-server/src/tools/ | grep -v index | grep -v __tests__
 ```
 
 **Architecture:** Tools use a schema registry pattern (not inline `toolDefinition` objects).
-- `schema-registry.ts` — canonical list of all 27 tools with slim summaries
+- `schema-registry.ts` — canonical list of all 30 tools with slim summaries
 - `schemas/*.json` — full JSON Schema files exposed as MCP Resources
 - `tools/*.ts` — implementation files export `execute*` functions
 
@@ -203,7 +203,7 @@ When completing tasks, return:
 |-------|----------------|--------|
 | Tauri Backend | 66 | 3 |
 | Frontend | 45 | 2 |
-| MCP Server | 27 | 0 |
+| MCP Server | 30 | 0 |
 
 ### Tauri Commands
 <details>
