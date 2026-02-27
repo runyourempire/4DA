@@ -207,7 +207,65 @@ Frontend tests: N/N passed
 
 ---
 
-### Step 5: Summary Report
+### Step 5: MCP Server End-to-End Wiring (unless skipped)
+
+Verify the MCP server correctly connects to the desktop app's database and produces real results.
+
+**5a. Doctor check (no DB required):**
+```bash
+cd mcp-4da-server && node dist/index.js --doctor 2>&1
+```
+Verify: exits cleanly, reports DB status honestly (warn if missing, pass if found).
+
+**5b. DB path resolution (requires 4DA to have run at least once):**
+Read `mcp-4da-server/src/db.ts` and verify `getDefaultDbPath()` checks:
+1. `FOURDA_DB_PATH` env var (highest priority)
+2. `data/4da.db` relative to cwd (development)
+3. `data/4da.db` relative to project root (monorepo)
+4. Platform-specific Tauri app data dirs (`com.4da.app/data/4da.db`)
+5. Final fallback
+
+Check that the Tauri app data paths match what `src-tauri/tauri.conf.json` produces. Read `src-tauri/tauri.conf.json` and verify the `identifier` field matches `com.4da.app`.
+
+**5c. Graceful degradation (no DB):**
+Verify that when no DB exists:
+- `get_relevant_content` returns a helpful error, not a stack trace
+- `get_context` returns a helpful error, not a stack trace
+- Server starts successfully and accepts connections (tools fail individually, server doesn't crash)
+
+**5d. Live tool validation (requires running 4DA instance with data):**
+If `data/4da.db` exists, run the MCP Inspector and manually invoke:
+- `get_context` — should return non-empty tech_stack or interests
+- `get_relevant_content` — should return scored items (or empty array if no recent content)
+- `source_health` — should report source fetch status
+
+**5e. Setup command verification:**
+```bash
+cd mcp-4da-server && node dist/setup.js --dry-run 2>&1
+```
+Verify it detects installed editors without modifying config files.
+
+**Pass criteria:**
+- Doctor runs cleanly on all platforms
+- DB path resolution matches Tauri app data identifier
+- No tool call crashes the server (graceful errors only)
+- Setup detects at least one editor or reports "no editors found"
+- If DB exists: at least one tool returns meaningful data
+
+**Output format:**
+```
+## MCP Wiring
+Status: PASS | FAIL
+Doctor: clean (N checks pass, N warnings)
+DB path: matches tauri.conf.json identifier
+Graceful degradation: verified (no crashes without DB)
+Live tools: N/N return data (or SKIPPED — no DB)
+Setup: detects [editors] or reports cleanly
+```
+
+---
+
+### Step 6: Summary Report
 
 Combine all section results into a final report:
 
@@ -222,6 +280,7 @@ Commit: [git rev-parse --short HEAD]
 | MCP Server | PASS/FAIL | 30 tools, clean build |
 | First-Run Experience | PASS/FAIL | 0 P0, 0 P1 issues |
 | Build Health | PASS/FAIL | All tests pass |
+| MCP Wiring | PASS/FAIL | DB path verified, graceful degradation |
 
 ## Overall: READY / NOT READY
 
