@@ -754,7 +754,7 @@ Modules    Engines    Community    Free Playbook    FAQ
 
 ### 4. Authority
 - **Technical specificity throughout.** The copy uses exact numbers ($121K average salary, $59.6B market projection, $0.02/parse API pricing), real tool names (Ollama, Tailwind, Next.js, PostgreSQL), and precise timeframes. This signals deep domain expertise.
-- **4DA as parent brand.** STREETS inherits authority from 4DA's technical credibility (Rust + Tauri, 5-axis scoring, 26 MCP tools). The "built by developers for developers" signal is implicit.
+- **4DA as parent brand.** STREETS inherits authority from 4DA's technical credibility (Rust + Tauri, 5-axis scoring, 30 MCP tools). The "built by developers for developers" signal is implicit.
 - **Revenue engine examples** use realistic, specific numbers (not "make six figures" but "$893/month from 47 customers at $19/month").
 
 ### 5. Liking

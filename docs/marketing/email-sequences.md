@@ -39,7 +39,7 @@ Talk soon.
 
 -- The 4DA team
 
-P.S. -- If you use Claude Code or Cursor, we are also shipping an MCP server with 26 tools that gives your AI assistant access to the same scored intelligence feed. MIT licensed. More on that at launch.
+P.S. -- If you use Claude Code or Cursor, we are also shipping an MCP server with 30 tools that gives your AI assistant access to the same scored intelligence feed. MIT licensed. More on that at launch.
 
 ---
 
@@ -71,7 +71,7 @@ P.S. -- If you use Claude Code or Cursor, we are also shipping an MCP server wit
 - **Confirmation gate** -- an item needs 2+ independent signals to pass. 99%+ gets rejected.
 - **Auto context discovery** -- scans your project files and Git activity to understand your stack. No configuration.
 - **Behavior learning** -- save and dismiss actions train the scoring with 30-day exponential decay
-- **MCP server** -- 26 tools for Claude Code and Cursor. Your AI assistant gets signal too.
+- **MCP server** -- 30 tools for Claude Code and Cursor. Your AI assistant gets signal too.
 - **Zero telemetry** -- no analytics, no tracking, no account required. Your data stays yours.
 
 The free tier is not a demo. It is the full scoring engine with all 11 sources, the CLI, the MCP server, and behavior learning. Most developers will never need more.
@@ -156,7 +156,7 @@ Open Settings and add any directory with manifest files or Git history.
 
 **If you use Claude Code or Cursor:**
 
-4DA ships an MCP server with 26 tools. Install it with one command:
+4DA ships an MCP server with 30 tools. Install it with one command:
 
 ```
 npx @4da/mcp-server

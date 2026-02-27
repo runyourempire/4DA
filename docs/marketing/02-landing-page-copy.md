@@ -91,7 +91,7 @@ Instead of fabricated social proof, use provable product facts that address the 
 > Privacy by Architecture: Raw data never leaves your machine. BYOK for AI features. Zero telemetry. Full offline mode with Ollama. Architecturally unable to see your data.
 
 **Card 4 -- Integration Proof (addresses power users)**
-> MCP Intelligence Server: 26 tools exposing scored intelligence, signal chains, knowledge gaps, and decision memory to Claude Code, Cursor, and any MCP-compatible host.
+> MCP Intelligence Server: 30 tools exposing scored intelligence, signal chains, knowledge gaps, and decision memory to Claude Code, Cursor, and any MCP-compatible host.
 
 ### Social Proof Strategy
 
@@ -235,7 +235,7 @@ Body:   Scans your Cargo.toml, package.json, go.mod, and Git activity
 ```
 Tag:    INTEGRATION
 Title:  MCP Integration
-Body:   26 tools for Claude Code and Cursor. Query your intelligence
+Body:   30 tools for Claude Code and Cursor. Query your intelligence
         feed, check dependencies, and surface relevant content directly
         in your editor. Your AI assistant gets the same signal you do.
 ```
@@ -363,7 +363,7 @@ Includes:
 -- ACE auto-context discovery
 -- CLI binary access
 -- Behavior learning from your actions
--- MCP server (26 tools)
+-- MCP server (30 tools)
 -- Auto-updates
 -- Zero telemetry, always
 
@@ -508,7 +508,7 @@ npx @4da/mcp-server
 
 ### Closing Line
 
-> 26 tools. Zero configuration. Your AI stops hallucinating about what is new -- because it has a grounded, scored, real-time feed to draw from.
+> 30 tools. Zero configuration. Your AI stops hallucinating about what is new -- because it has a grounded, scored, real-time feed to draw from.
 
 ### CTA
 

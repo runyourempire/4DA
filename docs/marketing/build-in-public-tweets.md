@@ -83,7 +83,7 @@
 > This week on the 4DA build:
 > - 54 Rust modules, 38 React components
 > - 11 content sources integrated
-> - 27 MCP tools for AI coding assistants
+> - 30 MCP tools for AI coding assistants
 > - sqlite-vec KNN search working locally
 >
 > What's coming next: Developer DNA profiling -- your coding patterns as a signal axis. #BuildInPublic

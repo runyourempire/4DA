@@ -1,4 +1,4 @@
-# How I Gave My AI Coding Assistant a Memory (26 MCP Tools for Developer Intelligence)
+# How I Gave My AI Coding Assistant a Memory (30 MCP Tools for Developer Intelligence)
 
 *Reading time: ~7 minutes*
 *Platform: Dev.to, Hashnode, personal blog*
@@ -18,9 +18,9 @@ Your AI assistant operates in a bubble. It knows your codebase (if you give it c
 
 Model Context Protocol (MCP) is a standard for giving AI tools access to external data sources and capabilities. Think of it as a plugin system for AI assistants. Instead of the AI only knowing what is in its training data and your current files, MCP lets it query live data sources.
 
-Claude Code, Cursor, and other MCP-compatible tools can connect to MCP servers to extend their capabilities. 4DA ships one with 26 intelligence tools.
+Claude Code, Cursor, and other MCP-compatible tools can connect to MCP servers to extend their capabilities. 4DA ships one with 30 intelligence tools.
 
-## The 26 Tools
+## The 30 Tools
 
 Here is what your AI assistant gets when you install the 4DA MCP server:
 
@@ -116,7 +116,7 @@ The gap between "what your AI knows about your code" and "what is happening in t
 
 Your AI assistant stops being a code-only tool and becomes a development intelligence partner. It knows your codebase AND it knows what is happening in the ecosystem around it. In real time. Scored and filtered for relevance.
 
-That is what 26 tools and a local-first architecture give you.
+That is what 30 tools and a local-first architecture give you.
 
 ---
 

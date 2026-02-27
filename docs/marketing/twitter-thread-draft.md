@@ -139,7 +139,7 @@ Your codebase context never leaves your device.
 
 **[11/13]**
 
-MCP integration: 26 tools that plug into Claude Code, Cursor, or any MCP-compatible AI assistant.
+MCP integration: 30 tools that plug into Claude Code, Cursor, or any MCP-compatible AI assistant.
 
 Your AI coding tools get real-time intelligence -- dependency updates, security advisories, relevant papers -- without you leaving the editor.
 

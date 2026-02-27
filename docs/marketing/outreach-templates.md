@@ -48,7 +48,7 @@ a good episode because of the technical decisions involved:
   React frontend. The tradeoffs, the sharp edges, and what Tauri 2.0
   actually delivers for a real production app.
 
-- **MCP integration** -- 27 tools that let Claude Code and Cursor query your
+- **MCP integration** -- 30 tools that let Claude Code and Cursor query your
   scored intelligence feed. Building on the Model Context Protocol and what
   it means for developer tooling.
 
@@ -104,7 +104,7 @@ Electron's 150MB+. SQLite with sqlite-vec for local vector search. Everything
 runs on the user's machine. Zero telemetry. No account required.
 
 **The business model:** Free tier is a complete product -- all 11 sources,
-full scoring engine, 27 MCP tools, CLI. Pro at $12/month ($99/year) adds AI
+full scoring engine, 30 MCP tools, CLI. Pro at $12/month ($99/year) adds AI
 briefings, Developer DNA profiling, and Score Autopsy. BYOK -- users bring
 their own API key, so my LLM costs are zero.
 
@@ -131,7 +131,7 @@ https://github.com/runyourempire/4DA
 
 1. `Local-first AI architecture: LLMs, vector search, and MCP without a cloud`
 2. `Privacy-first developer intelligence -- no telemetry, no cloud, no account`
-3. `27 MCP tools, Ollama fallback, sqlite-vec: building AI features that respect privacy`
+3. `30 MCP tools, Ollama fallback, sqlite-vec: building AI features that respect privacy`
 
 #### Email Body
 
@@ -160,7 +160,7 @@ stored in SQLite. KNN queries run in milliseconds on commodity hardware.
 key goes directly to the provider. We architecturally cannot intercept it
 because there's no server in between.
 
-**27 MCP tools.** 4DA ships an MCP server that gives Claude Code, Cursor,
+**30 MCP tools.** 4DA ships an MCP server that gives Claude Code, Cursor,
 and any MCP-compatible host access to scored intelligence. Your AI assistant
 queries your filtered feed instead of generic search results. The MCP server
 is MIT licensed and always free.
@@ -268,7 +268,7 @@ No editorial requirements -- honest take, good or bad.
   of a raw HN feed vs a scored, filtered feed is visually clear.
 
 - **Architecture is interesting.** 5 scoring axes, multi-signal confirmation
-  gate, sqlite-vec for local vector search, MCP integration with 27 tools.
+  gate, sqlite-vec for local vector search, MCP integration with 30 tools.
   Good material for a technical breakdown.
 
 - **Tauri 2.0 vs Electron comparison.** ~15MB binary. Rust backend. Real
@@ -337,7 +337,7 @@ relevant to your work.
   server to send data to.
 
 - **Free tier is a complete product.** All 11 sources, full 5-axis scoring
-  engine, 27 MCP tools for Claude Code/Cursor, CLI binary. No trial, no
+  engine, 30 MCP tools for Claude Code/Cursor, CLI binary. No trial, no
   expiration, no credit card.
 
 - **Pro tier at $12/month ($99/year).** AI briefings, Developer DNA profiling,
@@ -350,7 +350,7 @@ relevant to your work.
 - 11 content sources monitored
 - 5-axis relevance scoring (Context, Interest, ACE, Dependency, Learned)
 - 99%+ noise rejection via multi-signal confirmation gate
-- 27 MCP tools for AI assistant integration
+- 30 MCP tools for AI assistant integration
 - ~15MB binary (Tauri 2.0)
 - $0 free / $12 Pro per month
 

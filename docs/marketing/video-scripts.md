@@ -98,7 +98,7 @@ profile -- none of it leaves your machine. Zero telemetry. No account
 required. BYOK for AI features, or fully local with Ollama.
 
 The free tier is real. All 11 sources, the full 5-axis scoring engine,
-behavior learning, the MCP server with 26 tools for Claude Code and
+behavior learning, the MCP server with 30 tools for Claude Code and
 Cursor, and the CLI. It's not a trial. Most developers will never need
 more.
 
@@ -212,7 +212,7 @@ your first scored content. Let's go."
 - Open Claude Code, demonstrate MCP query:
   "What breaking changes affect my dependencies?"
 - Show 4DA returning scored, filtered results to the AI
-- "26 intelligence tools. Your AI assistant gets signal, not noise."
+- "30 intelligence tools. Your AI assistant gets signal, not noise."
 
 [8:00 - 8:30] PRICING
 - Free: all 11 sources, full scoring, MCP, CLI, behavior learning

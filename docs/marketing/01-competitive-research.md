@@ -205,7 +205,7 @@ The developer content space splits into four tiers:
 | **Privacy / local-first** | Yes (zero telemetry) | No (ad-supported) | No (cloud) | No (cloud) | No (cloud) | No (cloud) |
 | **Source diversity** | 11 sources | Web articles | RSS only | RSS + social | Manual save | Curated web |
 | **Offline capable** | Yes (Ollama) | No | No | No | Partial | No |
-| **MCP integration** | Yes (26 tools) | No | No | No | No | No |
+| **MCP integration** | Yes (30 tools) | No | No | No | No | No |
 | **Noise rejection** | 99%+ rejected | Infinite feed | Manual filters | Manual rules | No filtering | 5-10 links/day |
 | **Desktop app** | Yes (Tauri) | Browser ext. | Web/mobile | Web/mobile | Web/mobile | Web/email |
 | **Free tier** | Full engine | Full (ads) | 100 feeds | 150 feeds | 30-day trial | Daily digest |
@@ -333,7 +333,7 @@ The developer content space splits into four tiers:
 - Product Hunt (early adopter behavior)
 - GitHub trending
 
-**4DA conversion trigger:** "It has MCP integration with 26 tools? I can query my intelligence feed from Claude Code?"
+**4DA conversion trigger:** "It has MCP integration with 30 tools? I can query my intelligence feed from Claude Code?"
 
 ---
 
@@ -612,7 +612,7 @@ Hero (ATTENTION) -> Problem (PROBLEM) -> Agitation (AGITATION)
 **Differentiator 3: "Built for the AI-era developer"**
 > "4DA exposes 21 MCP tools for Claude Code, Cursor, and other AI development environments. Query your intelligence feed mid-conversation. Get ecosystem briefings while you code. Your AI assistant finally knows what is happening in the world outside your codebase."
 >
-> Feature support: MCP server with 26 tools, Claude Code / Cursor integration
+> Feature support: MCP server with 30 tools, Claude Code / Cursor integration
 
 **Layout:** Three cards or columns, each with a benefit headline, 2-3 sentence benefit description, and a supporting feature line in smaller/muted text.
 
