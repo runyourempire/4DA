@@ -229,9 +229,10 @@ for item in items {
 
 *Document any bugs that were fixed but could recur*
 
-| Date | Bug | Root Cause | Fix | Test Added |
-|------|-----|------------|-----|------------|
-| - | (No regressions documented yet) | - | - | - |
+| Date | ID | Bug | Root Cause | Fix | Test Added |
+|------|----|-----|------------|-----|------------|
+| 2026-02 | FM-LOW-008 | CI minutes exhausted during development sprint | Excessive parallel CI runs without caching, plus large test suite | Added cargo test caching, reduced CI trigger frequency | Monitoring CI usage dashboard |
+| 2026-02 | FM-MED-008 | `cargo test` OOM on CI runners | SQLite in-memory test databases accumulating across 800+ tests in single process | Split test execution with `--test-threads=1` for DB-heavy tests, added cleanup | OOM watchdog in CI config |
 
 ---
 
