@@ -1,0 +1,17 @@
+{
+  "date": "2026-02-28",
+  "commit": "b2a1de1",
+  "rust_unit_tests": 844,
+  "rust_integration_tests": 114,
+  "frontend_tests": 413,
+  "total_tests": 1371,
+  "rust_files_total": 182,
+  "rust_files_tested": 113,
+  "frontend_test_files": 33,
+  "store_slices_tested": 11,
+  "critical_systems_tested": 14,
+  "ipc_files_tested": 4,
+  "security_score": -1,
+  "clippy_warnings": -1,
+  "unwrap_count": -1
+}
