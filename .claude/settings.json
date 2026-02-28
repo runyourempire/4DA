@@ -56,15 +56,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/scripts/session-stop.sh"
-          },
-          {
-            "type": "command",
-            "command": "node .claude/scripts/wisdom-digest.cjs"
-          },
-          {
-            "type": "command",
-            "command": "node .claude/scripts/ops-session-end.cjs"
+            "command": "node .claude/scripts/session-stop-unified.cjs"
           }
         ]
       }
