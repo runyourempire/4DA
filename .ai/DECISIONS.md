@@ -307,6 +307,28 @@
 
 ---
 
+## Game Engine
+
+### AD-021: Game Engine Achievement Schema (Pinned)
+- **Decision:** Lock the achievement/game state schema. Fields are final and must not be renamed or restructured without a new AD entry.
+- **Schema:**
+  - `Achievement`: `id`, `name`, `description`, `icon`, `counter_type`, `threshold`
+  - `AchievementState` (frontend): `id`, `name`, `description`, `icon`, `counter_type`, `threshold`, `current`, `unlocked`, `unlocked_at`
+  - `AchievementUnlocked` (event): `id`, `name`, `description`, `icon`, `unlocked_at`
+  - `GameState`: `counters: Vec<CounterState>`, `achievements: Vec<AchievementState>`, `streak`, `last_active`
+  - `CounterState`: `counter_type`, `value`
+- **Rationale:**
+  - The schema just underwent a breaking rename (`title`→`name`, `progress`→`current`, flat stats→`counters` array) that required coordinated changes across `game_engine.rs`, `game_commands.rs`, `game-slice.ts`, `AchievementsPanel.tsx`, `GameCelebration.tsx`, and tests
+  - Further churn multiplies across all these files for no user value
+  - The counter-based design (track counter_type + value, achievements reference counters via counter_type + threshold) is clean and extensible — new achievements only require adding entries to `all_achievements()`, not schema changes
+- **Considered:**
+  - Allow organic evolution: Rejected — the rename just cost a full-stack coordinated change; locking prevents repeat
+  - Add more fields now (rarity, category, xp_reward): Deferred — current 13 achievements don't need categorization yet; add when achievement count exceeds 25
+- **Date:** 2026-03-02
+- **Status:** Final
+
+---
+
 ## Pending Decisions
 
 *Decisions under active consideration*
