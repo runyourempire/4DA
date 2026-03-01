@@ -217,12 +217,16 @@ function updateOpsState(modifiedFiles, recentCommits) {
 function getModifiedFiles() {
   try {
     const output = execSync('git status --porcelain', {
-      cwd: PROJECT_ROOT, encoding: 'utf8', timeout: 5000,
+      cwd: PROJECT_ROOT, encoding: 'utf8', timeout: 10000,
+      // Prevent git from waiting for credentials or pager
+      env: { ...process.env, GIT_TERMINAL_PROMPT: '0', GIT_PAGER: '' },
     }).trim();
     if (!output) return [];
     return output.split('\n').filter(Boolean).map(line => {
       const match = line.match(/^\s*(\S+)\s+(.*)/);
-      return match ? { status: match[1], file: match[2] } : null;
+      if (!match) return null;
+      // Normalize Windows backslash paths to forward slashes
+      return { status: match[1], file: match[2].replace(/\\/g, '/') };
     }).filter(Boolean);
   } catch (_) { return []; }
 }
@@ -230,7 +234,8 @@ function getModifiedFiles() {
 function getRecentCommits() {
   try {
     const output = execSync('git log --oneline --since="2 hours ago"', {
-      cwd: PROJECT_ROOT, encoding: 'utf8', timeout: 5000,
+      cwd: PROJECT_ROOT, encoding: 'utf8', timeout: 10000,
+      env: { ...process.env, GIT_TERMINAL_PROMPT: '0', GIT_PAGER: '' },
     }).trim();
     return output ? output.split('\n') : [];
   } catch (_) { return []; }

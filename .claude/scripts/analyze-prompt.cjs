@@ -36,22 +36,38 @@ process.stdin.on('end', () => {
     const prompt = hookData.prompt || hookData.content || '';
     const sessionId = hookData.session_id || 'unknown';
 
-    // Load state
+    // Early exit: skip analysis for very short prompts (< 10 chars)
+    // These are things like "y", "ok", "yes", "no", "continue", etc.
+    if (prompt.trim().length < 10) {
+      console.log(JSON.stringify({ status: 'success' }));
+      return;
+    }
+
+    // Load state (reads from disk only, no write yet)
     const state = loadState();
+
+    // Reset prompt counter on new session (> 10 min gap between prompts)
+    if (state.lastPrompt && (Date.now() - state.lastPrompt) > 10 * 60 * 1000) {
+      state.promptCount = 0;
+    }
 
     // Analyze prompt
     const analysis = analyzePrompt(prompt, state);
 
-    // Update state
-    state.promptCount = (state.promptCount || 0) + 1;
-    state.lastPrompt = Date.now();
-    if (analysis.signals.length > 0) {
-      state.complexPromptCount = (state.complexPromptCount || 0) + 1;
+    // Only write state when the analysis produced a meaningful signal.
+    // This prevents disk writes on simple prompts like "commit this" or "looks good".
+    const triggered = analysis.score >= CONFIG.threshold;
+    if (triggered || analysis.signals.length > 0) {
+      state.promptCount = (state.promptCount || 0) + 1;
+      state.lastPrompt = Date.now();
+      if (triggered) {
+        state.complexPromptCount = (state.complexPromptCount || 0) + 1;
+      }
+      saveState(state);
     }
-    saveState(state);
 
-    // Log analysis
-    if (CONFIG.enableLogging) {
+    // Log only triggered analyses (reduces log noise)
+    if (CONFIG.enableLogging && triggered) {
       logAnalysis(prompt, analysis, sessionId);
     }
 
@@ -203,22 +219,23 @@ function analyzePrompt(prompt, state) {
   }
 
   // === DEBUGGING SIGNALS ===
+  // Tightened patterns: require surrounding context to avoid false positives
+  // on casual mentions like "fix the commit" or "error in my understanding".
+  // Compound patterns (multiple debug signals in one prompt) listed first with higher weight.
   const debugPatterns = [
-    { pattern: /error:?\s/i, weight: 3 },
-    { pattern: /bug\b/i, weight: 3 },
-    { pattern: /fix (the|this|a) (bug|error|issue|problem)/i, weight: 4 },
-    { pattern: /(is |it's |it is )?(broken|not working|failing)/i, weight: 3 },
-    { pattern: /fails?\b/i, weight: 2 },
-    { pattern: /failure/i, weight: 3 },
-    { pattern: /crash/i, weight: 4 },
-    { pattern: /exception/i, weight: 3 },
-    { pattern: /debug/i, weight: 3 },
-    { pattern: /investigate/i, weight: 3 },
-    { pattern: /why (is|does|isn't|doesn't|won't|can't)/i, weight: 3 },
-    { pattern: /what's wrong/i, weight: 3 },
-    { pattern: /troubleshoot/i, weight: 3 },
+    // Compound: debug + error context in same prompt (strongest signal)
+    { pattern: /debug.{0,50}(crash|error|fail|bug|broken)|crash.{0,50}debug/i, weight: 5 },
+    { pattern: /fix (the|this|a) (bug|error|issue|problem|crash|failure)/i, weight: 4 },
+    { pattern: /(compile|build|test|runtime) (error|failure)/i, weight: 4 },
     { pattern: /stack ?trace/i, weight: 4 },
-    { pattern: /TypeError|ReferenceError|SyntaxError/i, weight: 4 },
+    { pattern: /TypeError|ReferenceError|SyntaxError|panic!?\b/i, weight: 4 },
+    { pattern: /(is |it's |it is )(broken|not working|failing)/i, weight: 3 },
+    { pattern: /(it|app|server|build|test|process|page) crash(es|ed|ing)/i, weight: 3 },
+    { pattern: /debug (the|this|why)/i, weight: 3 },
+    { pattern: /investigate (the|this|why)/i, weight: 3 },
+    { pattern: /why (is|does|isn't|doesn't|won't|can't) (it|this|the)/i, weight: 3 },
+    { pattern: /what's wrong with/i, weight: 3 },
+    { pattern: /troubleshoot/i, weight: 3 },
   ];
 
   for (const { pattern, weight } of debugPatterns) {
@@ -320,9 +337,9 @@ function analyzePrompt(prompt, state) {
   }
 
   // === SESSION FATIGUE SIGNAL ===
-  // If many prompts in session, lower threshold slightly
-  if (state.promptCount > 20) {
-    score += 1; // Slight bias toward subagent after many interactions
+  // Only trigger after very long sessions where context window is likely saturated
+  if (state.promptCount > 50) {
+    score += 1;
     signals.push('session-fatigue');
   }
 
