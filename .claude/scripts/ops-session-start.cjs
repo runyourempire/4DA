@@ -107,11 +107,12 @@ function isFirstPrompt() {
       const marker = JSON.parse(fs.readFileSync(SESSION_MARKER, 'utf8'));
       const age = Date.now() - (marker.timestamp || 0);
       if (age < 5 * 60 * 1000) {
-        return false; // Same session, wisdom-auto.cjs handles marker update
+        return false; // Same session
       }
     }
   } catch (e) {}
-  // New session — don't write marker here, wisdom-auto.cjs handles it
+  // New session — runs before wisdom-auto.cjs in hook order.
+  // wisdom-auto.cjs will create/update the marker when it runs next.
   return true;
 }
 

@@ -8,3 +8,18 @@ memory.db
 
 # Local state that shouldn't be shared
 *.local.md
+
+# Runtime state files (written by hooks, never committed)
+analyzer-state.json
+wisdom/
+
+# Session archives (local only)
+sessions/
+
+# Superseded scripts (kept on disk for reference, not tracked)
+scripts/ops-session-end.cjs
+scripts/wisdom-digest.cjs
+scripts/session-stop.sh
+scripts/session-start.sh
+scripts/prune-sessions.sh
+scripts/save-transcript-now.sh

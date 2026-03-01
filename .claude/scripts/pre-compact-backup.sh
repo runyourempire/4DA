@@ -14,8 +14,11 @@ mkdir -p "$BACKUP_DIR" 2>/dev/null || true
 INPUT=$(cat 2>/dev/null || true)
 
 # Parse JSON — handle both "key":"val" and "key": "val" formats
-TRANSCRIPT_PATH=$(echo "$INPUT" | grep -oP '"transcript_path"\s*:\s*"\K[^"]+' 2>/dev/null || echo "")
-TRIGGER=$(echo "$INPUT" | grep -oP '"trigger"\s*:\s*"\K[^"]+' 2>/dev/null || echo "unknown")
+# Use grep -oP on Linux/Mac, fallback to sed on Windows Git Bash where -P may not work
+TRANSCRIPT_PATH=$(echo "$INPUT" | grep -oP '"transcript_path"\s*:\s*"\K[^"]+' 2>/dev/null || \
+  echo "$INPUT" | sed -n 's/.*"transcript_path"\s*:\s*"\([^"]*\)".*/\1/p' 2>/dev/null || echo "")
+TRIGGER=$(echo "$INPUT" | grep -oP '"trigger"\s*:\s*"\K[^"]+' 2>/dev/null || \
+  echo "$INPUT" | sed -n 's/.*"trigger"\s*:\s*"\([^"]*\)".*/\1/p' 2>/dev/null || echo "unknown")
 
 # Log the compaction event
 echo "[$(date)] Compaction triggered: $TRIGGER" >> "$BACKUP_DIR/compaction.log" 2>/dev/null || true
@@ -23,7 +26,7 @@ echo "[$(date)] Compaction triggered: $TRIGGER" >> "$BACKUP_DIR/compaction.log" 
 # If we have a transcript path, back it up (skip if > 50MB)
 if [ -n "$TRANSCRIPT_PATH" ] && [ -f "$TRANSCRIPT_PATH" ]; then
     FILE_BYTES=$(stat -c%s "$TRANSCRIPT_PATH" 2>/dev/null || stat -f%z "$TRANSCRIPT_PATH" 2>/dev/null || echo "0")
-    if [ "$FILE_BYTES" -le 52428800 ] 2>/dev/null; then
+    if [ "${FILE_BYTES:-0}" -le 52428800 ] 2>/dev/null; then
         BACKUP_FILE="$BACKUP_DIR/transcript_${TIMESTAMP}.jsonl"
         cp "$TRANSCRIPT_PATH" "$BACKUP_FILE" 2>/dev/null || true
         echo "[$(date)] Backed up transcript to: $BACKUP_FILE" >> "$BACKUP_DIR/compaction.log" 2>/dev/null || true

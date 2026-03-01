@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/scripts/analyze-prompt.cjs"
+            "command": "node .claude/scripts/ops-session-start.cjs"
           },
           {
             "type": "command",
@@ -14,7 +14,7 @@
           },
           {
             "type": "command",
-            "command": "node .claude/scripts/ops-session-start.cjs"
+            "command": "node .claude/scripts/analyze-prompt.cjs"
           }
         ]
       }

@@ -61,28 +61,39 @@ process.stdin.on('end', () => {
  * Detect if this is the first prompt of a new session.
  * Uses a marker file with a timestamp — if the marker is older than 5 minutes
  * or doesn't exist, this is a new session.
+ *
+ * This hook runs AFTER ops-session-start.cjs in hook order.
+ * It owns the marker file — reads, creates, and updates it.
  */
 function checkFirstPrompt() {
   try {
     if (fs.existsSync(SESSION_MARKER)) {
-      const marker = JSON.parse(fs.readFileSync(SESSION_MARKER, 'utf8'));
+      let marker;
+      try {
+        marker = JSON.parse(fs.readFileSync(SESSION_MARKER, 'utf8'));
+      } catch (parseErr) {
+        // Corrupted marker file — treat as new session
+        marker = { timestamp: 0 };
+      }
       const age = Date.now() - (marker.timestamp || 0);
       // If marker is less than 5 minutes old, same session
       if (age < 5 * 60 * 1000) {
         // Update timestamp to keep session alive
         marker.timestamp = Date.now();
         marker.promptCount = (marker.promptCount || 0) + 1;
-        fs.writeFileSync(SESSION_MARKER, JSON.stringify(marker));
+        try { fs.writeFileSync(SESSION_MARKER, JSON.stringify(marker)); } catch (_) {}
         return false;
       }
     }
   } catch (e) {}
 
   // New session — create marker
-  fs.writeFileSync(SESSION_MARKER, JSON.stringify({
-    timestamp: Date.now(),
-    promptCount: 1,
-  }));
+  try {
+    fs.writeFileSync(SESSION_MARKER, JSON.stringify({
+      timestamp: Date.now(),
+      promptCount: 1,
+    }));
+  } catch (_) {}
   return true;
 }
 
