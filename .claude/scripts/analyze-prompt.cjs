@@ -368,35 +368,12 @@ function analyzePrompt(prompt, state) {
 function buildRecommendation(signals, agent, reason, score, isImplementationTask) {
   const signalList = [...new Set(signals)].join(', ');
 
-  let msg = `\n━━━ AUTOMATIC SUBAGENT RECOMMENDATION ━━━\n`;
-  msg += `Detected: ${signalList}\n`;
-  msg += `Complexity score: ${score}/${CONFIG.threshold} (threshold)\n`;
-  msg += `\n`;
-  msg += `⚡ RECOMMENDED: Spawn "${agent}" subagent\n`;
-  msg += `Reason: ${reason}\n`;
-  msg += `\n`;
-  msg += `How: Use Task tool with subagent_type="${agent}"\n`;
-  msg += `Include: Detailed task description, relevant file paths, expected output format\n`;
+  let msg = `Subagent recommended: "${agent}" (${signalList}, score ${score})`;
+  msg += ` — ${reason}`;
 
-  // Two-phase protocol reminder for implementation tasks
   if (isImplementationTask) {
-    msg += `\n`;
-    msg += `━━━ CADE TWO-PHASE PROTOCOL REQUIRED ━━━\n`;
-    msg += `This appears to be an implementation task. Follow the protocol:\n`;
-    msg += `\n`;
-    msg += `PHASE 1 (Orientation - NO CODE):\n`;
-    msg += `  1. Consult .ai/WISDOM.md wisdom gates for this action type\n`;
-    msg += `  2. Check .ai/INVARIANTS.md for relevant constraints\n`;
-    msg += `  3. Review .ai/FAILURE_MODES.md for risky areas\n`;
-    msg += `  4. Check MCP memory for prior art (recall_decisions, recall_learnings)\n`;
-    msg += `  5. State goal, list files to modify, identify invariants\n`;
-    msg += `  6. Propose approach and WAIT for approval\n`;
-    msg += `\n`;
-    msg += `PHASE 2 (Execution - CODE ONLY):\n`;
-    msg += `  After approval: Implement, validate, record consequences\n`;
+    msg += `. Orient first (check .ai/ docs + MCP memory), then execute.`;
   }
-
-  msg += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
 
   return msg;
 }
