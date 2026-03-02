@@ -8,47 +8,29 @@
 ## Title
 
 ```
-Show HN: 4DA -- Desktop app that scores tech content against your codebase (Rust + Tauri)
+Show HN: 4DA – Scores HN/arXiv/RSS against your actual codebase locally (Rust/Tauri)
 ```
 
 ## Body
 
-Hi HN,
+I built a desktop app that reads your Cargo.toml, package.json, go.mod, etc., builds a vector profile of your projects, then scores every piece of content it fetches against that profile. Everything runs locally -- your codebase context never leaves your machine.
 
-I built 4DA because I was spending too much time trying to stay current. Every morning was the same routine: open HN, open Reddit, check arXiv, browse GitHub Trending, scan a few newsletters. Two hours later, maybe 3 articles were actually relevant to what I was working on.
+The scoring pipeline has 15 dimensions: vector similarity against your project files, dependency version matching (it knows when a library you use ships a breaking change), keyword specificity weighting, semantic ACE boost from your actual source code, domain relevance penalties, content quality filtering, taste learning from your feedback, topic-aware freshness decay, and more. An item needs multiple independent signals to pass. The result is ~10 items per day instead of 500.
 
-4DA takes a different approach. Instead of curating by topic or trending metrics, it scans your local codebase and scores every piece of content against your actual project context. It reads your Cargo.toml, package.json, go.mod -- whatever defines your stack -- and builds a profile automatically. No manual keyword setup, no interest checklists.
+It monitors HN, Reddit, arXiv, GitHub Trending, RSS, YouTube, Product Hunt, and others. No manual keyword setup -- it auto-discovers your dependencies, languages, and architecture patterns by scanning your local projects.
 
-**What it does:**
+**Tech:** Rust backend (Tauri 2.0), React frontend, SQLite + sqlite-vec for KNN search, local embeddings via Ollama. ~15MB download.
 
-- Monitors 11 sources: HN, arXiv, Reddit, GitHub, Product Hunt, YouTube, RSS, and more
-- Scans your local projects to build a context profile (auto-discovers dependencies, languages, architecture patterns)
-- Scores every article across 5 independent axes using vector embeddings (PASIFA algorithm) -- an item needs 2+ independent signals to pass
-- Rejects 99%+ of content as irrelevant noise
-- Surfaces only what impacts your specific stack
+**Privacy:** No cloud, no telemetry, no account. I cannot see who uses it or how. BYOK for external LLM APIs, or run fully offline with Ollama.
 
-The result is 5-15 items per day that actually matter to what you are working on, instead of 500+ items that are interesting-but-irrelevant.
+**What's free:** All sources, the full scoring engine, and a 7-module developer optimization curriculum (STREETS). Pro adds AI briefings and deeper analytics.
 
-**Tech stack:**
+**License:** FSL-1.1-Apache-2.0 (source available now, converts to Apache 2.0 after 2 years).
 
-- Rust backend with Tauri 2.0
-- React + TypeScript frontend
-- SQLite + sqlite-vec for vector similarity search
-- Local embeddings via Ollama (works fully offline)
-- MCP integration for AI coding tools (Claude Code, Cursor, etc.)
+Also ships an MCP server (MIT licensed, 30 tools) that plugs into Claude Code, Cursor, etc. -- so your AI coding tools can query your intelligence feed.
 
-**Privacy model:**
+I have been using it daily for months. The biggest win is not time saved -- it is catching things I would have missed entirely: a dep shipping a breaking change, an arXiv paper directly relevant to a problem I was stuck on.
 
-All processing happens locally. No cloud. No telemetry. No account required. Your codebase context and reading patterns never leave your machine. BYOK if you want to use external LLM APIs, or run fully local with Ollama. Zero data collection -- I genuinely cannot see who is using it or how.
-
-**License:** FSL-1.1-Apache-2.0 (converts to Apache 2.0 after 2 years -- source is available for inspection).
-
-**Pricing:**
-
-Free tier includes all 11 sources with the full 5-axis scoring engine. This is not a crippled trial -- it is a genuinely useful tool at the free tier. Pro ($12/mo or $99/yr) adds AI-generated daily briefings, Developer DNA profiling, and detailed intelligence panels.
-
-I have been using it daily for months and my "staying current" time went from about 2 hours a day to around 10 minutes. The biggest win is not just time saved -- it is catching things I would have missed entirely. A dependency shipping a breaking change. An arXiv paper directly relevant to a problem I was stuck on. A new library that does exactly what I was about to build from scratch.
-
-I would love feedback on the approach. Particularly interested in whether the scoring accuracy matches your sense of what is relevant -- that is the hardest part to get right and I am still tuning it.
+Would love feedback on the scoring approach. That is the hardest part and I am still tuning it.
 
 Try it: [download link]
