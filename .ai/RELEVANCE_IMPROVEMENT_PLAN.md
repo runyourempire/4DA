@@ -136,19 +136,19 @@ SHOW:
 
 ## Implementation Priority
 
-| Priority | Phase | What | Lines of Code | Impact |
-|----------|-------|------|--------------|--------|
-| **NOW** | 1a | Default showOnlyRelevant=true | 1 line | Massive UX improvement |
-| **NOW** | 1b | Off-domain penalty 0.12->0.50 | 1 line | Kills noise |
-| **NOW** | 1c | Topic weight threshold 0.3->0.55 | 1 line | Tightens signals |
-| **NOW** | 1d | Quality floor bypass 0.55->0.70 | 1 line | Closes gate bypass |
-| **NOW** | 1e | Instant anti-topic on Mark Irrelevant | ~20 lines | Trust-building |
-| **NOW** | 1f-1g | Knowledge Gaps domain filter | ~40 lines | Kills absurd categories |
-| **NEXT** | 2 | Domain Profile + domain scoring | ~300 lines | Transformative |
-| **THEN** | 3a | Novelty detection | ~200 lines | Unique differentiator |
-| **THEN** | 3b | Intent-aware scoring from git | ~150 lines | "Reads your mind" |
-| **THEN** | 3c | Content quality signal | ~100 lines | Kills blogspam |
-| **THEN** | 3d | Temporal clustering | ~250 lines | Clean UX |
+| Priority | Phase | What | Lines of Code | Impact | Status |
+|----------|-------|------|--------------|--------|--------|
+| **NOW** | 1a | Default showOnlyRelevant=true | 1 line | Massive UX improvement | DONE |
+| **NOW** | 1b | Off-domain penalty 0.12->0.50 | 1 line | Kills noise | DONE (0.25→0.50) |
+| **NOW** | 1c | Topic weight threshold 0.3->0.55 | 1 line | Tightens signals | DONE |
+| **NOW** | 1d | Quality floor bypass 0.55->0.70 | 1 line | Closes gate bypass | DONE (0.50→0.70) |
+| **NOW** | 1e | Instant anti-topic on Mark Irrelevant | ~20 lines | Trust-building | DONE |
+| **NOW** | 1f-1g | Knowledge Gaps domain filter | ~40 lines | Kills absurd categories | DONE |
+| **NEXT** | 2 | Domain Profile + domain scoring | ~300 lines | Transformative | DONE |
+| **THEN** | 3a | Novelty detection | ~200 lines | Unique differentiator | DONE |
+| **THEN** | 3b | Intent-aware scoring from git | ~150 lines | "Reads your mind" | DONE |
+| **THEN** | 3c | Content quality signal | ~100 lines | Kills blogspam | DONE |
+| **THEN** | 3d | Temporal clustering | ~250 lines | Clean UX | DONE |
 
 ---
 
