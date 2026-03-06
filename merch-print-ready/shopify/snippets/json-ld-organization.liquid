@@ -1,0 +1,56 @@
+{% comment %}
+  JSON-LD Organization + Store Structured Data
+  Tells Google who you are, builds Knowledge Panel eligibility
+
+  INSTALL:
+  Shopify Admin > Online Store > Themes > Edit Code
+  Create file: snippets/json-ld-organization.liquid
+
+  In layout/theme.liquid, add before </head>:
+  {% raw %}{% render 'json-ld-organization' %}{% endraw %}
+{% endcomment %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "4DA SYSTEMS",
+  "legalName": "4DA SYSTEMS",
+  "url": "{{ shop.url }}",
+  "logo": "{{ 'logo.png' | asset_url }}",
+  "description": "Privacy-first developer tools and merch. All signal. No feed.",
+  "foundingDate": "2026",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Shop 2, 290 Boundary St",
+    "addressLocality": "Spring Hill",
+    "addressRegion": "QLD",
+    "postalCode": "4000",
+    "addressCountry": "AU"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "email": "runyourempirehq@gmail.com",
+    "contactType": "customer service"
+  },
+  "sameAs": [
+    "https://x.com/4aborhood",
+    "https://github.com/runyourempire/4DA",
+    "https://4da.ai"
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "4DA SYSTEMS",
+  "url": "{{ shop.url }}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ shop.url }}/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>

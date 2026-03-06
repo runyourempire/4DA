@@ -1,0 +1,41 @@
+{% comment %}
+  FREE SHIPPING PROGRESS BAR — Shows in cart drawer/page
+
+  Shows how close the customer is to free shipping ($120 AUD).
+  Encourages adding more items.
+
+  INSTALL:
+  Shopify Admin > Online Store > Themes > Edit Code
+  Create: snippets/free-shipping-bar.liquid
+  Paste this code.
+
+  Then add to your cart template (sections/main-cart-footer.liquid or cart-drawer):
+  {% raw %}{% render 'free-shipping-bar' %}{% endraw %}
+
+  OR add via Theme Customize > Cart page > Custom Liquid block:
+  {% raw %}{% render 'free-shipping-bar' %}{% endraw %}
+{% endcomment %}
+
+{%- assign threshold = 12000 -%}
+{%- comment -%}12000 = $120.00 in cents{%- endcomment -%}
+{%- assign cart_total = cart.total_price -%}
+
+<div style="padding:16px 0;margin-bottom:16px;">
+  {%- if cart_total >= threshold -%}
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;color:#D4AF37;text-align:center;padding:8px 0;">
+      Free worldwide shipping unlocked
+    </div>
+    <div style="width:100%;height:3px;background:#2A2A2A;border-radius:2px;overflow:hidden;">
+      <div style="width:100%;height:100%;background:#D4AF37;border-radius:2px;"></div>
+    </div>
+  {%- else -%}
+    {%- assign remaining = threshold | minus: cart_total -%}
+    {%- assign progress = cart_total | times: 100 | divided_by: threshold -%}
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;color:#A0A0A0;text-align:center;padding:8px 0;">
+      {{ remaining | money }} away from free shipping
+    </div>
+    <div style="width:100%;height:3px;background:#2A2A2A;border-radius:2px;overflow:hidden;">
+      <div style="width:{{ progress }}%;height:100%;background:#D4AF37;border-radius:2px;transition:width 0.3s ease;"></div>
+    </div>
+  {%- endif -%}
+</div>

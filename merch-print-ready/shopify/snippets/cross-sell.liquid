@@ -1,0 +1,63 @@
+{% comment %}
+  CROSS-SELL / "PAIRS WELL WITH" SECTION
+
+  Shows recommended products on the product page.
+  Uses Shopify's native recommendation engine.
+
+  INSTALL:
+  Shopify Admin > Online Store > Themes > Edit Code
+  Create: snippets/cross-sell.liquid
+
+  Add to product page via Theme Customize > Product page template >
+  Add section: "Custom Liquid"
+  Code: {% raw %}{% render 'cross-sell' %}{% endraw %}
+
+  Note: Shopify's recommendation API needs a few orders/views
+  to generate good suggestions. Initially it uses collection-based matching.
+{% endcomment %}
+
+<div id="cross-sell" style="margin-top:40px;padding-top:32px;border-top:1px solid #2A2A2A;">
+  <p style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:#666;margin-bottom:16px;">
+    Pairs well with
+  </p>
+  <div id="cross-sell-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;">
+  </div>
+</div>
+
+<script>
+(function() {
+  var productId = {{ product.id | json }};
+  var url = '/recommendations/products.json?product_id=' + productId + '&limit=4';
+
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var grid = document.getElementById('cross-sell-grid');
+      var container = document.getElementById('cross-sell');
+      if (!data.products || data.products.length === 0) {
+        container.style.display = 'none';
+        return;
+      }
+      data.products.forEach(function(p) {
+        var card = document.createElement('a');
+        card.href = p.url;
+        card.style.cssText = 'display:block;background:#141414;border:1px solid #2A2A2A;border-radius:8px;overflow:hidden;text-decoration:none;transition:border-color 0.2s,transform 0.2s;';
+        card.onmouseenter = function() { card.style.borderColor='#3A3A3A'; card.style.transform='translateY(-2px)'; };
+        card.onmouseleave = function() { card.style.borderColor='#2A2A2A'; card.style.transform='none'; };
+
+        var imgSrc = p.featured_image ? p.featured_image + '&width=300' : '';
+        card.innerHTML =
+          (imgSrc ? '<img src="' + imgSrc + '" alt="' + p.title + '" style="width:100%;aspect-ratio:1;object-fit:cover;background:#0A0A0A;" loading="lazy">' : '') +
+          '<div style="padding:10px;">' +
+            '<div style="font-size:12px;font-weight:500;color:#FFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + p.title + '</div>' +
+            '<div style="font-family:JetBrains Mono,monospace;font-size:11px;color:#A0A0A0;margin-top:4px;">$' + (p.price / 100).toFixed(0) + '</div>' +
+          '</div>';
+
+        grid.appendChild(card);
+      });
+    })
+    .catch(function() {
+      document.getElementById('cross-sell').style.display = 'none';
+    });
+})();
+</script>

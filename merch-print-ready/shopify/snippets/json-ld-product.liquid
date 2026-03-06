@@ -1,0 +1,94 @@
+{% comment %}
+  JSON-LD Structured Data for Product Pages
+  Gets your products into Google Shopping results FOR FREE (no ad spend needed)
+
+  INSTALL:
+  Shopify Admin > Online Store > Themes > Edit Code
+  Create file: snippets/json-ld-product.liquid
+  Paste this code.
+
+  Then in templates/product.json or sections/main-product.liquid,
+  add before the closing tag:
+  {% raw %}{% render 'json-ld-product' %}{% endraw %}
+
+  Or add via Theme Customize > Product page > Custom Liquid block:
+  {% raw %}{% render 'json-ld-product' %}{% endraw %}
+{% endcomment %}
+
+{%- if product -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | truncate: 500 | json }},
+  "url": "{{ shop.url }}{{ product.url }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "4DA SYSTEMS"
+  },
+  "manufacturer": {
+    "@type": "Organization",
+    "name": "4DA SYSTEMS"
+  },
+  {%- if product.featured_image -%}
+  "image": [
+    "{{ product.featured_image | image_url: width: 1200 }}"
+    {%- for image in product.images offset: 1 limit: 4 -%}
+    ,"{{ image | image_url: width: 1200 }}"
+    {%- endfor -%}
+  ],
+  {%- endif -%}
+  "sku": {{ product.selected_or_first_available_variant.sku | json }},
+  "mpn": {{ product.selected_or_first_available_variant.sku | json }},
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "{{ shop.currency }}",
+    "lowPrice": {{ product.price_min | money_without_currency | remove: ',' | json }},
+    "highPrice": {{ product.price_max | money_without_currency | remove: ',' | json }},
+    "offerCount": {{ product.variants.size }},
+    "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "url": "{{ shop.url }}{{ product.url }}",
+    "seller": {
+      "@type": "Organization",
+      "name": "4DA SYSTEMS"
+    },
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "AU"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 2,
+          "maxValue": 5,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 5,
+          "maxValue": 10,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "applicableCountry": "AU",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
+      "merchantReturnDays": 14,
+      "returnMethod": "https://schema.org/ReturnByMail"
+    }
+  },
+  "material": {% if product.type == 'Hoodie' or product.type == 'Sweatshirt' %}"50% Cotton, 50% Polyester"{% else %}"100% Cotton"{% endif %},
+  "audience": {
+    "@type": "PeopleAudience",
+    "suggestedGender": "unisex"
+  },
+  "category": "{{ product.type }}"
+}
+</script>
+{%- endif -%}

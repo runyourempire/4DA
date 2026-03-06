@@ -1,0 +1,972 @@
+/* =====================================================================
+   4DA SYSTEMS — Shopify Theme Override v2.0
+   Dawn Theme Customization (Consolidated & Bulletproof)
+
+   Design System: #0A0A0A / #D4AF37 / Inter + JetBrains Mono
+
+   FIXES:
+   - Price/size/variant visibility on dark background
+   - Aggressive fallback selectors for Dawn theme updates
+   - Consolidated from two previous CSS files into one source of truth
+
+   INSTALL:
+   1. Shopify Admin > Online Store > Themes > Actions > Edit Code
+   2. In assets/ folder, create or replace: custom.css
+   3. In layout/theme.liquid, add before </head>:
+      {{ 'custom.css' | asset_url | stylesheet_tag }}
+   ===================================================================== */
+
+/* -- Fonts -- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* -- Root Variables Override (Dawn-specific) -- */
+:root {
+  --color-base-text: 255, 255, 255;
+  --color-base-background-1: 10, 10, 10;
+  --color-base-background-2: 20, 20, 20;
+  --color-base-solid-button-labels: 10, 10, 10;
+  --color-base-outline-button-labels: 212, 175, 55;
+  --color-base-accent-1: 212, 175, 55;
+  --color-base-accent-2: 249, 115, 22;
+  --color-shadow: 0, 0, 0;
+  --alpha-button-background: 1;
+
+  /* 4DA Design Tokens */
+  --4da-bg: #0A0A0A;
+  --4da-bg-card: #141414;
+  --4da-bg-elevated: #1F1F1F;
+  --4da-text: #FFFFFF;
+  --4da-text-secondary: #A0A0A0;
+  --4da-text-muted: #666666;
+  --4da-gold: #D4AF37;
+  --4da-orange: #F97316;
+  --4da-border: #2A2A2A;
+  --4da-border-hover: #3A3A3A;
+  --4da-radius: 12px;
+  --4da-radius-sm: 6px;
+  --4da-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --4da-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+/* =====================================================================
+   GLOBAL — Nuclear fallback: force white text everywhere
+   This catches ANY element Dawn renders that we didn't explicitly target
+   ===================================================================== */
+body,
+body *:not(script):not(style):not(svg):not(path) {
+  color: var(--4da-text) !important;
+}
+
+/* Then restore secondary/muted colors where needed */
+body {
+  background-color: var(--4da-bg) !important;
+  font-family: var(--4da-font) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.shopify-section,
+.template-index,
+.template-collection,
+.template-product,
+.template-cart,
+.template-page,
+#MainContent,
+main,
+.main-content {
+  background-color: var(--4da-bg) !important;
+}
+
+/* =====================================================================
+   TYPOGRAPHY
+   ===================================================================== */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--4da-font) !important;
+  color: var(--4da-text) !important;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+h1, .h1 { font-size: clamp(32px, 5vw, 48px) !important; font-weight: 700; }
+h2, .h2 { font-size: clamp(24px, 4vw, 36px) !important; }
+
+p, span, li, td, th, label, input, select, textarea, div, a {
+  font-family: var(--4da-font) !important;
+}
+
+/* Paragraphs and body text — secondary color */
+p,
+.rte p,
+.product__description p,
+.product__text p {
+  color: var(--4da-text-secondary) !important;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+a {
+  color: var(--4da-gold) !important;
+  text-decoration: none !important;
+  transition: opacity 0.2s;
+}
+a:hover { opacity: 0.8; }
+
+/* =====================================================================
+   MONOSPACE ACCENTS (prices, labels, badges)
+   ===================================================================== */
+.price,
+.price-item,
+.price-item--regular,
+.price-item--sale,
+.price__regular,
+.product__price,
+.money,
+[data-money],
+.cart-item__price,
+.totals__total-value,
+.price .money,
+.price-item .money,
+span.money,
+.product-price {
+  font-family: var(--4da-mono) !important;
+  letter-spacing: 0.02em;
+  color: var(--4da-text) !important;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+/* =====================================================================
+   ANNOUNCEMENT BAR — Free shipping banner
+   ===================================================================== */
+.announcement-bar,
+.shopify-section--announcement-bar,
+[class*="announcement"] {
+  background-color: var(--4da-bg-card) !important;
+  border-bottom: 1px solid var(--4da-border) !important;
+}
+
+.announcement-bar__message,
+.announcement-bar a,
+.announcement-bar__link,
+.announcement-bar p,
+.announcement-bar span,
+[class*="announcement"] a,
+[class*="announcement"] p,
+[class*="announcement"] span {
+  color: var(--4da-gold) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 12px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+/* =====================================================================
+   HEADER / NAVIGATION
+   ===================================================================== */
+.header,
+.section-header,
+.shopify-section-group-header-group,
+.header-wrapper,
+.site-header,
+header,
+#shopify-section-header {
+  background-color: rgba(10, 10, 10, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid var(--4da-border) !important;
+}
+
+.header__heading-link,
+.header__heading,
+.site-header__logo {
+  color: var(--4da-text) !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  letter-spacing: -0.01em;
+}
+
+/* Nav links — muted, brighten on hover */
+.header__menu-item,
+.header nav a,
+.list-menu__item,
+.site-nav a,
+.site-nav--has-dropdown > a,
+.header-wrapper a:not(.header__heading-link) {
+  color: var(--4da-text-muted) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  transition: color 0.2s !important;
+}
+.header__menu-item:hover,
+.header nav a:hover,
+.list-menu__item:hover,
+.site-nav a:hover {
+  color: var(--4da-text) !important;
+}
+
+.header__icon,
+.header__icon svg {
+  color: var(--4da-text-secondary) !important;
+}
+.header__icon:hover,
+.header__icon:hover svg {
+  color: var(--4da-text) !important;
+}
+
+/* =====================================================================
+   PRODUCT CARDS (collection grid)
+   ===================================================================== */
+.card,
+.product-card,
+.product-card-wrapper,
+.card-wrapper,
+.grid-product,
+.collection-product-card {
+  background-color: var(--4da-bg-card) !important;
+  border: 1px solid var(--4da-border) !important;
+  border-radius: var(--4da-radius) !important;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s !important;
+}
+.card:hover,
+.product-card:hover,
+.product-card-wrapper:hover,
+.card-wrapper:hover {
+  border-color: var(--4da-border-hover) !important;
+  transform: translateY(-2px) !important;
+}
+
+.card__heading a,
+.card__heading,
+.card-information__text,
+.product-card__title,
+.grid-product__title {
+  color: var(--4da-text) !important;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.card__media,
+.card .media {
+  background-color: var(--4da-bg) !important;
+}
+
+/* Card prices — CRITICAL FIX */
+.card-information .price,
+.card-information .price *,
+.card-information .price-item,
+.card-information .price-item--regular,
+.card-information .price-item--sale,
+.card-information .money,
+.card .price,
+.card .price *,
+.card .money,
+.price-item--regular,
+.price-item--sale {
+  color: var(--4da-text) !important;
+  font-family: var(--4da-mono) !important;
+  font-weight: 500;
+}
+
+/* Badges */
+.card__badge,
+.badge,
+.product__badge,
+.price__badge {
+  background-color: rgba(212, 175, 55, 0.15) !important;
+  color: var(--4da-gold) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 10px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  border-radius: 4px !important;
+}
+
+/* =====================================================================
+   PRODUCT PAGE — The critical conversion page
+   ===================================================================== */
+.product,
+.product-section,
+[class*="product-template"],
+.shopify-section--product {
+  background-color: var(--4da-bg) !important;
+}
+
+/* Product title */
+.product__title,
+.product-single__title,
+.product__title h1 {
+  color: var(--4da-text) !important;
+  font-size: 28px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* Product description */
+.product__description,
+.product__text,
+.product-single__description,
+.product__description *,
+.product__text *,
+.rte {
+  color: var(--4da-text-secondary) !important;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+}
+
+.product__description ul li,
+.product__text ul li,
+.rte ul li {
+  color: var(--4da-text-secondary) !important;
+  padding: 4px 0;
+}
+
+.product__description strong,
+.product__text strong,
+.rte strong {
+  color: var(--4da-text) !important;
+}
+
+.product__description code,
+.product__text code,
+.rte code {
+  font-family: var(--4da-mono) !important;
+  color: var(--4da-gold) !important;
+  background: var(--4da-bg-card);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* Product media */
+.product__media-wrapper,
+.product__media,
+.product-media-container {
+  background-color: var(--4da-bg) !important;
+  border: 1px solid var(--4da-border) !important;
+  border-radius: var(--4da-radius) !important;
+}
+
+/* =====================================================================
+   PRICE ON PRODUCT PAGE — THE #1 FIX
+   Force visibility with maximum specificity
+   ===================================================================== */
+.product .price,
+.product .price *,
+.product .price__container,
+.product .price__regular,
+.product .price__sale,
+.product .price-item,
+.product .price-item--regular,
+.product .price-item--sale,
+.product .price .money,
+.product .money,
+.product [class*="price"],
+.product-form .price,
+.product-form [class*="price"],
+.product-info .price,
+.product-info [class*="price"],
+.product-info__price .price,
+.product-info__price .money,
+.product-info__price *,
+.product__info-wrapper .price,
+.product__info-wrapper .price *,
+.product__info-wrapper .money,
+.product__info-wrapper [class*="price"] {
+  color: var(--4da-text) !important;
+  font-family: var(--4da-mono) !important;
+  font-weight: 500 !important;
+  font-size: 20px !important;
+}
+
+/* Price "sale" strikethrough */
+.product .price--on-sale .price-item--regular,
+.price--on-sale .price-item--regular {
+  color: var(--4da-text-muted) !important;
+  text-decoration: line-through;
+  font-size: 16px !important;
+}
+
+/* =====================================================================
+   VARIANT SELECTOR (Color + Size) — THE #2 FIX
+   Force visibility for ALL variant label/button patterns
+   ===================================================================== */
+
+/* Variant section labels ("Color", "Size") */
+.product-form__input label,
+.product-form__input legend,
+.product-form__input .form__label,
+fieldset legend,
+.variant-input label,
+.variant-wrapper label,
+[class*="variant"] label,
+[class*="variant"] legend,
+.product-form label,
+.product-form legend {
+  color: var(--4da-text-secondary) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 12px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+}
+
+/* Variant option buttons (S, M, L, XL, etc.) */
+.product-form__input input[type="radio"] + label,
+.variant-input label,
+.variant-input-wrapper label,
+.swatch label,
+.size-swatch,
+.variant__button-label,
+fieldset .product-form__input label,
+.product-form__input--pill label,
+.product-form__input--pill input[type="radio"] + label {
+  background-color: transparent !important;
+  border: 1px solid var(--4da-border) !important;
+  color: var(--4da-text-secondary) !important;
+  border-radius: var(--4da-radius-sm) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  transition: all 0.15s !important;
+  padding: 8px 16px !important;
+  min-width: 44px !important;
+  text-align: center;
+}
+
+/* Variant option hover */
+.product-form__input input[type="radio"] + label:hover,
+.variant-input label:hover,
+.product-form__input--pill label:hover {
+  border-color: var(--4da-text-muted) !important;
+  color: var(--4da-text) !important;
+}
+
+/* Variant option SELECTED state */
+.product-form__input input[type="radio"]:checked + label,
+.variant-input input:checked + label,
+.swatch.active,
+.variant__button-label.active,
+.product-form__input--pill input[type="radio"]:checked + label {
+  border-color: var(--4da-gold) !important;
+  color: var(--4da-gold) !important;
+  background-color: rgba(212, 175, 55, 0.08) !important;
+  font-weight: 500 !important;
+}
+
+/* Variant option UNAVAILABLE/sold out */
+.product-form__input input[type="radio"]:disabled + label,
+.product-form__input input[type="radio"] + label.disabled,
+.product-form__input--pill input[type="radio"]:disabled + label {
+  opacity: 0.3 !important;
+  cursor: not-allowed !important;
+  text-decoration: line-through !important;
+}
+
+/* Dropdown variant selectors (fallback) */
+.product-form__input select,
+.variant-wrapper select,
+.single-option-selector {
+  background-color: var(--4da-bg-card) !important;
+  color: var(--4da-text) !important;
+  border: 1px solid var(--4da-border) !important;
+  border-radius: var(--4da-radius-sm) !important;
+  font-family: var(--4da-font) !important;
+  padding: 10px 16px;
+  font-size: 14px !important;
+}
+
+/* Quantity selector */
+.quantity__input,
+.quantity input,
+.quantity__button {
+  background-color: var(--4da-bg-card) !important;
+  border: 1px solid var(--4da-border) !important;
+  color: var(--4da-text) !important;
+  border-radius: var(--4da-radius-sm) !important;
+}
+
+.quantity__button {
+  color: var(--4da-text-secondary) !important;
+  border: none !important;
+}
+
+/* =====================================================================
+   BUTTONS
+   ===================================================================== */
+.button,
+.btn,
+.shopify-challenge__button,
+button[type="submit"],
+.cart__checkout-button,
+.product-form__submit,
+.cart__submit,
+input[type="submit"],
+.shopify-payment-button button,
+.shopify-payment-button__button {
+  background-color: var(--4da-gold) !important;
+  color: var(--4da-bg) !important;
+  border: none !important;
+  border-radius: var(--4da-radius-sm) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  padding: 14px 28px !important;
+  transition: opacity 0.2s, transform 0.15s !important;
+  cursor: pointer;
+}
+
+.button:hover, .btn:hover,
+.product-form__submit:hover,
+.cart__checkout-button:hover,
+.cart__submit:hover {
+  background-color: var(--4da-gold) !important;
+  color: var(--4da-bg) !important;
+  opacity: 0.85 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Dynamic checkout buttons (Shop Pay, etc.) */
+.shopify-payment-button .shopify-payment-button__button--unbranded {
+  background-color: var(--4da-gold) !important;
+  color: var(--4da-bg) !important;
+}
+
+/* Secondary / outline buttons */
+.button--secondary,
+.btn--secondary {
+  background-color: transparent !important;
+  color: var(--4da-gold) !important;
+  border: 1px solid var(--4da-gold) !important;
+}
+.button--secondary:hover,
+.btn--secondary:hover {
+  background-color: rgba(212, 175, 55, 0.08) !important;
+}
+
+/* =====================================================================
+   COLLECTION PAGE
+   ===================================================================== */
+.collection-hero,
+.collection-header {
+  background-color: var(--4da-bg) !important;
+  padding: 48px 24px;
+}
+
+.collection-hero__title,
+.collection-header__title {
+  color: var(--4da-text) !important;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.collection-hero__description,
+.collection-header__description {
+  color: var(--4da-text-secondary) !important;
+}
+
+/* Filters */
+.facets__wrapper,
+.active-facets,
+.facets-container {
+  border-color: var(--4da-border) !important;
+}
+
+.facet-checkbox__text,
+.facets__label,
+.facets__summary,
+.facets__selected {
+  color: var(--4da-text-secondary) !important;
+}
+
+/* Pagination */
+.pagination__item {
+  color: var(--4da-text-secondary) !important;
+  border-color: var(--4da-border) !important;
+}
+.pagination__item--current {
+  background-color: var(--4da-gold) !important;
+  color: var(--4da-bg) !important;
+  border-color: var(--4da-gold) !important;
+}
+
+/* =====================================================================
+   CART
+   ===================================================================== */
+.cart,
+.cart-items,
+.cart__footer,
+.cart-drawer,
+.drawer--is-open {
+  background-color: var(--4da-bg) !important;
+  border-color: var(--4da-border) !important;
+}
+
+.cart-item,
+.cart-items td,
+.cart__row {
+  border-color: var(--4da-border) !important;
+}
+
+.cart-item__name,
+.cart-item__title {
+  color: var(--4da-text) !important;
+}
+
+.cart-item__details,
+.cart-item__quantity,
+.cart-item__discounted-prices {
+  color: var(--4da-text-secondary) !important;
+}
+
+.cart-item__price,
+.cart-item__price .money,
+.totals__total-value,
+.totals .price {
+  color: var(--4da-text) !important;
+  font-family: var(--4da-mono) !important;
+}
+
+.cart__footer,
+.cart-drawer__footer {
+  background-color: var(--4da-bg-card) !important;
+  border-top: 1px solid var(--4da-border) !important;
+}
+
+/* Free shipping progress (if using app) */
+.free-shipping-bar,
+[class*="shipping-bar"] {
+  background-color: var(--4da-bg-card) !important;
+  border: 1px solid var(--4da-border) !important;
+  border-radius: var(--4da-radius-sm) !important;
+}
+
+/* =====================================================================
+   FORMS & INPUTS
+   ===================================================================== */
+input,
+select,
+textarea {
+  background-color: var(--4da-bg-card) !important;
+  border: 1px solid var(--4da-border) !important;
+  color: var(--4da-text) !important;
+  border-radius: 8px !important;
+  font-family: var(--4da-font) !important;
+  padding: 12px 16px;
+  font-size: 14px;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--4da-text-muted) !important;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--4da-gold) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.15) !important;
+}
+
+/* =====================================================================
+   FOOTER
+   ===================================================================== */
+.footer,
+.site-footer,
+.section-footer,
+#shopify-section-footer {
+  background-color: var(--4da-bg) !important;
+  border-top: 1px solid var(--4da-border) !important;
+  padding: 48px 24px;
+}
+
+.footer__content-top,
+.footer-block {
+  border-color: var(--4da-border) !important;
+}
+
+.footer h2,
+.footer h3 {
+  color: var(--4da-text) !important;
+  font-size: 13px !important;
+  font-family: var(--4da-mono) !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+}
+
+.footer a,
+.site-footer a {
+  color: var(--4da-text-muted) !important;
+  font-size: 14px;
+}
+.footer a:hover,
+.site-footer a:hover {
+  color: var(--4da-text) !important;
+}
+
+.copyright,
+.footer__copyright {
+  color: var(--4da-text-muted) !important;
+  font-size: 12px !important;
+}
+
+/* =====================================================================
+   DRAWER / MOBILE MENU
+   ===================================================================== */
+.drawer,
+.menu-drawer,
+.cart-drawer,
+.menu-drawer__inner-container {
+  background-color: var(--4da-bg-card) !important;
+  color: var(--4da-text) !important;
+  border-color: var(--4da-border) !important;
+}
+
+.menu-drawer a {
+  color: var(--4da-text-secondary) !important;
+}
+.menu-drawer a:hover {
+  color: var(--4da-text) !important;
+}
+
+/* =====================================================================
+   HERO / IMAGE BANNER
+   ===================================================================== */
+.banner,
+.image-banner,
+.shopify-section--image-banner,
+.banner__box {
+  background-color: var(--4da-bg) !important;
+}
+
+.banner__heading,
+.image-banner__heading {
+  font-size: clamp(36px, 6vw, 56px) !important;
+  font-weight: 600 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--4da-text) !important;
+}
+
+.banner__text,
+.image-banner__text {
+  color: var(--4da-text-secondary) !important;
+  font-size: 17px !important;
+  max-width: 520px !important;
+}
+
+.image-banner .banner__media::after {
+  background: linear-gradient(to top, var(--4da-bg) 0%, transparent 60%) !important;
+}
+
+/* =====================================================================
+   RICH TEXT SECTIONS
+   ===================================================================== */
+.rich-text,
+.shopify-section--rich-text,
+[class*="rich-text"] {
+  background-color: var(--4da-bg) !important;
+}
+
+.rich-text .rich-text__text,
+.rich-text p {
+  color: var(--4da-text-secondary) !important;
+}
+
+/* =====================================================================
+   TRUST BADGES (add via theme customizer or Liquid snippet)
+   ===================================================================== */
+.trust-badges {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 24px 0;
+  border-top: 1px solid var(--4da-border);
+  margin-top: 24px;
+}
+
+.trust-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.trust-badge__icon {
+  font-size: 24px;
+  opacity: 0.6;
+}
+
+.trust-badge__text {
+  font-family: var(--4da-mono) !important;
+  font-size: 10px !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--4da-text-muted) !important;
+}
+
+/* =====================================================================
+   FREE SHIPPING ANNOUNCEMENT STYLING
+   ===================================================================== */
+.announcement-bar--shipping {
+  background: linear-gradient(90deg, var(--4da-bg-card), rgba(212, 175, 55, 0.05), var(--4da-bg-card)) !important;
+}
+
+/* =====================================================================
+   NOTIFICATION / FLASH MESSAGES
+   ===================================================================== */
+.form__message {
+  background-color: var(--4da-bg-card) !important;
+  border: 1px solid var(--4da-border) !important;
+  color: var(--4da-text) !important;
+  border-radius: var(--4da-radius-sm) !important;
+}
+
+.form__message--error {
+  border-color: #EF4444 !important;
+}
+
+.form__message--success {
+  border-color: #22C55E !important;
+}
+
+/* =====================================================================
+   BREADCRUMBS
+   ===================================================================== */
+.breadcrumbs a,
+.breadcrumb a {
+  color: var(--4da-text-muted) !important;
+  font-size: 12px !important;
+  font-family: var(--4da-mono) !important;
+}
+.breadcrumbs a:hover,
+.breadcrumb a:hover {
+  color: var(--4da-gold) !important;
+}
+
+/* =====================================================================
+   DIVIDERS / BORDERS
+   ===================================================================== */
+hr,
+.divider,
+[class*="section-template"] {
+  border-color: var(--4da-border) !important;
+}
+
+/* =====================================================================
+   SCROLLBAR
+   ===================================================================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--4da-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--4da-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--4da-border-hover);
+}
+
+/* =====================================================================
+   SELECTION
+   ===================================================================== */
+::selection {
+  background-color: rgba(212, 175, 55, 0.3);
+  color: var(--4da-text);
+}
+
+/* =====================================================================
+   PAGE TEMPLATES (About, FAQ, Size Chart, etc.)
+   ===================================================================== */
+.template-page .page-width,
+.template-page .rte,
+.template-page .main-page-title {
+  background-color: var(--4da-bg) !important;
+}
+
+.rte h2,
+.rte h3 {
+  color: var(--4da-text) !important;
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+.rte a {
+  color: var(--4da-gold) !important;
+  text-decoration: underline !important;
+}
+
+.rte table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.rte table th,
+.rte table td {
+  padding: 10px 16px;
+  border: 1px solid var(--4da-border) !important;
+  text-align: left;
+  font-size: 14px;
+}
+
+.rte table th {
+  background-color: var(--4da-bg-card) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--4da-text-secondary) !important;
+}
+
+.rte table td {
+  color: var(--4da-text-secondary) !important;
+}
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+@media (max-width: 749px) {
+  .product__title,
+  .product-single__title {
+    font-size: 24px !important;
+  }
+
+  .collection-hero {
+    padding: 32px 16px;
+  }
+
+  .trust-badges {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  /* Ensure variant buttons are tappable on mobile */
+  .product-form__input input[type="radio"] + label,
+  .product-form__input--pill input[type="radio"] + label {
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+/* =====================================================================
+   ACCESSIBILITY — ensure focus states are visible
+   ===================================================================== */
+*:focus-visible {
+  outline: 2px solid var(--4da-gold) !important;
+  outline-offset: 2px !important;
+}
+
+/* Skip link */
+.skip-to-content-link:focus {
+  background-color: var(--4da-gold) !important;
+  color: var(--4da-bg) !important;
+}
