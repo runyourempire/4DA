@@ -294,7 +294,7 @@ Create in Shopify Admin > **Products** > **Collections**:
 
 - **Store name:** 4DA SYSTEMS
 - **Legal business name:** 4DA SYSTEMS (ABN 75 453 268 396)
-- **Store email:** runyourempirehq@gmail.com
+- **Store email:** support@4da.ai
 - **Currency:** AUD
 - **Payments:** Shopify Payments (Stripe)
 - **Address:** Shop 2, 290 Boundary St, Spring Hill QLD 4000

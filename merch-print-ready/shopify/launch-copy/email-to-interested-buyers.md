@@ -5,7 +5,7 @@
 
 ---
 
-## Template (Personalize the [name] and send from runyourempirehq@gmail.com)
+## Template (Personalize the [name] and send from support@4da.ai)
 
 ```
 Subject: The 4DA store is open
