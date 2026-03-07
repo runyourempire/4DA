@@ -1,0 +1,458 @@
+/* 4DA SYSTEMS — Shopify Theme Override v3.0
+   Dawn Theme | Design: #0A0A0A / #D4AF37 / Inter + JetBrains Mono
+
+   v3 fixes: slider button gold bug, image visibility, price visibility */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --color-base-text: 255, 255, 255;
+  --color-base-background-1: 10, 10, 10;
+  --color-base-background-2: 20, 20, 20;
+  --color-base-solid-button-labels: 10, 10, 10;
+  --color-base-outline-button-labels: 255, 255, 255;
+  --color-base-accent-1: 20, 20, 20;
+  --color-base-accent-2: 20, 20, 20;
+  --color-shadow: 0, 0, 0;
+  --alpha-button-background: 1;
+
+  --4da-bg: #0A0A0A;
+  --4da-bg-card: #141414;
+  --4da-bg-elevated: #1F1F1F;
+  --4da-text: #FFFFFF;
+  --4da-text-secondary: #A0A0A0;
+  --4da-text-muted: #666666;
+  --4da-gold: #D4AF37;
+  --4da-border: #2A2A2A;
+  --4da-border-hover: #3A3A3A;
+  --4da-radius: 12px;
+  --4da-radius-sm: 6px;
+  --4da-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --4da-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+/* === GLOBAL TEXT — white on dark === */
+body, body *:not(script):not(style):not(svg):not(path) {
+  color: var(--4da-text) !important;
+}
+
+body {
+  background-color: var(--4da-bg) !important;
+  font-family: var(--4da-font) !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+.shopify-section, .template-index, .template-collection,
+.template-product, .template-cart, .template-page,
+#MainContent, main {
+  background-color: var(--4da-bg) !important;
+}
+
+/* === TYPOGRAPHY === */
+h1,h2,h3,h4,h5,h6 {
+  font-family: var(--4da-font) !important;
+  color: var(--4da-text) !important;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+h1 { font-size: clamp(32px, 5vw, 48px) !important; font-weight: 700; }
+h2 { font-size: clamp(24px, 4vw, 36px) !important; }
+
+p, span, li, td, th, label, input, select, textarea, div, a {
+  font-family: var(--4da-font) !important;
+}
+
+p, .rte p, .product__description p {
+  color: var(--4da-text-secondary) !important;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+a { color: var(--4da-gold) !important; text-decoration: none !important; transition: opacity 0.2s; }
+a:hover { opacity: 0.8; }
+
+/* === PRICES — always visible === */
+.price, .price-item, .price-item--regular, .price-item--sale,
+.price__regular, .product__price, .money, [data-money],
+.cart-item__price, .totals__total-value, .price .money,
+.price-item .money, span.money, .product-price,
+.card-information .price, .card-information .price *,
+.card-information .money, .card .price, .card .price *,
+.card .money, .card__content .price, .card__content .money {
+  font-family: var(--4da-mono) !important;
+  letter-spacing: 0.02em;
+  color: var(--4da-text) !important;
+  font-weight: 500;
+  font-size: 18px;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* === ANNOUNCEMENT BAR === */
+.announcement-bar, .shopify-section--announcement-bar, [class*="announcement"] {
+  background-color: var(--4da-bg-card) !important;
+  border-bottom: 1px solid var(--4da-border) !important;
+}
+.announcement-bar__message, .announcement-bar a, .announcement-bar p,
+.announcement-bar span, [class*="announcement"] a,
+[class*="announcement"] p, [class*="announcement"] span {
+  color: var(--4da-gold) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 12px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+/* === HEADER === */
+.header, .section-header, .shopify-section-group-header-group,
+header, #shopify-section-header {
+  background-color: rgba(10, 10, 10, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid var(--4da-border) !important;
+}
+.header__heading-link, .header__heading {
+  color: var(--4da-text) !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+}
+.header__menu-item, .header nav a, .list-menu__item {
+  color: var(--4da-text-muted) !important;
+  font-size: 14px !important;
+  transition: color 0.2s !important;
+}
+.header__menu-item:hover, .header nav a:hover, .list-menu__item:hover {
+  color: var(--4da-text) !important;
+}
+.header__icon, .header__icon svg { color: var(--4da-text-secondary) !important; }
+.header__icon:hover, .header__icon:hover svg { color: var(--4da-text) !important; }
+
+/* === PRODUCT CARDS === */
+.card, .product-card, .card-wrapper, .product-card-wrapper {
+  background-color: var(--4da-bg-card) !important;
+  border: 1px solid var(--4da-border) !important;
+  border-radius: var(--4da-radius) !important;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s !important;
+}
+.card:hover, .card-wrapper:hover {
+  border-color: var(--4da-border-hover) !important;
+  transform: translateY(-2px) !important;
+}
+.card__heading a, .card__heading, .card-information__text {
+  color: var(--4da-text) !important;
+  font-weight: 600;
+  font-size: 16px;
+}
+.card__media, .card .media { background-color: var(--4da-bg) !important; }
+
+/* Card badges */
+.card__badge, .badge, .price__badge {
+  background-color: rgba(212, 175, 55, 0.15) !important;
+  color: var(--4da-gold) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 10px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  border-radius: 4px !important;
+}
+
+/* === PRODUCT PAGE === */
+.product, .product-section, .shopify-section--product {
+  background-color: var(--4da-bg) !important;
+}
+.product__title, .product-single__title {
+  color: var(--4da-text) !important;
+  font-size: 28px !important;
+  font-weight: 600 !important;
+}
+.product__description, .product__text, .rte {
+  color: var(--4da-text-secondary) !important;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+}
+.product__description strong, .rte strong { color: var(--4da-text) !important; }
+.product__description code, .rte code {
+  font-family: var(--4da-mono) !important;
+  color: var(--4da-gold) !important;
+  background: var(--4da-bg-card);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* Product price — force visible */
+.product .price, .product .price *, .product .money,
+.product [class*="price"], .product-form [class*="price"],
+.product-info__price *, .product__info-wrapper .price,
+.product__info-wrapper .money {
+  color: var(--4da-text) !important;
+  font-family: var(--4da-mono) !important;
+  font-weight: 500 !important;
+  font-size: 20px !important;
+}
+.price--on-sale .price-item--regular {
+  color: var(--4da-text-muted) !important;
+  text-decoration: line-through;
+  font-size: 16px !important;
+}
+
+/* === PRODUCT MEDIA — images always visible === */
+.product__media-wrapper, .product__media, .product-media-container {
+  background-color: var(--4da-bg) !important;
+  border: 1px solid var(--4da-border) !important;
+  border-radius: var(--4da-radius) !important;
+}
+img {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.media, .product__media-item, .product__media-list .media,
+.grid__item .media, .global-media-settings {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* === SLIDER / THUMBNAIL / UTILITY BUTTONS — NEVER GOLD === */
+.slider-button,
+.button-unstyled,
+button.slider-button,
+button.button-unstyled,
+.thumbnail button,
+.product__media-list button,
+.product__media-toggle,
+.slider-button:hover,
+.button-unstyled:hover,
+.slider-button:focus,
+.button-unstyled:focus,
+.slider-button:active,
+.button-unstyled:active,
+.slider-button.is-active,
+button[aria-current],
+.deferred-media button,
+modal-opener button,
+.product__modal-opener,
+.product__media-toggle,
+.media-gallery button,
+.slider button,
+.slider-counter button {
+  background-color: transparent !important;
+  background: transparent !important;
+  transform: none !important;
+}
+
+/* === CTA BUTTONS — white on dark === */
+.product-form__submit,
+.cart__checkout-button,
+.cart__submit,
+button[name="add"],
+.shopify-payment-button button,
+.shopify-payment-button__button,
+input[type="submit"],
+form[action*="/cart/add"] button,
+.shopify-challenge__button {
+  background-color: #FFFFFF !important;
+  color: #0A0A0A !important;
+  border: none !important;
+  border-radius: var(--4da-radius-sm) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  padding: 14px 28px !important;
+  cursor: pointer;
+}
+.product-form__submit:hover, .cart__checkout-button:hover, .cart__submit:hover {
+  background-color: #FFFFFF !important;
+  color: #0A0A0A !important;
+  opacity: 0.85 !important;
+}
+.shopify-payment-button .shopify-payment-button__button--unbranded {
+  background-color: #FFFFFF !important;
+  color: #0A0A0A !important;
+}
+
+/* === VARIANT SELECTORS (Size, Color) — always visible === */
+.product-form__input label, .product-form__input legend, fieldset legend {
+  color: #FFFFFF !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 12px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.product-form__input input[type="radio"] + label,
+.product-form__input--pill input[type="radio"] + label,
+.variant-input label {
+  background-color: #141414 !important;
+  border: 1px solid #2A2A2A !important;
+  color: #FFFFFF !important;
+  border-radius: var(--4da-radius-sm) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 13px !important;
+  padding: 8px 16px !important;
+  min-width: 44px !important;
+  text-align: center;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.product-form__input input[type="radio"] + label:hover,
+.product-form__input--pill label:hover {
+  border-color: #666666 !important;
+  color: #FFFFFF !important;
+}
+.product-form__input input[type="radio"]:checked + label,
+.product-form__input--pill input[type="radio"]:checked + label {
+  border-color: #FFFFFF !important;
+  color: #FFFFFF !important;
+  background-color: #1F1F1F !important;
+}
+.product-form__input input[type="radio"]:disabled + label {
+  opacity: 0.3 !important;
+  text-decoration: line-through !important;
+}
+.product-form__input select {
+  background-color: var(--4da-bg-card) !important;
+  color: var(--4da-text) !important;
+  border: 1px solid var(--4da-border) !important;
+  border-radius: var(--4da-radius-sm) !important;
+}
+.quantity__input, .quantity input, .quantity__button, .quantity {
+  background-color: #141414 !important;
+  background: #141414 !important;
+  border: 1px solid #2A2A2A !important;
+  color: #FFFFFF !important;
+}
+
+/* === COLLECTION PAGE === */
+.collection-hero, .collection-header {
+  background-color: var(--4da-bg) !important;
+  padding: 48px 24px;
+}
+.collection-hero__title { color: var(--4da-text) !important; font-weight: 700; }
+.collection-hero__description { color: var(--4da-text-secondary) !important; }
+.pagination__item { color: var(--4da-text-secondary) !important; border-color: var(--4da-border) !important; }
+.pagination__item--current { background-color: var(--4da-gold) !important; color: var(--4da-bg) !important; }
+
+/* === CART === */
+.cart, .cart-items, .cart__footer, .cart-drawer {
+  background-color: var(--4da-bg) !important;
+  border-color: var(--4da-border) !important;
+}
+.cart-item, .cart-items td { border-color: var(--4da-border) !important; }
+.cart-item__name { color: var(--4da-text) !important; }
+.cart-item__details { color: var(--4da-text-secondary) !important; }
+.cart-item__price, .cart-item__price .money, .totals__total-value {
+  color: var(--4da-text) !important;
+  font-family: var(--4da-mono) !important;
+}
+.cart__footer, .cart-drawer__footer {
+  background-color: var(--4da-bg-card) !important;
+  border-top: 1px solid var(--4da-border) !important;
+}
+
+/* === FORMS === */
+input, select, textarea {
+  background-color: var(--4da-bg-card) !important;
+  border: 1px solid var(--4da-border) !important;
+  color: var(--4da-text) !important;
+  border-radius: 8px !important;
+  font-family: var(--4da-font) !important;
+}
+input::placeholder, textarea::placeholder { color: var(--4da-text-muted) !important; }
+input:focus, select:focus, textarea:focus {
+  border-color: var(--4da-gold) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.15) !important;
+}
+
+/* === FOOTER === */
+.footer, .site-footer, #shopify-section-footer {
+  background-color: var(--4da-bg) !important;
+  border-top: 1px solid var(--4da-border) !important;
+  padding: 48px 24px;
+}
+.footer h2, .footer h3 {
+  color: var(--4da-text) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 13px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+}
+.footer a { color: var(--4da-text-muted) !important; }
+.footer a:hover { color: var(--4da-text) !important; }
+.copyright, .footer__copyright { color: var(--4da-text-muted) !important; font-size: 12px !important; }
+
+/* === DRAWERS === */
+.drawer, .menu-drawer, .cart-drawer, .menu-drawer__inner-container {
+  background-color: var(--4da-bg-card) !important;
+  color: var(--4da-text) !important;
+}
+.menu-drawer a { color: var(--4da-text-secondary) !important; }
+.menu-drawer a:hover { color: var(--4da-text) !important; }
+
+/* === HERO / BANNER === */
+.banner, .image-banner, .banner__box { background-color: var(--4da-bg) !important; }
+.banner__heading { font-size: clamp(36px, 6vw, 56px) !important; font-weight: 600 !important; color: var(--4da-text) !important; }
+.banner__text { color: var(--4da-text-secondary) !important; }
+
+/* === RICH TEXT === */
+.rich-text, [class*="rich-text"] { background-color: var(--4da-bg) !important; }
+.rich-text p { color: var(--4da-text-secondary) !important; }
+
+/* === PAGES (FAQ, Size Chart, About, etc.) === */
+.template-page .page-width, .template-page .rte { background-color: var(--4da-bg) !important; }
+.rte h2, .rte h3 { color: var(--4da-text) !important; margin-top: 32px; margin-bottom: 12px; }
+.rte a { color: var(--4da-gold) !important; text-decoration: underline !important; }
+.rte table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.rte table th, .rte table td { padding: 10px 16px; border: 1px solid var(--4da-border) !important; font-size: 14px; }
+.rte table th {
+  background-color: var(--4da-bg-card) !important;
+  font-family: var(--4da-mono) !important;
+  font-size: 11px !important;
+  text-transform: uppercase;
+  color: var(--4da-text-secondary) !important;
+}
+.rte table td { color: var(--4da-text-secondary) !important; }
+
+/* === TRUST BADGES === */
+.trust-badges { display: flex; justify-content: center; gap: 32px; padding: 24px 0; border-top: 1px solid var(--4da-border); margin-top: 24px; }
+.trust-badge { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.trust-badge__text { font-family: var(--4da-mono) !important; font-size: 10px !important; text-transform: uppercase; color: var(--4da-text-muted) !important; }
+
+/* === NOTIFICATIONS === */
+.form__message { background-color: var(--4da-bg-card) !important; border: 1px solid var(--4da-border) !important; color: var(--4da-text) !important; }
+.form__message--error { border-color: #EF4444 !important; }
+.form__message--success { border-color: #22C55E !important; }
+
+/* === MISC === */
+.breadcrumbs a, .breadcrumb a { color: var(--4da-text-muted) !important; font-size: 12px !important; font-family: var(--4da-mono) !important; }
+hr, .divider { border-color: var(--4da-border) !important; }
+::selection { background-color: rgba(212, 175, 55, 0.3); color: var(--4da-text); }
+*:focus-visible { outline: 2px solid var(--4da-gold) !important; outline-offset: 2px !important; }
+.skip-to-content-link:focus { background-color: var(--4da-gold) !important; color: var(--4da-bg) !important; }
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--4da-bg); }
+::-webkit-scrollbar-thumb { background: var(--4da-border); border-radius: 3px; }
+
+/* === RESPONSIVE === */
+@media (max-width: 749px) {
+  .product__title { font-size: 24px !important; }
+  .trust-badges { flex-wrap: wrap; gap: 20px; }
+  .product-form__input input[type="radio"] + label {
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+/* === KILL DAWN ANIMATIONS that hide images === */
+.reveal, [class*="motion"], [class*="animate"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: none !important;
+}
