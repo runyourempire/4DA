@@ -124,7 +124,7 @@ There is a reason 4DA is a desktop app and not a web service. To score content a
 3. **Wait about 60 seconds** for the initial scan
 4. **See your first scored content** from 11 sources, ranked by relevance to your codebase
 
-The free tier includes everything: all 11 sources, the full scoring engine, behavior learning, MCP server (30 tools for Claude Code and Cursor), and the CLI. It is not a trial.
+The free tier includes everything: all 11 sources, the full scoring engine, feedback-driven scoring, MCP server (30 tools for Claude Code and Cursor), and the CLI. It is not a trial.
 
 Pro ($12/month or $99/year) adds AI briefings, Developer DNA profiling, and Score Autopsy. But most developers will find the free tier more than sufficient.
 

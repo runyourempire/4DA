@@ -70,11 +70,11 @@ P.S. -- If you use Claude Code or Cursor, we are also shipping an MCP server wit
 - **5-axis scoring engine** -- Context, Interest, ACE, Dependency, and Learned axes independently evaluate every item
 - **Confirmation gate** -- an item needs 2+ independent signals to pass. 99%+ gets rejected.
 - **Auto context discovery** -- scans your project files and Git activity to understand your stack. No configuration.
-- **Behavior learning** -- save and dismiss actions train the scoring with 30-day exponential decay
+- **Feedback-driven scoring** -- save and dismiss actions adjust scores with 30-day exponential decay
 - **MCP server** -- 30 tools for Claude Code and Cursor. Your AI assistant gets signal too.
 - **Zero telemetry** -- no analytics, no tracking, no account required. Your data stays yours.
 
-The free tier is not a demo. It is the full scoring engine with all 11 sources, the CLI, the MCP server, and behavior learning. Most developers will never need more.
+The free tier is not a demo. It is the full scoring engine with all 11 sources, the CLI, the MCP server, and feedback-driven scoring. Most developers will never need more.
 
 Setup takes under 3 minutes. Point it at a project directory and it builds your profile automatically.
 

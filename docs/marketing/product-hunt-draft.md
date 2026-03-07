@@ -51,7 +51,7 @@ So I built 4DA. It reads your manifest files locally, builds a technology profil
 
 Things I want you to know:
 
-- The free tier is real. All 11 sources, the full scoring engine, behavior learning, the MCP server (30 tools for Claude Code / Cursor). It is not a trial. Most people will never need Pro.
+- The free tier is real. All 11 sources, the full scoring engine, feedback-driven scoring, the MCP server (30 tools for Claude Code / Cursor). It is not a trial. Most people will never need Pro.
 
 - Privacy is not a feature -- it is the architecture. Your data literally cannot reach me. There is no server. No telemetry. No account. I genuinely do not know how many people use 4DA. That is by design.
 
@@ -86,7 +86,7 @@ For the developers in the thread -- some technical depth:
 2. Interest alignment -- does the content quality/topic fit?
 3. ACE (Autonomous Context Engine) -- does your codebase context confirm relevance?
 4. Dependency relevance -- does this affect a package you actually use?
-5. Learned behavior -- have your saves/dismissals trained the model?
+5. Feedback signals -- have your saves/dismissals adjusted the scoring?
 
 An item needs 2+ independent signals to pass the confirmation gate. Single-signal matches get rejected as coincidence. This is what produces the 99%+ rejection rate -- and why what survives is actually useful.
 
@@ -101,7 +101,7 @@ An item needs 2+ independent signals to pass the confirmation gate. Single-signa
 If you use Claude Code or Cursor, 4DA exposes 30 MCP tools -- query your scored feed, check dependency advisories, surface signal chains, all from your AI assistant. Install: `npx @4da/mcp-server`
 
 **Pricing:**
-- Free forever: all 11 sources, full scoring engine, MCP server, behavior learning, CLI
+- Free forever: all 11 sources, full scoring engine, MCP server, feedback-driven scoring, CLI
 - Pro ($12/mo or $99/yr): AI daily briefings, Developer DNA profiling, intelligence panels, score autopsy
 
 **License:** FSL-1.1-Apache-2.0 (source available, converts to Apache 2.0 after 2 years). The MCP server is MIT today.

@@ -242,12 +242,11 @@ Body:   30 tools for Claude Code and Cursor. Query your intelligence
 
 **Card 5 -- The Gets-Better Story**
 ```
-Tag:    LEARNING
-Title:  Behavior Learning
-Body:   Learns from your save and dismiss actions with 30-day
-        exponential decay. The scoring improves continuously as you
-        use it. Recent actions matter more than old ones. It adapts
-        to you.
+Tag:    FEEDBACK
+Title:  Feedback-Driven Scoring
+Body:   Save and dismiss actions directly influence future scores
+        with 30-day decay. Recent feedback weighs more than old.
+        The scoring adapts to what you care about.
 ```
 
 **Card 6 -- The Terminal Native**
@@ -261,7 +260,7 @@ Body:   Terminal-native access to your intelligence feed. Scriptable,
 
 ### Rationale
 
-Card ordering follows persuasion priority: lead with the unique mechanism (scoring), follow with the trust objection (privacy), explain the magic (context discovery), hook power users (MCP), show the improvement trajectory (learning), and close with accessibility (CLI). Each description ends with a punchy sentence that reinforces the value proposition. *Authority* is established through technical specificity. *Commitment/Consistency* is activated by the learning card -- the tool gets better the more you use it, which makes switching costs feel like investment rather than lock-in.
+Card ordering follows persuasion priority: lead with the unique mechanism (scoring), follow with the trust objection (privacy), explain the magic (context discovery), hook power users (MCP), show the feedback loop (scoring adapts to your actions), and close with accessibility (CLI). Each description ends with a punchy sentence that reinforces the value proposition. *Authority* is established through technical specificity. *Commitment/Consistency* is activated by the feedback card -- the scoring adapts the more you use it, which makes switching costs feel like investment rather than lock-in.
 
 ---
 
@@ -399,7 +398,7 @@ CTA: [Start Pro -- $12/month]
 
 **Q: Is the free tier actually useful or just a teaser?**
 
-A: The free tier includes all 11 source adapters, the full 5-axis scoring engine, the feed UI, behavior learning, the CLI, and the MCP server. It is a complete product. Pro adds AI synthesis and intelligence layers on top. Most individual developers will find the free tier more than sufficient.
+A: The free tier includes all 11 source adapters, the full 5-axis scoring engine, the feed UI, feedback-driven scoring, the CLI, and the MCP server. It is a complete product. Pro adds AI synthesis and intelligence layers on top. Most individual developers will find the free tier more than sufficient.
 
 **Q: Why should I pay when I bring my own API keys?**
 
@@ -415,7 +414,7 @@ A: No. 4DA is a desktop application. Your manifest files, git history, scoring d
 
 **Q: What if I stop paying for Pro?**
 
-A: You keep the free tier permanently. Your data, your scoring history, your behavior learning -- all of it stays. You lose access to AI briefings, DNA profiling, and intelligence panels. No lock-in. No data hostage.
+A: You keep the free tier permanently. Your data, your scoring history, your feedback-driven scoring -- all of it stays. You lose access to AI briefings, DNA profiling, and intelligence panels. No lock-in. No data hostage.
 
 **Q: Is this open source?**
 
@@ -547,7 +546,7 @@ The MCP section targets the highest-value developer segment: those already using
 
 ### Final Persuasive Push
 
-> 4DA is free. It runs locally. It respects your privacy. It gets smarter every day you use it. And it takes 3 minutes to set up.
+> 4DA is free. It runs locally. It respects your privacy. It adapts to your feedback every day you use it. And it takes 3 minutes to set up.
 >
 > The only question is how long you want to keep manually filtering noise.
 
