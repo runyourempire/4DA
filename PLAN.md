@@ -1,258 +1,401 @@
-# Pro Tier — Make It Irresistible
+# 4DA Hardening Plan
+
+**Objective:** Transform every tab, component, and backend module into production-grade quality — zero hardcoded strings, full accessibility, optimal performance, comprehensive test coverage, and dead code elimination.
+
+**Scope:** 7 phases covering frontend, backend, and infrastructure. Each phase is atomic and independently committable.
+
+---
+
+## Phase 1: File Size & Component Extraction
+
+**Problem:** BriefingView.tsx is 537 lines (exceeds 500-line error threshold). GAME component `containerRef` patterns produce 5 ESLint warnings.
+
+### 1.1 Extract BriefingAtmosphere from BriefingView
+
+**Source:** `src/components/BriefingView.tsx` (537 lines)
+**Target:** `src/components/briefing/BriefingAtmosphere.tsx` (~80 lines)
+
+Extract the GAME component lifecycle block (containerRef, useEffect with `registerGameComponent`, cleanup):
+- Move the `<div ref={containerRef}>` + useEffect + cleanup into `<BriefingAtmosphere />`
+- Props: `{ visible: boolean }` — controls mount/unmount
+- Import and render `<BriefingAtmosphere />` in BriefingView where the old block was
+- BriefingView drops to ~460 lines (safely under 500)
+
+### 1.2 Extract shared useGameComponent hook
+
+**Target:** `src/hooks/useGameComponent.ts` (~40 lines)
+
+All 6 GAME component mount points use the same pattern:
+```tsx
+const containerRef = useRef<HTMLDivElement>(null);
+useEffect(() => {
+  const el = containerRef.current;
+  if (!el) return;
+  registerGameComponent('component-name', el, { ...params });
+  return () => { el.innerHTML = ''; };
+}, [deps]);
+```
+
+Create a reusable hook:
+```tsx
+export function useGameComponent(
+  name: string,
+  params: Record<string, unknown>,
+  deps: unknown[] = []
+): React.RefObject<HTMLDivElement>
+```
+
+**Files to refactor (replace inline pattern with hook):**
+- `src/components/BriefingView.tsx` (or new BriefingAtmosphere)
+- `src/components/PlaybookView.tsx`
+- `src/components/TechRadar.tsx`
+- `src/components/IntelligenceProfileCard.tsx`
+- `src/components/LearningIndicator.tsx`
+- `src/components/channels/ChannelsView.tsx`
+
+This eliminates all 5 ESLint `containerRef` warnings.
+
+### 1.3 Validate file sizes
+
+```bash
+pnpm run validate:sizes
+```
+
+All files must pass. No new exceptions added to check-file-sizes.cjs.
+
+---
+
+## Phase 2: Accessibility Hardening
+
+**Problem:** 12+ components missing ARIA attributes, keyboard navigation gaps, screen reader blind spots.
+
+### 2.1 DecisionMemory form accessibility
+
+**File:** `src/components/DecisionMemory.tsx`
+
+- Add `role="form"` and `aria-label="Record decision"` to decision input form
+- Add `aria-required="true"` to decision text input
+- Add `aria-describedby` linking input to error message (when validation fails)
+- Add loading state: `aria-busy="true"` on form during submission
+- Add `aria-live="polite"` to the decisions list for dynamic updates
+- Add visual loading spinner during `handleSubmit` / `handleSupersede` / `handleReconsider`
+
+### 2.2 IntelligencePulse toggle
+
+**File:** `src/components/IntelligenceProfileCard.tsx`
+
+- Add `role="switch"` and `aria-checked` to the Intelligence Pulse visibility toggle
+- Add `aria-label="Toggle intelligence pulse display"`
+
+### 2.3 ChannelCard keyboard support
+
+**File:** `src/components/channels/ChannelCard.tsx`
+
+- Add `role="article"` to channel card container
+- Ensure channel card actions (edit, delete, toggle) are keyboard-focusable
+- Add `aria-label` to icon-only action buttons
+
+### 2.4 ToolkitView navigation
+
+**File:** `src/components/toolkit/ToolkitView.tsx`
+
+- Add `role="tablist"` to tool selector sidebar
+- Add `role="tab"` + `aria-selected` to each tool button
+- Add `role="tabpanel"` to the active tool content area
+- Add `aria-labelledby` linking tabpanel to its tab
+
+### 2.5 ContextPanel
+
+**File:** `src/components/ContextPanel.tsx`
+
+- Add `role="complementary"` and `aria-label="Context panel"` to the aside
+- Add `aria-expanded` to collapsible sections
+
+### 2.6 EngagementPulse heatmap
+
+**File:** `src/components/EngagementPulse.tsx` (if exists)
+
+- Add `role="img"` and `aria-label` describing the heatmap data
+- Add screen reader text summarizing engagement trend
+
+---
+
+## Phase 3: Remaining i18n
+
+**Problem:** 3-5 hardcoded strings survived the audit sweep.
+
+### 3.1 BriefingView hardcoded strings
+
+**File:** `src/components/BriefingView.tsx`
+
+Find and replace:
+- `"System learned"` → `t('briefing.systemLearned')`
+- `"Intelligence Metrics"` → `t('briefing.intelligenceMetrics')`
+- Any remaining hardcoded tooltip text or labels
+
+### 3.2 ToolkitView title
+
+**File:** `src/components/toolkit/ToolkitView.tsx`
+
+- Replace hardcoded `"Toolkit"` header → `t('toolkit.title')`
+
+### 3.3 use-analysis.ts toast
+
+**File:** `src/hooks/use-analysis.ts`
+
+- Replace hardcoded toast message strings → `t()` calls
+- Import `useTranslation` or use i18n.t() directly
+
+### 3.4 Add keys to locale file
+
+**File:** `src/locales/en/ui.json`
+
+Add all new keys from 3.1-3.3. Verify no orphaned keys remain.
+
+### 3.5 Full i18n sweep
+
+Run grep for remaining hardcoded user-facing strings:
+```bash
+grep -rn ">[A-Z][a-z]" src/components/ --include="*.tsx" | grep -v "t(" | grep -v test | grep -v mock
+```
+
+Fix any survivors.
+
+---
+
+## Phase 4: Performance Optimization
+
+**Problem:** Unmemoized components and computations cause unnecessary re-renders.
+
+### 4.1 SovereignDeveloperProfile sub-components
+
+**File:** `src/components/SovereignDeveloperProfile.tsx`
+
+- Wrap `DimensionRadar` render output in `useMemo`
+- Wrap `AffinityList` render output in `useMemo`
+- Memoize `formatDNAProfile` result with `useMemo`
+- Verify no stale closures introduced
+
+### 4.2 Fix learnedAffinities dependency warnings
+
+**Files:**
+- `src/components/IntelligenceProfileCard.tsx`
+- `src/components/result-item/BadgeRow.tsx`
+
+- Audit `useEffect` / `useMemo` dependency arrays
+- Add missing `learnedAffinities` to dependency arrays OR
+- Restructure to use store selector that returns stable references
+- Verify with `pnpm run lint` — zero warnings
+
+### 4.3 ResultsView virtual scroll audit
+
+**File:** `src/components/ResultsView.tsx`
+
+- Verify `@tanstack/react-virtual` is using stable `estimateSize` callback
+- Ensure row components are wrapped in `memo()` with proper comparison
+- Check that sort/filter changes properly reset virtualizer
+
+### 4.4 Store selector optimization
+
+**Files:** Multiple components using `useAppStore`
+
+- Audit components using `useShallow` — ensure selectors return minimal state
+- Check for components subscribing to entire slices when they need 1-2 fields
+- Fix any selector that causes re-renders on unrelated state changes
+
+---
+
+## Phase 5: Test Coverage for Audit Fixes
+
+**Problem:** Audit fixes (i18n, accessibility, error handling, Pro guards) have zero test coverage.
+
+### 5.1 ProvenanceTooltip Escape key test
+
+**File:** `src/components/channels/__tests__/ProvenanceTooltip.test.tsx` (new)
+
+Test:
+- Renders tooltip content
+- Pressing Escape calls onClose
+- Displays `t('channels.provenance')` label
+
+### 5.2 DecisionMemory error handling tests
+
+**File:** `src/components/__tests__/DecisionMemory.test.tsx` (new or extend)
+
+Tests:
+- `handleSubmit` catches invoke errors and shows error toast
+- `handleSupersede` catches errors and shows error toast
+- `handleReconsider` catches errors and shows error toast
+- Loading state shown during async operations
+- Form validation prevents empty submissions
+
+### 5.3 IntelligenceProfileCard Pro guard test
+
+**File:** `src/components/__tests__/IntelligenceProfileCard.test.tsx` (new or extend)
+
+Tests:
+- KnowledgeGapsCard returns null when `isPro` is false
+- KnowledgeGapsCard renders content when `isPro` is true
+- Component wrapped in `memo()` prevents unnecessary re-renders
+
+### 5.4 CalibrationView i18n test
+
+**File:** `src/components/__tests__/CalibrationView.test.tsx` (new)
+
+Tests:
+- All calibration sections render with i18n keys (not hardcoded strings)
+- ARIA roles present on key elements
+- Action buttons have accessible labels
+
+### 5.5 RadarSVG a11y test
+
+**File:** `src/components/tech-radar/__tests__/RadarSVG.test.tsx` (new)
+
+Tests:
+- SVG has `role="img"` and `aria-label`
+- Ring labels use i18n keys
+
+### 5.6 Run full test suite
+
+```bash
+pnpm run test
+```
+
+All tests must pass. No skipped tests allowed.
+
+---
+
+## Phase 6: Rust Backend Audit
+
+**Problem:** 100 .rs files not audited for dead code after streamlining deleted 42 frontend files and removed features.
+
+### 6.1 Dead code detection
+
+```bash
+cd src-tauri && cargo build 2>&1 | grep "warning.*dead_code\|warning.*unused"
+```
+
+For each warning:
+- If the function is genuinely unused → delete it
+- If it's a Tauri command not yet wired → wire it or delete it
+- If it's used but compiler can't see the usage → add `#[allow(dead_code)]` with comment explaining why
+
+### 6.2 Orphaned Tauri commands
+
+**File:** `src-tauri/src/lib.rs`
+
+Cross-reference every function in `invoke_handler!` against frontend `invoke()` calls:
+```bash
+grep -rn "invoke(" src/ --include="*.ts" --include="*.tsx" | grep -oP "'[a-z_]+'" | sort -u
+```
+
+Compare against registered commands. Remove any command that:
+- Has no frontend caller
+- Has no MCP server caller
+- Is not part of the public API
+
+### 6.3 Orphaned modules
+
+Check for modules declared in `lib.rs` or `mod.rs` that export nothing used:
+- Review each `mod declaration` in lib.rs
+- If the module only contained code for deleted features → remove the module file
+
+### 6.4 Validate Rust
+
+```bash
+cd src-tauri && cargo test && cargo clippy -- -D warnings
+```
+
+Zero warnings, zero test failures.
+
+---
+
+## Phase 7: Final Polish & Validation
+
+### 7.1 DecisionMemory loading state
+
+**File:** `src/components/DecisionMemory.tsx`
+
+- Add `isSubmitting` state boolean
+- Set true before invoke, false in finally block
+- Disable submit button and show spinner during submission
+- Apply to all three handlers (submit, supersede, reconsider)
+
+### 7.2 Keyboard shortcuts modal audit
+
+**File:** `src/components/KeyboardShortcutsModal.tsx`
+
+- Verify all listed shortcuts still work after streamlining
+- Remove any shortcuts for deleted features
+- Add shortcuts for any new features without shortcuts
+
+### 7.3 Full validation suite
+
+```bash
+pnpm run validate:all
+pnpm run validate:sizes
+cd src-tauri && cargo test
+pnpm run test
+pnpm run lint
+npx tsc --noEmit
+```
+
+All must pass clean.
+
+### 7.4 Commit strategy
+
+One commit per phase:
+1. `Extract BriefingAtmosphere + useGameComponent hook, fix file sizes`
+2. `Add ARIA roles, keyboard nav, screen reader support across 6 components`
+3. `Replace final hardcoded strings with i18n`
+4. `Memoize SovereignProfile + fix dependency warnings`
+5. `Add test coverage for audit fixes (5 new test files)`
+6. `Remove dead Rust code and orphaned commands`
+7. `DecisionMemory loading state + final polish`
+
+---
+
+## Success Criteria
+
+- [ ] Zero files over 500 lines (TypeScript) or 1000 lines (Rust)
+- [ ] Zero ESLint warnings
+- [ ] Zero hardcoded user-facing strings in components
+- [ ] Every interactive element has ARIA attributes
+- [ ] Every async form has loading/error states
+- [ ] Every Pro-gated feature has null guard for free tier
+- [ ] All audit fixes have test coverage
+- [ ] Zero dead code warnings in Rust
+- [ ] `pnpm run validate:all` passes clean
+- [ ] `cargo clippy -- -D warnings` passes clean
+
+---
+
+## Appendix: Pro Tier Strategy
+
+> Preserved from previous planning session. Execute after hardening is complete.
+
+### Pro Tier — Make It Irresistible
 
 **Objective:** Transform 4DA Pro from "nice analytics panels" into an irresistible upgrade with visible daily value, intelligent free-tier limits, and a flagship search feature.
 
 **Outcome:** 13+ working Pro features, 3 usage gates, zero vapor promises.
 
----
-
-## Phase 1: Wire & Clean (30 min)
-
-Quick wins that immediately improve the Pro package.
-
-### 1.1 Wire `get_semantic_shifts` into Tauri
-
-**Files:** `src-tauri/src/semantic_diff.rs`, `src-tauri/src/lib.rs`
-
-- Add `#[tauri::command]` attribute above the function (line ~244 in semantic_diff.rs)
-- Make function `pub async` with correct Tauri signature
-- Register in lib.rs invoke_handler after `resolve_signal_chain` (~line 355)
-- Already has `require_pro_feature` call — no gate work needed
-- Already in PRO_FEATURES list — no license.rs changes needed
-
-**Verify:** `cargo build` passes, command callable from frontend
-
-### 1.2 Clean vapor features from PRO_FEATURES
-
-**File:** `src-tauri/src/settings/license.rs`
-
-- Remove `"generate_audio_briefing"` from PRO_FEATURES (no backend, no UI)
-- Remove `"get_predicted_context"` from PRO_FEATURES (no backend, no UI)
-- Remove `"generate_context_packet"` from PRO_FEATURES (no backend, no UI)
-- Keep `"natural_language_query"` — implementing in Phase 2
-
-**Result:** PRO_FEATURES list is honest — every entry has a working backend
-
-### 1.3 Clean game-components cache bust
-
-**File:** `src/lib/game-components.ts`, `src/lib/game-components/types.d.ts`
-
-- Remove `?v=2` query param from signal-waveform import
-- Remove duplicate `declare module` in types.d.ts
-- Components reload correctly on dev server restart (no hack needed)
-
----
-
-## Phase 2: Natural Language Search (2-3 hours)
-
-The flagship Pro feature. Frontend already exists and works — needs backend only.
-
-### 2.1 Create `natural_language_query` command
-
-**New file:** `src-tauri/src/natural_language_search.rs`
-
-**Architecture:**
-```
-User query -> Local intent parser -> SQL/FTS query -> Optional LLM enhancement -> Results
-```
-
-**Local intent parser (no LLM required):**
-- Extract keywords (strip stop words, stem)
-- Detect time ranges ("last week", "from last month", "yesterday")
-- Detect file types ("pdfs", "images", "xlsx files")
-- Detect intent (find/summarize/compare/timeline/count)
-- Compute confidence score
-
-**Query execution:**
-- FTS5 full-text search on `source_items.title` and `source_items.content`
-- If embeddings available: sqlite-vec KNN similarity search
-- Apply time range filter (`created_at > ?`)
-- Apply source_type filter if file types detected
-- Combine FTS + vector scores, rank by relevance
-- Cap at 20 results
-
-**Optional LLM enhancement (BYOK/Ollama):**
-- If LLM available: send query to LLM for better intent extraction
-- System prompt: "Extract search intent from this natural language query. Return JSON with: keywords, time_range, file_types, intent, entities"
-- Graceful fallback to local parser if LLM unavailable
-
-**Return type (matches existing frontend interface):**
-```rust
-struct QueryResult {
-    query: String,
-    intent: String,
-    items: Vec<QueryResultItem>,
-    total_count: usize,
-    execution_ms: u64,
-    summary: Option<String>,
-    parsed: ParsedQuery,
-}
-```
-
-**Pro gate:** `require_pro_feature("natural_language_query")?` at top
-
-### 2.2 Register command
-
-**File:** `src-tauri/src/lib.rs`
-
-- Add `mod natural_language_search;` declaration
-- Add `natural_language_search::natural_language_query` to invoke_handler
-
-### 2.3 Add NL Search ProGate in frontend
-
-**File:** `src/components/NaturalLanguageSearch.tsx`
-
-- Wrap the search input area with `<ProGate feature="natural_language_query">`
-- Free users see the blurred search UI with upgrade prompt
-- The "try these" example queries remain visible (teaser)
-
----
-
-## Phase 3: Intelligent Free Tier Gates (1-2 hours)
-
-Three limits that make free users feel the ceiling without crippling the experience.
-
-### 3.1 Channel Limit Gate
-
-**Limit:** Free = 3 custom channels, Pro = unlimited
-
-**Backend — `src-tauri/src/channel_commands.rs`:**
-- In `create_custom_channel`: count existing custom channels
-- If count >= 3 AND not Pro: return error with upgrade message
-- Built-in seed channels don't count toward the limit
-
-**Frontend — `src/components/channels/ChannelsView.tsx`:**
-- Show channel count badge: "2/3 channels" for free, no limit for Pro
-- When at limit: replace "Create Channel" button with Pro upgrade prompt
-
-### 3.2 Monitoring Frequency Gate
-
-**Limit:** Free = minimum 30 min interval, Pro = minimum 5 min
-
-**Backend — `src-tauri/src/monitoring_commands.rs`:**
-- In `set_monitoring_interval`: check license tier
-- If not Pro AND minutes < 30: clamp to 30 and return warning
-- Pro users: minimum 5 min
-
-**Frontend — wherever monitoring settings are configured:**
-- Show interval options with Pro badges on < 30 min options
-- Selecting a Pro interval triggers upgrade prompt if free tier
-
-### 3.3 History Depth Gate
-
-**Limit:** Free = 30 days of results, Pro = unlimited
-
-**Backend — `src-tauri/src/db/mod.rs` or relevant query functions:**
-- Add `history_cutoff` parameter to source item queries
-- For free tier: `AND s.created_at > datetime('now', '-30 days')`
-- For Pro: no date filter
-- Determine tier at query time via settings manager
-
-**Frontend — results area:**
-- When free tier: show subtle footer "Showing last 30 days — unlock full history with Pro"
-- Don't hide old items completely — show them grayed with lock icon
-- Clicking a locked historical item triggers ProGate
-
----
-
-## Phase 4: Pro Polish Features (2-3 hours)
-
-### 4.1 Weekly Intelligence Digest
-
-**New file:** `src-tauri/src/weekly_digest.rs`
-
-**What it does:** Aggregates the week's intelligence into a single structured report.
-
-**Data sources (all already computed):**
-- Attention report: "This week you focused on: React, Rust, authentication"
-- Knowledge gaps: "Gaps detected: React 19 migration, Bun runtime"
-- Signal chains: "Emerging pattern: 3 signals about WebGPU adoption"
-- Project health: "tauri-app health: 85/100, 2 stale dependencies"
-- Scoring stats: "Processed 612 items, 39 relevant, 1 top pick"
-
-**Format:** Structured JSON that frontend renders as a card/panel
-
-**Trigger:** Manual `generate_weekly_digest` command (Pro-gated)
-
-**Frontend:** New panel in Insights view
-
-### 4.2 Decision Impact Tracking
-
-**Files:** `src-tauri/src/decision_advantage/`, `src-tauri/src/db/`
-
-**What it does:** After recording a decision ("adopted React 19"), 4DA monitors incoming signals that relate to that decision and surfaces them.
-
-**Implementation:**
-- When new decision recorded: extract `subject` + `context_tags` as tracking terms
-- During analysis: cross-reference relevant items against active decision subjects
-- New query: `get_decision_signals(decision_id)` returns matching items
-- Store matches in `decision_signals` junction table
-
-**Match types:** supporting, challenging, related
-
-**Frontend:** In Decision Journal, each decision shows a "Signals" badge. Expand to see matching items.
-
-**Pro gate:** `require_pro_feature("get_decision_signals")?`
-
----
-
-## Phase 5: Commit & Validate
-
-### 5.1 Validation checklist
-- [ ] `cargo build` — Rust compiles cleanly
-- [ ] `cargo test` — all tests pass (from src-tauri/)
-- [ ] `npx tsc --noEmit` — TypeScript clean
-- [ ] `pnpm run validate:sizes` — no file size violations
-- [ ] `pnpm run validate:all` — full validation suite
-
-### 5.2 Commit strategy
-- Phase 1: "Wire semantic_shifts + clean vapor features"
-- Phase 2: "Implement natural_language_query backend"
-- Phase 3: "Add free tier gates (channels, monitoring, history)"
-- Phase 4: "Add weekly digest + decision impact tracking"
-
----
-
-## Final Pro Package
-
-### Working Pro Features (13):
-1. AI Briefing (generate + retrieve)
-2. Attention Report
-3. Knowledge Gaps
-4. Signal Chains
-5. Project Health
-6. Developer DNA (view + markdown + SVG)
-7. Semantic Shifts (newly wired)
-8. Natural Language Search (newly implemented)
-9. Weekly Intelligence Digest (new)
-10. Decision Impact Tracking (new)
-
-### Usage Gates (3):
-11. Unlimited custom channels (free: 3)
-12. Fast monitoring (free: 30 min, Pro: 5 min)
-13. Full history (free: 30 days, Pro: unlimited)
-
-### Removed vapor:
-- ~~Audio briefing~~ (removed from gate)
-- ~~Predicted context~~ (removed from gate)
-- ~~Context packet~~ (removed from gate)
-
-**Every listed feature works. Zero promises that can't be delivered.**
-
----
-
-## Execution Order
-
-```
-Phase 1.1  ->  Wire semantic_shifts        [5 min]
-Phase 1.2  ->  Clean vapor features         [5 min]
-Phase 1.3  ->  Clean cache bust hack        [2 min]
-Phase 2.1  ->  NL search backend            [90 min]
-Phase 2.2  ->  Register + frontend gate     [15 min]
-Phase 3.1  ->  Channel limit gate           [30 min]
-Phase 3.2  ->  Monitoring frequency gate    [20 min]
-Phase 3.3  ->  History depth gate           [30 min]
-Phase 4.1  ->  Weekly intelligence digest   [60 min]
-Phase 4.2  ->  Decision impact tracking     [60 min]
-Phase 5    ->  Validate + commit            [20 min]
-```
+#### Quick Wins
+- Wire `get_semantic_shifts` into Tauri (already has Pro gate)
+- Clean vapor features from PRO_FEATURES list (remove audio_briefing, predicted_context, context_packet)
+- Clean game-components cache bust hack
+
+#### Flagship: Natural Language Search
+- Local intent parser (keywords, time ranges, file types, intent detection)
+- FTS5 + sqlite-vec KNN hybrid search
+- Optional LLM enhancement (BYOK/Ollama)
+- ProGate wrapper in frontend
+
+#### Usage Gates (3)
+- Channel limit: Free = 3 custom, Pro = unlimited
+- Monitoring frequency: Free = 30 min, Pro = 5 min
+- History depth: Free = 30 days, Pro = unlimited
+
+#### Polish Features
+- Weekly Intelligence Digest (aggregates attention, gaps, signals, health, stats)
+- Decision Impact Tracking (monitors signals related to recorded decisions)
