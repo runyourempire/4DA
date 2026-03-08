@@ -3,6 +3,12 @@
 > Simulation-driven launch strategy. Every decision is explored before planned, planned before implemented.
 > Created: 8 March 2026
 > Status: ACTIVE
+> Phase 0.1: First-launch experience — COMPLETE
+> Phase 0.2: Dead command audit — COMPLETE (1 bug fixed: get_latest_digest)
+> Phase 0.3: Network manifest — COMPLETE (NETWORK.md, 290 lines)
+> Phase 0.4: Offline resilience — IN PROGRESS
+> Phase 1.1: Local telemetry — COMPLETE (telemetry.rs, use-telemetry.ts, Phase 25 migration)
+> Phase 2: Trusted testers — NOT STARTED (requires external action)
 > Method: Simulate all scenarios → identify highest-EV path → build for the probable case → prepare contingencies for edge cases
 
 ---
@@ -601,10 +607,10 @@ The repo is at github.com/runyourempire/4DA. It needs:
 | Landing page | Not started | Hard blocker |
 | Stripe checkout | Not started | Hard blocker for revenue |
 | Keygen integration | Done | - |
-| Privacy audit | Not started | Hard blocker |
-| First-launch experience | Needs polish | Hard blocker |
+| Privacy audit | Done (NETWORK.md) | - |
+| First-launch experience | Done (warmup + empty states) | - |
 | Demo video/GIF | Not started | Hard blocker for landing page |
-| Local telemetry | Not started | Soft blocker (we learn nothing without it) |
+| Local telemetry | Done (Phase 25 migration) | - |
 | Tester feedback | Not started | Hard blocker (per battle plan) |
 
 ---
