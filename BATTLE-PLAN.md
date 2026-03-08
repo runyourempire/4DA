@@ -6,7 +6,7 @@
 > Phase 0.1: First-launch experience — COMPLETE
 > Phase 0.2: Dead command audit — COMPLETE (1 bug fixed: get_latest_digest)
 > Phase 0.3: Network manifest — COMPLETE (NETWORK.md, 290 lines)
-> Phase 0.4: Offline resilience — IN PROGRESS
+> Phase 0.4: Offline resilience — COMPLETE (DB corruption recovery added)
 > Phase 1.1: Local telemetry — COMPLETE (telemetry.rs, use-telemetry.ts, Phase 25 migration)
 > Phase 2: Trusted testers — NOT STARTED (requires external action)
 > Method: Simulate all scenarios → identify highest-EV path → build for the probable case → prepare contingencies for edge cases
