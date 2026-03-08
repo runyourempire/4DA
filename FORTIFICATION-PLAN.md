@@ -238,8 +238,8 @@ Re-audited line counts (8 March 2026):
 - [x] Settings: settings-slice.test.ts (17 tests)
 - [x] Scoring pipeline: 1,000+ Rust scoring/simulation tests
 - [x] Privacy: privacy_tests.rs (comprehensive redaction + canary tests)
-- [ ] Taste test flow (component test — deferred)
-- [ ] Playbook navigation (component test — deferred)
+- [x] Taste test flow: TasteTestStep.test.tsx (15 tests — intro, cards, rating, confidence, skip, summary)
+- [x] Playbook navigation: PlaybookView.test.tsx (20 tests — modules, templates, lessons, completion)
 
 ### 8.2 Edge case tests
 - [x] NaN/infinity in scoring (unwrap_or fallbacks throughout)
@@ -273,7 +273,7 @@ Re-audited line counts (8 March 2026):
 - [x] CODE_OF_CONDUCT.md — Standard Contributor Covenant (commit 832005c)
 - [ ] Update LICENSE copyright to "4DA Systems Pty Ltd" (after company registered)
 - [x] README.md trademark notice in footer (commit 832005c)
-- [ ] Verify all docs reference correct contact info (support@4da.ai)
+- [x] Contact info verified: security@4da.ai (SECURITY.md) + support@4da.ai (CODE_OF_CONDUCT.md, SECURITY.md)
 
 ---
 
@@ -290,11 +290,11 @@ Re-audited line counts (8 March 2026):
 
 ### 10.2 Update mechanism
 - [x] Tauri updater plugin configured (tauri-plugin-updater v2.9.0)
-- [ ] Verify updater endpoint configured (needs server URL)
+- [x] Updater endpoint: GitHub releases URL + Minisign pubkey configured in tauri.conf.json
 - [ ] UpdateBanner component test (deferred)
 
 ### 10.3 Release checklist (for launch day)
-1. [x] All tests passing (1,618 Rust + 792 frontend = 2,410)
+1. [x] All tests passing (1,618 Rust + 817 frontend = 2,435)
 2. [x] Release build successful
 3. [ ] Installer tested on clean machine
 4. [ ] Version number verified in tauri.conf.json
@@ -344,7 +344,7 @@ These are items from PRE-LAUNCH-PLAN.md that require human action:
 
 The app is launch-ready when ALL of these are true:
 - [x] 0 Rust warnings, 0 TypeScript errors
-- [x] All tests passing — 1,618 Rust + 792 frontend = 2,410 (target: 2,500 — 90 short, non-blocking)
+- [x] All tests passing — 1,618 Rust + 817 frontend = 2,435 (target: 2,500 — 65 short, non-blocking)
 - [x] Release build completes (NSIS installer: 11MB) — clean machine test deferred to manual
 - [x] First-run flow works (verified end-to-end)
 - [x] No API keys in logs, errors, or telemetry (Phase 6 audit)
