@@ -340,11 +340,157 @@ These are items from PRE-LAUNCH-PLAN.md that require human action:
 
 ---
 
+## PHASE 11: Deep Audit — Surgical Fixes
+**Scope:** Isolated one-line fixes found during comprehensive codebase audit
+**Risk:** LOW | **Effort:** 1 hour | **Impact:** Removes known tech debt
+
+- [ ] Delete `println!("Hello")` debug leftover in `ace/watcher.rs:901`
+- [ ] Wire orphaned `git_deck_tests.rs` (45 lines) and `video_curriculum_tests.rs` (298 lines) into `lib.rs` or delete
+- [ ] Add `PRAGMA journal_mode = WAL` to `state.rs:82` (db.rs and ace/db.rs set it, state.rs doesn't)
+- [ ] Fix 10 hardcoded English strings found in components (should use `t()`)
+- [ ] Add token rotation reminder (API keys stored indefinitely — consider TTL prompt)
+
+---
+
+## PHASE 12: Console Log → Structured Logging
+**Scope:** Replace 46 console.log/warn/error calls across 25 production files
+**Risk:** LOW | **Effort:** 2-3 hours | **Impact:** Clean production console
+
+### Approach
+Replace raw `console.log/warn/error` with a thin structured logger that:
+- Adds component name + timestamp prefix
+- Is no-op in production builds (via import.meta.env.PROD check)
+- Keeps console.warn for catch handlers (already improved in a153410)
+
+**Files with highest count:**
+- `NaturalLanguageSearch.tsx` (6 calls)
+- `SynthesisPanel.tsx` (4 calls)
+- `ChannelsView.tsx` (3 calls)
+- 22 more files with 1-2 calls each
+
+---
+
+## PHASE 13: Accessibility & Design Token Pass
+**Scope:** Fix 168+ WCAG contrast violations + 3 missing aria-labels
+**Risk:** LOW | **Effort:** 3-4 hours | **Impact:** WCAG AA compliance
+
+### 13.1 Contrast violations
+Raw Tailwind `text-gray-500` (#6B7280) on `#0A0A0A` fails WCAG AA (ratio 3.7:1, needs 4.5:1).
+Replace with design system tokens:
+- `text-gray-500` → `text-text-secondary` (#A0A0A0, ratio 6.3:1 ✅)
+- `text-gray-600` → `text-text-muted` (#666666, ratio 4.0:1 — borderline, acceptable for decorative)
+- `text-gray-400` → case-by-case (some are fine, some need `text-text-secondary`)
+
+**Files with most violations (top 10):**
+- `SovereignDeveloperProfile.tsx` (14)
+- `BriefingCard.tsx` (12)
+- `ChannelsView.tsx` (10)
+- `IntelligenceProfileCard.tsx` (9)
+- `PlaybookView.tsx` (8)
+- `TechRadar.tsx` (7)
+- 25+ more files
+
+### 13.2 Missing aria-labels
+- Settings modal tabs
+- Tech Radar SVG interactive elements
+- Template card action buttons
+
+---
+
+## PHASE 14: Dead Code Purge
+**Scope:** 120+ `#[allow(dead_code)]` annotations across 40+ Rust files
+**Risk:** MEDIUM | **Effort:** 4-5 hours | **Impact:** Smaller binary, clearer intent
+
+### Strategy
+For each `#[allow(dead_code)]`:
+1. If tagged `// Future:` with no progress → DELETE
+2. If used by tests only → gate with `#[cfg(test)]`
+3. If genuinely needed for API stability → keep but document why
+4. If part of a complete module (e.g., suns, delegation) → assess holistically
+
+### Priority targets
+- `ace/` module: ~15 annotations
+- `scoring/` module: ~20 annotations
+- Scattered across 30+ other files
+
+---
+
+## PHASE 15: Timer & Listener Leak Audit
+**Scope:** 79 setTimeout/setInterval + 34 listen() calls — verify all are cleaned up
+**Risk:** MEDIUM | **Effort:** 2-3 hours | **Impact:** No memory leaks in long sessions
+
+### Audit methodology
+For each `setTimeout`/`setInterval`/`listen()`:
+1. Verify matching cleanup in useEffect return / component unmount
+2. Check for refs that could go stale (closures over stale state)
+3. Verify interval timers have clearInterval on unmount
+
+**Known patterns to check:**
+- 53 cleanup returns across 36 files — should match the 79+34 = 113 creates
+- `BriefingView` uses 4 listeners — verify all 4 cleaned up
+- `App.tsx` uses multiple timers — verify no leaks during view transitions
+
+---
+
+## PHASE 16: TypeScript Binding Freshness
+**Scope:** 39 ts-rs generated binding files must stay synchronized with Rust structs
+**Risk:** LOW | **Effort:** 1-2 hours | **Impact:** No runtime type mismatches
+
+### Actions
+- [ ] Run `cargo test --lib binding_tests` to regenerate all 39 bindings
+- [ ] Diff generated files against committed versions
+- [ ] Fix any stale bindings
+- [ ] Add CI step: `cargo test binding_tests && git diff --exit-code src-tauri/bindings/`
+
+---
+
+## PHASE 17: Error Resilience (Outside-the-Box)
+**Scope:** Handle edge cases that don't crash but degrade silently
+**Risk:** LOW-MEDIUM | **Effort:** 3-4 hours | **Impact:** Robustness
+
+### 17.1 Settings corruption recovery
+If `settings.json` is malformed, offer to reset rather than silently using defaults.
+Show a one-time "Your settings were corrupted and have been reset" toast.
+
+### 17.2 Startup crash guard
+If the app crashes 3 times within 60 seconds of launch, offer "Safe Mode" that
+disables all sources and loads minimal UI. Prevents crash loops.
+
+### 17.3 Error message humanization
+Replace raw Rust error strings with user-friendly messages. Create an error
+translation map: `"UNIQUE constraint failed"` → `"This item already exists"`.
+
+---
+
+## PHASE 18: Validation Infrastructure
+**Scope:** Automated guards to prevent future regressions
+**Risk:** LOW | **Effort:** 2-3 hours | **Impact:** Self-healing codebase
+
+- [ ] CI check: TypeScript binding freshness (fail if stale)
+- [ ] ESLint rule: ban `console.log` in production code (allow console.warn in catch handlers)
+- [ ] Pre-commit hook: file size enforcement (already exists, verify it catches new violations)
+- [ ] Design token linter: flag raw `text-gray-*` usage, suggest design system tokens
+
+---
+
+## Updated Metrics (8 March 2026)
+
+| Metric | Value |
+|--------|-------|
+| Rust lib tests | 1,642 passing |
+| Frontend tests | 812 passing |
+| Total tests | 2,454 |
+| Rust warnings | 0 (clean cargo check) |
+| TypeScript errors | 0 |
+| Commits this session | 8 |
+
+---
+
 ## Success Criteria
 
 The app is launch-ready when ALL of these are true:
 - [x] 0 Rust warnings, 0 TypeScript errors
-- [x] All tests passing — 1,618 Rust + 817 frontend = 2,435 (target: 2,500 — 65 short, non-blocking)
+- [x] All tests passing — 1,642 Rust + 812 frontend = 2,454 (target: 2,500 — 46 short, non-blocking)
 - [x] Release build completes (NSIS installer: 11MB) — clean machine test deferred to manual
 - [x] First-run flow works (verified end-to-end)
 - [x] No API keys in logs, errors, or telemetry (Phase 6 audit)
@@ -353,3 +499,8 @@ The app is launch-ready when ALL of these are true:
 - [x] All legal docs in place and accurate (Phase 9 — 2 items pending company registration)
 - [x] Keygen license validation working (Phase 2 — BE3529 format keys + local ed25519)
 - [x] File size limits: 0 warnings, 0 errors (Phase 3 verified)
+- [x] Local telemetry system active (privacy-first, all data local)
+- [x] Console.warn for catch handlers (no more silent failures)
+- [ ] Timer/listener leak audit complete (Phase 15)
+- [ ] Design token compliance — 0 raw gray-text violations (Phase 13)
+- [ ] TypeScript bindings verified fresh (Phase 16)
