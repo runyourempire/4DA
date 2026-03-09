@@ -14,11 +14,11 @@
 - **Files**: list of files being modified
 -->
 
-### T1 — Production safety hardening (Phase 2+3+4)
-- **Status**: done
-- **Commit**: `7b11cd1` Production safety: replace silent error swallowing with tracing::warn
-- **Delivered**: 43 backend .rs files — 58 filter_map fixes, 47 let\_=fixes, image.rs Result fix
-- **Available for**: new tasks — all backend .rs files
+### T1 — Error classification: strip redundant .map_err, add From<tauri::Error>
+- **Status**: committing
+- **Previous commit**: `7b11cd1` Production safety hardening
+- **Delivered**: 76 redundant .map_err(|e| e.to_string()) removed across 14 files + From<tauri::Error> added
+- **Files**: error.rs, temporal.rs, channel_render.rs, source_config.rs, ace/context.rs, ace/topic_embeddings.rs, ace/mod.rs, attention.rs, monitoring.rs, knowledge_decay.rs, signal_chains.rs, project_health.rs, decision_signals.rs, agent_memory.rs, ace_commands.rs
 
 ### T2 — Git hygiene, embedding fix, file size compliance
 - **Status**: done (all pushed to origin)
