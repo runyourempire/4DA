@@ -5,6 +5,14 @@
 **Previous plans:** IMPROVEMENT_PLAN.md (complete), RELEVANCE_IMPROVEMENT_PLAN.md (complete), ACE_IMPROVEMENT_PLAN.md (complete)
 **Overlap with existing plans:** None — this covers entirely new territory
 
+### Phase 0 Status — ALL GREEN ✅ (verified 2026-03-10)
+- **0.1** ✅ DONE — ACE provider match cleaned up. Was not a real bug — OpenAI already routed correctly; merged redundant catch-all arm.
+- **0.2** ✅ DONE — Full audit: 8 production unwrap() all in benchmark.rs (test infra). Zero dangerous unwraps in command handlers, DB ops, or networking code.
+- **0.3** ✅ DONE — 50+ E2E tests across 8 spec files (critical-path, first-run, analysis, settings, keyboard, error-recovery, smoke, app-loads).
+- **0.4** ✅ DONE — Signing key verified: valid minisign pubkey `19AF42B1B6971703` in tauri.conf.json:46. Tauri updater pointed at GitHub releases.
+- **0.5** ✅ DONE — Network audit: 14 endpoints total, all privacy-preserving. Zero telemetry, zero analytics, zero crash reporting. BYOK for LLM/embedding. All source fetches read-only public APIs.
+- **0.6** ✅ DONE — settings.json gets 0o600 permissions on Unix (settings/mod.rs:758). Windows inherits user ACL from AppData.
+
 ---
 
 ## Phase 0: Pre-Launch Gate (BLOCKING — Do Before Ship)
