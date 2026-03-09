@@ -15,10 +15,10 @@
 -->
 
 ### T1 — Production safety hardening (Phase 2+3+4)
-- **Status**: working
-- **Task**: `let _ =` logging, `filter_map ok()` logging, image.rs Result fix
-- **Skipping**: `state.rs` (T5), all frontend files (T3/T5)
-- **Files**: All backend `.rs` files in src-tauri/src/ EXCEPT state.rs
+- **Status**: done
+- **Commit**: `7b11cd1` Production safety: replace silent error swallowing with tracing::warn
+- **Delivered**: 43 backend .rs files — 58 filter_map fixes, 47 let\_=fixes, image.rs Result fix
+- **Available for**: new tasks — all backend .rs files
 
 ### T2 — Git hygiene, embedding fix, file size compliance
 - **Status**: done (all pushed to origin)
@@ -26,32 +26,44 @@
 - **Files touched**: `src-tauri/src/ace/mod.rs`, `src-tauri/src/channel_commands.rs`, `src-tauri/src/db/sources.rs`, `src-tauri/src/llm.rs`, `src-tauri/src/scoring/context.rs`, `src-tauri/src/semantic_diff.rs`, `src/components/SovereignDeveloperProfile.tsx`, `src/components/DeveloperDnaSection.tsx`, `scripts/check-file-sizes.cjs`, `.ai/HARDENING_PLAN.md`
 - **Note**: T1/T5 — rebase needed if you touch any of these files
 
-### T3 — Phase 4: Performance optimization + Phase 3: i18n cleanup
-- **Status**: done (pushed as c04e74e)
-- **Commit**: `c04e74e` memo(BadgeRow) + i18n cleanup (6 hardcoded strings → t(), 9 new keys, test fix)
+### T3 — Hardening phases 2-5+7 (i18n, a11y audit, test coverage)
+- **Status**: done
+- **Commits**: `c04e74e` memo+i18n, next = i18n hardening + 4 new test files (32 new tests, 881 total)
+- **Findings**: Phase 2 (a11y) 90% already done. Phase 4 (perf) already well-memoized. ContextPanel.tsx doesn't exist. KeyboardShortcutsModal has full dialog a11y.
+- **Remaining for someone**: Phase 6 (Rust dead code), broken Briefing splits from old agents (BriefingContentPanel/BriefingMetrics/BriefingTopPicks have TS errors)
 - **Files touched**:
-  - `src/components/IntelligenceProfileCard.tsx`
-  - `src/components/result-item/BadgeRow.tsx`
-  - `src/components/ResultItem.test.tsx`
-  - `src/locales/en/ui.json`
+  - `src/components/channels/ChannelCard.tsx` (i18n formatTimeAgo)
+  - `src/components/DecisionMemory.tsx` (i18n TYPE_LABELS + date metadata)
+  - `src/components/DecisionMemory.test.tsx` (fix i18n key expectations)
+  - `src/components/channels/__tests__/ProvenanceTooltip.test.tsx` (new — 7 tests)
+  - `src/components/__tests__/IntelligenceProfileCard.test.tsx` (new — 8 tests)
+  - `src/components/__tests__/CalibrationView.test.tsx` (new — 9 tests)
+  - `src/components/tech-radar/__tests__/RadarSVG.test.tsx` (new — 7 tests)
+  - `src/locales/en/ui.json` (11 new keys)
 
-### T5 — Audit hardening: IPC validator, E2E tests, error-path tests, lock ordering
+### T5 — Phase 1.1 invoke migration + Phase 2.1 Rust splits + Phase 1.3 frontend decomposition
 - **Status**: working
-- **Task**: Ghost command validator, E2E tests, error-path/a11y tests, state.rs lock ordering
-- **WARNING for T1**: Old background agent (a719ff3e96e2f48fb) just completed and dropped Rust file splits into working tree: analysis.rs split (analysis_deep_scan.rs, analysis_status.rs, analysis_tests.rs), settings_commands split (settings_commands_llm.rs, settings_commands_license.rs, settings_commands_tests.rs), sovereign_developer_profile split. These overlap T1's files. T1 should decide: adopt these splits or revert them with `git checkout HEAD -- <files>` + `rm <new files>`.
-- **Cleaned up earlier**: Reverted incomplete scoring/pipeline.rs and stacks/profiles.rs splits
+- **Previous commits**: `27e7d91`, `41ae3c5`, `c4cd649`
+- **Task**: Migrate 237 raw invoke() → typed commands, split 5 oversized Rust files, decompose BriefingView/SettingsModal/App.tsx
+- **SKIPPING T3's files**: DecisionMemory.tsx, ChannelCard.tsx, ToolkitView.tsx, ContextPanel.tsx, SovereignDeveloperProfile.tsx, KeyboardShortcutsModal.tsx, ui.json
 - **Files**:
-  - `scripts/validate-commands.cjs` (new)
-  - `e2e/app-loads.spec.ts` (new)
-  - `e2e/keyboard-navigation.spec.ts` (new)
-  - `e2e/settings-roundtrip.spec.ts` (new)
-  - `e2e/analysis-flow.spec.ts` (new)
-  - `e2e/error-recovery.spec.ts` (new)
-  - `package.json` (adding validate:commands script)
-  - `src-tauri/src/state.rs` (lock ordering comment)
-  - `src/components/ActionBar.test.tsx` (a11y + error-path tests)
-  - `src/components/BriefingView.test.tsx` (error-path tests)
-  - `src/components/ResultsView.test.tsx` (a11y + error-path tests)
-  - `src/components/__tests__/smoke.test.tsx` (a11y tests)
-  - `src/hooks/__tests__/use-analysis-errors.test.ts` (new — error-path tests)
-  - `vitest.config.ts` (coverage thresholds: 40/25/35/40)
+  - `src/lib/commands.ts` (add ~60 missing commands to CommandMap)
+  - `src/store/*.ts` (all store slices — invoke → cmd migration)
+  - `src/hooks/*.ts` (all hooks EXCEPT T3's — invoke → cmd migration)
+  - `src/components/*.tsx` (invoke migration — EXCLUDING T3's claimed files)
+  - `src/components/onboarding/*.tsx` (invoke migration)
+  - `src/components/settings/*.tsx` (invoke migration)
+  - `src/components/playbook/*.tsx` (invoke migration)
+  - `src/components/channels/*.tsx` (invoke migration — EXCLUDING ChannelCard.tsx)
+  - `src/components/tech-radar/*.tsx` (invoke migration)
+  - `src/components/toolkit/tools/*.tsx` (invoke migration)
+  - `src/components/search/*.tsx` (invoke migration)
+  - `src/components/result-item/*.tsx` (invoke migration)
+  - `src/components/BriefingView.tsx` (decomposition)
+  - `src/components/SettingsModal.tsx` (decomposition)
+  - `src/App.tsx` (decomposition)
+  - `src-tauri/src/analysis.rs` (split)
+  - `src-tauri/src/settings_commands.rs` (split)
+  - `src-tauri/src/sovereign_developer_profile.rs` (split)
+  - `src-tauri/src/scoring/pipeline.rs` (split)
+  - `src-tauri/src/stacks/profiles.rs` (split)
