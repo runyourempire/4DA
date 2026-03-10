@@ -14,12 +14,16 @@
 - **Files**: list of files being modified
 -->
 
-### T1 — Phase 3.2 frontend error-path tests + console audit
+### T1 — Move 3 (Professional Card) + Move 4 (Chain Prediction)
 - **Status**: working
 - **Files**:
-  - Frontend test files (new error-path tests)
-  - `src/App.css` (potential text-muted color fix)
-  - `.ai/HARDENING_PLAN.md` (status updates)
+  - `src-tauri/Cargo.toml` (add resvg/tiny-skia for PNG)
+  - `src-tauri/src/developer_dna.rs` (professional SVG + PNG export)
+  - `src-tauri/src/signal_chains.rs` (chain lifecycle prediction)
+  - `src-tauri/src/lib.rs` (command registration)
+  - `src/components/DeveloperDna.tsx` (PNG download button)
+  - `src/components/SignalChains.tsx` (prediction UI)
+  - `src/lib/commands.ts` (new commands)
 
 
 ### T3 — Rust error-path tests, DB concurrency tests, plan status updates
@@ -32,3 +36,23 @@
   - `src-tauri/src/db/mod.rs` (module declarations)
   - `scripts/check-file-sizes.cjs` (added 6 exceptions)
   - `ASCENT-PLAN.md` (status updates)
+
+### T4 — Operational hardening + management systems
+- **Status**: working
+- **Files**:
+  - `docs/strategy/OPUS-OPERATIONS-PLAYBOOK.md` (NEW)
+  - `src-tauri/src/sources/adapter_tests.rs` (NEW)
+  - `.ai/DECISIONS.md` (AD-023)
+
+### T5 — Source adapter resilience tests
+- **Status**: done
+- **Files**:
+  - `src-tauri/src/sources/adapter_resilience_tests.rs` (NEW)
+  - `src-tauri/src/sources/mod.rs` (module declaration)
+
+### T7 — Startup health self-check
+- **Status**: working
+- **Files**:
+  - `src-tauri/src/startup_health.rs` (NEW)
+  - `src-tauri/src/lib.rs` (mod declaration + call + command registration only)
+
