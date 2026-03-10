@@ -14,45 +14,15 @@
 - **Files**: list of files being modified
 -->
 
-### T1 — Move 3 (Professional Card) + Move 4 (Chain Prediction)
+### T1 — System wiring: updater UI, proactive notifications, vuln correlation
 - **Status**: working
 - **Files**:
-  - `src-tauri/Cargo.toml` (add resvg/tiny-skia for PNG)
-  - `src-tauri/src/developer_dna.rs` (professional SVG + PNG export)
-  - `src-tauri/src/signal_chains.rs` (chain lifecycle prediction)
-  - `src-tauri/src/lib.rs` (command registration)
-  - `src/components/DeveloperDna.tsx` (PNG download button)
-  - `src/components/SignalChains.tsx` (prediction UI)
-  - `src/lib/commands.ts` (new commands)
-
-
-### T3 — Rust error-path tests, DB concurrency tests, plan status updates
-- **Status**: committing
-- **Files**:
-  - `src-tauri/src/hardening_error_path_tests.rs` (new — 35 tests)
-  - `src-tauri/src/db/stress_tests.rs` (new — 5 tests)
-  - `src-tauri/src/db/concurrency_tests.rs` (new — 6 tests)
-  - `src-tauri/src/lib.rs` (module declaration ordering)
-  - `src-tauri/src/db/mod.rs` (module declarations)
-  - `scripts/check-file-sizes.cjs` (added 6 exceptions)
-  - `ASCENT-PLAN.md` (status updates)
-
-### T4 — Operational hardening + management systems
-- **Status**: working
-- **Files**:
-  - `docs/strategy/OPUS-OPERATIONS-PLAYBOOK.md` (NEW)
-  - `src-tauri/src/sources/adapter_tests.rs` (NEW)
-  - `.ai/DECISIONS.md` (AD-023)
-
-### T5 — Source adapter resilience tests
-- **Status**: done
-- **Files**:
-  - `src-tauri/src/sources/adapter_resilience_tests.rs` (NEW)
-  - `src-tauri/src/sources/mod.rs` (module declaration)
-
-### T7 — Startup health self-check
-- **Status**: working
-- **Files**:
-  - `src-tauri/src/startup_health.rs` (NEW)
-  - `src-tauri/src/lib.rs` (mod declaration + call + command registration only)
+  - `src/components/settings/UpdateSection.tsx` (NEW — updater UI)
+  - `src-tauri/src/signal_chains.rs` (proactive notification wiring)
+  - `src-tauri/src/monitoring_jobs.rs` (chain prediction notifications)
+  - `src-tauri/src/monitoring_notifications.rs` (chain notification dispatch)
+  - `src-tauri/src/project_health_dimensions.rs` (vuln correlation enhancement)
+  - `src-tauri/src/decision_advantage/windows.rs` (dep-aware security windows)
+  - `src/components/settings/SettingsContent.tsx` or similar (add UpdateSection)
+  - `src/locales/en/ui.json` (i18n keys)
 
