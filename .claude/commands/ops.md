@@ -1,7 +1,7 @@
 ---
 description: "AOS — Autonomous Operations System. Sovereignty score, cadences, decisions, war room, immune system."
 allowed-tools: ["Read", "Bash", "Glob", "Grep", "Edit", "Write", "Task", "WebSearch"]
-argument-hint: "[status | daily | weekly | monthly | decide | war-room <issue> | immune [context] | replay | drift | metabolism]"
+argument-hint: "[status | daily | weekly | monthly | decide | war-room <issue> | immune [context] | replay | drift | metabolism | compound]"
 ---
 
 # /ops — Autonomous Operations System
@@ -39,6 +39,9 @@ Compute sovereignty score and show brief status.
 5. Update ops-state.json with new scores
 6. Record metric via MCP `record_metric`
 7. Display sovereignty status with bar chart and pending items
+8. Include compound score (from last `/ops compound` run in ops-state.json) alongside sovereignty score in the summary line
+9. Include test count (from ops-state.json `testCounts.history` latest entry) in the summary line after sovereignty and compound scores
+   - Format: `Sovereignty: XX% | Compound: XX% | Tests: NNNN (rust) + NNNN (frontend) = NNNN total`
 
 ### `/ops daily`
 
@@ -129,6 +132,62 @@ Run codebase metabolism analysis:
 4. For dead candidates, grep for import/use statements
 5. Update metabolism data in ops-state.json
 6. Display metabolism report with hot zones, cold zones, dead tissue
+
+### `/ops compound`
+
+Show compound intelligence report — how the Human+Opus partnership is accumulating knowledge over time.
+
+1. Read `.claude/wisdom/ops-state.json`
+2. Read MCP memory metrics via `recall_decisions` (count), `recall_learnings` (count), `recall_code_locations` (count)
+3. Read test counts from ops-state.json `testCounts.history` — show trend over last 5 entries
+4. Gather compound data:
+   - **Sessions completed:** from ops-state.json `compound.sessionsCompleted`
+   - **Decisions stored / referenced:** ratio = leverage (higher means decisions are being reused, not just stored)
+   - **Antibodies created / triggered:** ratio = protection (higher means the immune system is catching real issues)
+   - **Crystallizations run:** from ops-state.json `compound.crystallizations`
+   - **Rework events:** from ops-state.json `compound.reworkEvents` (lower is better — rework means a prior decision was wrong)
+   - **Test trend:** chart last 5 data points from `testCounts.history` using ASCII sparkline (e.g., `▁▃▅▇█`)
+   - **Knowledge density:** (decisions + learnings + code_locations) per 1000 LOC — compute LOC via `find src-tauri/src -name '*.rs' | xargs wc -l` and `find src -name '*.ts' -o -name '*.tsx' | xargs wc -l`
+5. Compute **Compound Score** (0-100) using weighted formula:
+   - **Test growth rate (20%):** % increase in tests from oldest to newest of last 5 history entries. 0% growth = 50, >20% growth = 100, negative = 0
+   - **Decision reference ratio (20%):** decisions_referenced / decisions_stored. Ratio ≥1.0 = 100, 0.5 = 75, 0.0 = 0
+   - **Antibody effectiveness (15%):** antibodies_triggered / antibodies_created. Ratio ≥0.5 = 100, 0.25 = 75, 0.0 = 25 (having antibodies untriggered still has value)
+   - **Low rework rate (15%):** 100 - (rework_events / sessions_completed * 200). Clamped to 0-100. Zero rework = 100
+   - **Knowledge density (15%):** (total_knowledge_items / total_KLOC). ≥50 per KLOC = 100, 25 = 75, 10 = 50, <5 = 25
+   - **Session consistency (15%):** sessions in last 30 days / 30. Daily sessions = 100, every other day = 50. From ops-state.json `compound.recentSessionDates`
+6. Display formatted report:
+
+```
+╔══════════════════════════════════════════════╗
+║        COMPOUND INTELLIGENCE REPORT          ║
+╠══════════════════════════════════════════════╣
+║                                              ║
+║  Sessions completed:     NNN                 ║
+║  Decisions:              NN stored / NN ref   → leverage: X.Xx
+║  Antibodies:             NN created / NN hit  → protection: X.Xx
+║  Crystallizations:       NN                  ║
+║  Rework events:          NN (target: 0)      ║
+║                                              ║
+║  Test trend (last 5):    ▁▃▅▇█  NNNN→NNNN   ║
+║  Knowledge density:      XX.X per KLOC       ║
+║                                              ║
+╠══════════════════════════════════════════════╣
+║  COMPOUND SCORE                              ║
+║                                              ║
+║  Test growth ........... XX% (weight: 20%)   ║
+║  Decision leverage ..... XX% (weight: 20%)   ║
+║  Antibody effectiveness  XX% (weight: 15%)   ║
+║  Low rework rate ....... XX% (weight: 15%)   ║
+║  Knowledge density ..... XX% (weight: 15%)   ║
+║  Session consistency ... XX% (weight: 15%)   ║
+║                                              ║
+║  ══════════════════════════════════          ║
+║  COMPOUND SCORE: XX%                         ║
+╚══════════════════════════════════════════════╝
+```
+
+7. Update ops-state.json: set `compound.lastScore`, `compound.lastRun`, and `compound.scoreHistory` (append latest)
+8. Record metric via MCP `record_metric` with name `compound_score`
 
 ## Edge Cases
 
