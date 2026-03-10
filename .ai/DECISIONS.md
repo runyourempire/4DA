@@ -354,6 +354,15 @@ When adding a new decision:
 - **Status:** [Final/Active/Superseded]
 ```
 
+### AD-022: Tier Rename Pro→Signal + Enterprise Tier + STREETS Coaching Deprecation
+- **Decision:** Rename "Pro" tier to "Signal", add "enterprise" tier, remove STREETS Community/Cohort tiers.
+- **Rationale:** "Signal" reinforces brand vocabulary ("All signal. No feed."), is identity-based not feature-based, and is unique in the market. STREETS coaching/cohort tiers were never launched — the STREETS playbook remains free for all users. Enterprise tier supports bottom-up PLG (Tailscale model).
+- **Tier structure:** Free → Signal ($12/mo, $99/yr) → Team ($29/seat/mo) → Enterprise (custom)
+- **Backwards compat:** Legacy `"pro"` in settings.json is accepted via `is_paid_tier()` helper. New activations write `"signal"`.
+- **Removed:** `STREETS_COMMUNITY_FEATURES`, `STREETS_COHORT_FEATURES`, `is_streets_feature_available()`, `require_streets_feature()`, `get_streets_tier()`, `activate_streets_license` command. Templates ungated (free for all).
+- **Date:** 2026-03-10
+- **Status:** Final
+
 ---
 
 *Decisions are made once and referenced often. Re-litigation requires new evidence.*

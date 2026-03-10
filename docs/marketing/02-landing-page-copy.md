@@ -2,7 +2,7 @@
 ## Version 1.0 | February 2026
 
 **Target audience:** Software developers (IC to senior/staff), indie hackers, open-source maintainers
-**Conversion goals:** Download app (primary), Install MCP server (secondary), Upgrade to Pro (tertiary)
+**Conversion goals:** Download app (primary), Install MCP server (secondary), Upgrade to Signal (tertiary)
 **Tone:** Minimal, confident, technical but accessible. Linear/Vercel energy -- not enterprise SaaS.
 
 ---
@@ -343,10 +343,10 @@ This section converts privacy from a feature bullet ("Privacy First" in the Feat
 `PRICING`
 
 ### Section Headline
-> Free to use. Pro to command.
+> Free to use. Signal to command.
 
 ### Section Subtitle
-> The free tier is not a demo. It is a complete noise-reduction engine. Pro adds intelligence layers for developers who want more than signal -- they want synthesis.
+> The free tier is not a demo. It is a complete noise-reduction engine. Signal adds intelligence layers for developers who want more than signal -- they want synthesis.
 
 ### Free Tier Card
 
@@ -369,10 +369,10 @@ Includes:
 CTA: [Download Free]
 ```
 
-### Pro Tier Card
+### Signal Tier Card
 
 ```
-PRO
+SIGNAL
 $12/month  or  $99/year (save $45)
 
 Everything in Free, plus:
@@ -387,7 +387,7 @@ Everything in Free, plus:
    item was scored the way it was
 -- Priority support and feature requests
 
-CTA: [Start Pro -- $12/month]
+CTA: [Start Signal -- $12/month]
 ```
 
 ### Annual Savings Callout
@@ -398,11 +398,11 @@ CTA: [Start Pro -- $12/month]
 
 **Q: Is the free tier actually useful or just a teaser?**
 
-A: The free tier includes all 11 source adapters, the full 5-axis scoring engine, the feed UI, feedback-driven scoring, the CLI, and the MCP server. It is a complete product. Pro adds AI synthesis and intelligence layers on top. Most individual developers will find the free tier more than sufficient.
+A: The free tier includes all 11 source adapters, the full 5-axis scoring engine, the feed UI, feedback-driven scoring, the CLI, and the MCP server. It is a complete product. Signal adds AI synthesis and intelligence layers on top. Most individual developers will find the free tier more than sufficient.
 
 **Q: Why should I pay when I bring my own API keys?**
 
-A: Your API keys power the AI models. The Pro subscription unlocks the intelligence features built on top of those models -- briefing generation, DNA profiling, trend analysis, and score autopsy. Think of it as: you bring the engine, Pro unlocks the dashboard.
+A: Your API keys power the AI models. The Signal subscription unlocks the intelligence features built on top of those models -- briefing generation, DNA profiling, trend analysis, and score autopsy. Think of it as: you bring the engine, Signal unlocks the dashboard.
 
 **Q: How does 4DA compare to Feedly / Inoreader / daily.dev?**
 
@@ -412,7 +412,7 @@ A: Feed readers show you everything and let you filter manually. daily.dev perso
 
 A: No. 4DA is a desktop application. Your manifest files, git history, scoring data, and intelligence feed all stay on your machine. There is no server. There is no account required for the free tier. There is no telemetry. We architecturally cannot see your data because we never receive it.
 
-**Q: What if I stop paying for Pro?**
+**Q: What if I stop paying for Signal?**
 
 A: You keep the free tier permanently. Your data, your scoring history, your feedback-driven scoring -- all of it stays. You lose access to AI briefings, DNA profiling, and intelligence panels. No lock-in. No data hostage.
 
@@ -422,7 +422,7 @@ A: 4DA is licensed under FSL-1.1-Apache-2.0. The source code is publicly availab
 
 ### Rationale
 
-The pricing section uses several Cialdini principles simultaneously. *Reciprocity*: the free tier is genuinely generous (all 11 sources, full scoring, MCP server), creating goodwill that primes upgrade consideration. *Commitment/Consistency*: once a developer uses the free tier and builds behavior learning, upgrading to Pro feels like a natural progression -- not a separate purchase. *Scarcity*: the annual savings frame creates mild urgency without feeling manipulative. No artificial countdown timers. The FAQ section preemptively handles the "yeah, but..." objections. The "you bring the engine, Pro unlocks the dashboard" metaphor reframes BYOK as a feature rather than a cost-shifting mechanism.
+The pricing section uses several Cialdini principles simultaneously. *Reciprocity*: the free tier is genuinely generous (all 11 sources, full scoring, MCP server), creating goodwill that primes upgrade consideration. *Commitment/Consistency*: once a developer uses the free tier and builds behavior learning, upgrading to Signal feels like a natural progression -- not a separate purchase. *Scarcity*: the annual savings frame creates mild urgency without feeling manipulative. No artificial countdown timers. The FAQ section preemptively handles the "yeah, but..." objections. The "you bring the engine, Signal unlocks the dashboard" metaphor reframes BYOK as a feature rather than a cost-shifting mechanism.
 
 ---
 
@@ -456,11 +456,11 @@ But Developer DNA is more than a scoring input. It is a mirror.
 
 ### CTA
 
-> Unlock Developer DNA with Pro -- $12/month
+> Unlock Developer DNA with Signal -- $12/month
 
 ### Rationale
 
-Developer DNA activates *Liking* and *Commitment/Consistency* simultaneously. Developers are deeply identified with their tech stack -- showing them an accurate, evolving profile creates emotional resonance. The "mirror" metaphor is intentional: people are drawn to accurate reflections of themselves. The progression from "it powers scoring" to "it is a mirror" moves the value proposition from utility to identity -- a stronger purchase motivator. The section ends with the Pro CTA because DNA is a Pro feature, and by this point the reader is curious enough about their own profile to consider upgrading.
+Developer DNA activates *Liking* and *Commitment/Consistency* simultaneously. Developers are deeply identified with their tech stack -- showing them an accurate, evolving profile creates emotional resonance. The "mirror" metaphor is intentional: people are drawn to accurate reflections of themselves. The progression from "it powers scoring" to "it is a mirror" moves the value proposition from utility to identity -- a stronger purchase motivator. The section ends with the Signal CTA because DNA is a Signal feature, and by this point the reader is curious enough about their own profile to consider upgrading.
 
 ---
 
@@ -630,7 +630,7 @@ The download section uses *Commitment/Consistency* -- you have read this far, th
       "@type": "Offer",
       "price": "12",
       "priceCurrency": "USD",
-      "description": "Pro tier with AI briefings, Developer DNA, and intelligence panels"
+      "description": "Signal tier with AI briefings, Developer DNA, and intelligence panels"
     }
   ],
   "downloadUrl": "https://github.com/runyourempire/4DA/releases/latest",
@@ -728,7 +728,7 @@ The following phrases mirror how developers actually talk, not how marketers des
 | Control | After hero, before problem section |
 | A | After features, before pricing |
 
-**Hypothesis:** Early social proof builds trust before the reader invests time scrolling. Late social proof validates right before the purchase decision. Position near the highest-friction decision point likely converts better for the Pro upgrade, while early placement likely converts better for free downloads.
+**Hypothesis:** Early social proof builds trust before the reader invests time scrolling. Late social proof validates right before the purchase decision. Position near the highest-friction decision point likely converts better for the Signal upgrade, while early placement likely converts better for free downloads.
 
 ### Test 5: Pricing Anchor Order
 
@@ -737,7 +737,7 @@ The following phrases mirror how developers actually talk, not how marketers des
 | Control | "$12/month or $99/year (save $45)" |
 | A | "$99/year or $12/month" |
 
-**Hypothesis:** Leading with annual anchors the effective price lower ($8.25/mo) and makes monthly feel expensive by comparison. Test whether anchor order affects Pro conversion rate.
+**Hypothesis:** Leading with annual anchors the effective price lower ($8.25/mo) and makes monthly feel expensive by comparison. Test whether anchor order affects Signal conversion rate.
 
 ### Test 6: Developer DNA as Standalone Conversion Page
 
@@ -746,7 +746,7 @@ The following phrases mirror how developers actually talk, not how marketers des
 | Control | DNA section within the landing page |
 | A | Separate "/dna" page with deeper content and interactive preview |
 
-**Hypothesis:** Developer DNA is the most emotionally resonant Pro feature. A dedicated page with an interactive preview (e.g., "paste your package.json and see a preview of your DNA") could be a higher-converting Pro upgrade path than a section embedded in the main page. The standalone page also creates a shareable URL for organic distribution.
+**Hypothesis:** Developer DNA is the most emotionally resonant Signal feature. A dedicated page with an interactive preview (e.g., "paste your package.json and see a preview of your DNA") could be a higher-converting Signal upgrade path than a section embedded in the main page. The standalone page also creates a shareable URL for organic distribution.
 
 ---
 
