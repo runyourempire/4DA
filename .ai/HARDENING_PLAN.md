@@ -134,6 +134,11 @@ test('analysis produces results', async ({ page }) => {
 
 > Eliminate the class of bugs where frontend silently calls nonexistent commands.
 
+### Phase 1 Status — 1.1, 1.2, 1.3 DONE ✅ (2026-03-10)
+- **1.1** ✅ DONE — All raw `invoke()` migrated to typed `cmd()`. ESLint `no-restricted-imports` rule enforces this going forward. Zero raw invoke in production code.
+- **1.2** ✅ DONE — All 6 `.catch(() => {})` replaced with `console.debug()` logging. Zero silent error suppression.
+- **1.3** ✅ DONE — SettingsModal: 561→465 lines (removed 2 duplicate inline components that were already extracted). BriefingView: 569→512 lines (extracted 7 useMemo blocks to `use-briefing-derived` hook). Both below error threshold or in exceptions.
+
 ### 1.1 — Migrate All Raw `invoke()` to Typed Commands Wrapper
 **Current state:** 86 raw `invoke()` calls scattered across hooks, store slices, and components. `src/lib/commands.ts` exists with 107 typed commands but isn't universally used.
 

@@ -14,10 +14,6 @@
 - **Files**: list of files being modified
 -->
 
-### T2 — IPC migration: complete, committing
-- **Status**: committing
-- **Files**: (see commit)
-
 ### T1 — ASCENT Phase 6 + next backend work
 - **Status**: committing
 - **Done**: Feature-flagged game_engine + game_achievements behind `#[cfg(feature = "experimental")]`
