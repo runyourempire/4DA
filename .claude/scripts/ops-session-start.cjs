@@ -51,6 +51,10 @@ const DEFAULT_STATE = {
     fileChangeFrequency: {},
     lastMetabolismScan: null,
   },
+  testCounts: {
+    history: [],  // Array of { date, rust, frontend, total }
+    lastRecorded: null,
+  },
   drift: {
     recentSessionCategories: [],
     lastDriftReport: null,
@@ -153,6 +157,30 @@ function buildBriefing(state) {
     instructions.push('Compute sovereignty score: /ops');
   }
 
+  // Test health
+  const testHistory = (state.testCounts && state.testCounts.history) || [];
+  if (testHistory.length > 0) {
+    const latest = testHistory[testHistory.length - 1];
+    let testLine = `TEST HEALTH: ${latest.total} total (${latest.rust} Rust + ${latest.frontend} frontend)`;
+    if (testHistory.length >= 2) {
+      const previous = testHistory[testHistory.length - 2];
+      const delta = latest.total - previous.total;
+      if (delta > 0) {
+        testLine += ` \u2191${delta} since last session`;
+      } else if (delta < 0) {
+        testLine += ` \u2193${Math.abs(delta)} since last session`;
+      } else {
+        testLine += ` \u2192 unchanged since last session`;
+      }
+      if (delta < 0) {
+        instructions.push('Warning: Test count decreased! Investigate regressions.');
+      }
+    }
+    lines.push(testLine);
+  } else {
+    lines.push('TEST HEALTH: not yet tracked \u2014 run /ops to record baseline');
+  }
+
   lines.push('');
 
   // Cadence checks
@@ -202,6 +230,14 @@ function buildBriefing(state) {
     });
     lines.push(`${instructions.length + 1}. Then proceed with user's request`);
   }
+
+  // Compound advantage summary
+  const compound = state.compound || {};
+  lines.push('');
+  lines.push('COMPOUND:');
+  lines.push(`  Sessions completed: ${compound.sessionsCompleted || 0}`);
+  lines.push(`  Decisions: ${compound.decisionsStored || 0} stored / ${compound.decisionsReferenced || 0} referenced`);
+  lines.push(`  Antibodies: ${compound.antibodiesCreated || 0} created / ${compound.antibodiesTriggered || 0} triggered`);
 
   return lines.join('\n');
 }
