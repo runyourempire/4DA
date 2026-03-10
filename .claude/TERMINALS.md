@@ -14,8 +14,21 @@
 - **Files**: list of files being modified
 -->
 
-### T1 — ASCENT Phase 6 + next backend work
+### T1 — Phase 3.2 frontend error-path tests + console audit
+- **Status**: working
+- **Files**:
+  - Frontend test files (new error-path tests)
+  - `src/App.css` (potential text-muted color fix)
+  - `.ai/HARDENING_PLAN.md` (status updates)
+
+
+### T3 — Rust error-path tests, DB concurrency tests, plan status updates
 - **Status**: committing
-- **Done**: Feature-flagged game_engine + game_achievements behind `#[cfg(feature = "experimental")]`
-- **Audit**: Zero production unwrap() calls — all 653 are in test code. No hardening needed.
-- **Files**: `src-tauri/src/lib.rs`
+- **Files**:
+  - `src-tauri/src/hardening_error_path_tests.rs` (new — 35 tests)
+  - `src-tauri/src/db/stress_tests.rs` (new — 5 tests)
+  - `src-tauri/src/db/concurrency_tests.rs` (new — 6 tests)
+  - `src-tauri/src/lib.rs` (module declaration ordering)
+  - `src-tauri/src/db/mod.rs` (module declarations)
+  - `scripts/check-file-sizes.cjs` (added 6 exceptions)
+  - `ASCENT-PLAN.md` (status updates)
