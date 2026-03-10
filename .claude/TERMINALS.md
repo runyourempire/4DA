@@ -14,15 +14,4 @@
 - **Files**: list of files being modified
 -->
 
-### T1 — System wiring: updater UI, proactive notifications, vuln correlation
-- **Status**: working
-- **Files**:
-  - `src/components/settings/UpdateSection.tsx` (NEW — updater UI)
-  - `src-tauri/src/signal_chains.rs` (proactive notification wiring)
-  - `src-tauri/src/monitoring_jobs.rs` (chain prediction notifications)
-  - `src-tauri/src/monitoring_notifications.rs` (chain notification dispatch)
-  - `src-tauri/src/project_health_dimensions.rs` (vuln correlation enhancement)
-  - `src-tauri/src/decision_advantage/windows.rs` (dep-aware security windows)
-  - `src/components/settings/SettingsContent.tsx` or similar (add UpdateSection)
-  - `src/locales/en/ui.json` (i18n keys)
 
