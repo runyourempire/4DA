@@ -3,7 +3,8 @@
 > The plan to take 143,000 lines of engine and shape it into a product that speaks for itself.
 > Created: 8 March 2026
 > Authors: Claude + Antony
-> Status: READY TO EXECUTE
+> Status: PHASES 2, 4 (backend), 6 COMPLETE — Phases 1, 3, 4 (frontend), 5 in progress
+> Last updated: 10 March 2026
 
 ---
 
@@ -15,7 +16,7 @@ Six phases. Each is independently shippable. Each makes the product measurably b
 
 ---
 
-## PHASE 1: Progressive Disclosure
+## PHASE 1: Progressive Disclosure — FRONTEND (not started)
 
 > Goal: A new user sees 4 tabs, not 9. Views reveal as usage deepens.
 
@@ -105,7 +106,9 @@ Reasoning: Briefing → Results is the core loop. Playbook is free and immediate
 
 ---
 
-## PHASE 2: Wire the Unwired
+## PHASE 2: Wire the Unwired — 4/5 DONE ✅
+
+> **Status:** Analysis narration (14+ emissions), intelligence history recording, weekly digest scheduling, standing query events, and feedback toasts are all wired end-to-end. Intelligence history frontend refresh is the only partial gap (backend records snapshots, UI requires polling).
 
 > Goal: Five features that are 90% built become 100% functional.
 
@@ -300,7 +303,7 @@ These are one-line additions to existing feedback handlers. No new infrastructur
 
 ---
 
-## PHASE 3: Naming & Copy Pass
+## PHASE 3: Naming & Copy Pass — FRONTEND (not started)
 
 > Goal: Every user-facing string becomes instantly clear. Internal names stay rich.
 
@@ -395,7 +398,9 @@ Every tab subtitle should tell the user exactly what they'll find:
 
 ---
 
-## PHASE 4: Core Loop Polish
+## PHASE 4: Core Loop Polish — Backend DONE ✅, Frontend not started
+
+> **Status:** 4.2 decision_window_match + decision_boost_applied fields wired in types.rs. 4.3 near_misses field added to AnalysisState + wired in analysis pipeline (commit `085e630`). 4.4 SourceQualityReport + compute_source_quality() in health.rs, exposed via get_source_quality command. Frontend components (4.1 inline match reasons, 4.3 ZeroResultsGuide, 4.5 score formatting) not started.
 
 > Goal: The fetch → score → display → learn cycle becomes flawless.
 
@@ -523,7 +528,9 @@ Use it everywhere a score is rendered to the user.
 
 ---
 
-## PHASE 5: Production Hardening
+## PHASE 5: Production Hardening — MOSTLY DONE ✅
+
+> **Status:** 5.1 File splits done (commit `8f19081`). Zero production unwrap(). Error handling unified via ResultExt (165 migrations). Ghost command validator passes clean. Remaining: offline resilience audit, startup performance measurement.
 
 > Goal: Every edge case is handled. The app is bulletproof.
 
@@ -625,7 +632,9 @@ Measure cold start time from app launch to first interactive frame.
 
 ---
 
-## PHASE 6: Strategic Pruning
+## PHASE 6: Strategic Pruning — DONE ✅
+
+> **Status:** All 3 systems behind `#[cfg(feature = "experimental")]`: game_engine + game_achievements (commit `8779be4`), delegation (prior work), toolkit_http (prior work). Production binary excludes ~2,840 lines. `cargo build --features experimental` compiles all pruned code. Tests: 1615 without flag, 1677 with.
 
 > Goal: Remove dead weight. Keep everything that earns its place.
 
