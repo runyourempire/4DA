@@ -14,23 +14,12 @@
 - **Files**: list of files being modified
 -->
 
-### T1 — Accuracy sprint: near_misses + query preprocessing + frontend
+### T2 — IPC migration: complete, committing
 - **Status**: committing
-- **Files**:
-  - `src-tauri/src/types.rs` (extract_near_misses helper)
-  - `src-tauri/src/analysis_deep_scan.rs` (wire near_misses)
-  - `src-tauri/src/analysis_status.rs` (wire near_misses)
-  - `src-tauri/src/scoring/analyzer.rs` (wire near_misses)
-  - `src-tauri/src/analysis_tests.rs` (5 new tests)
-  - `src-tauri/src/utils.rs` (preprocess_content pub(crate))
-  - `src-tauri/src/natural_language_search.rs` (query preprocessing)
-  - `src-tauri/src/query/executor.rs` (query preprocessing)
-  - `src/store/types.ts` (nearMisses field)
-  - `src/store/analysis-slice.ts` (nearMisses initial)
-  - `src/lib/commands.ts` (near_misses in CommandMap)
-  - `src/hooks/use-analysis.ts` (extract near misses from event)
-  - `src/hooks/use-app-bootstrap.ts` (restore near misses)
-  - `src/App.tsx` (restore near misses)
-  - `src/components/ResultsView.tsx` (near misses UI)
-  - `src/locales/en/ui.json` (2 new keys)
-  - `src/store/__tests__/analysis-slice.test.ts` (test fix)
+- **Files**: (see commit)
+
+### T1 — ASCENT Phase 6 + next backend work
+- **Status**: committing
+- **Done**: Feature-flagged game_engine + game_achievements behind `#[cfg(feature = "experimental")]`
+- **Audit**: Zero production unwrap() calls — all 653 are in test code. No hardening needed.
+- **Files**: `src-tauri/src/lib.rs`
