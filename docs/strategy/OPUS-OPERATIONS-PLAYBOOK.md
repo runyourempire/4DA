@@ -184,21 +184,21 @@ This is not solo development with AI assist. This is a **two-brain architecture*
 
 ## Part 6: Implementation Priority Queue
 
-### Phase A: Fix Known Issues (This Session)
-1. Source adapter resilience tests
-2. Settings auto-migration ("pro" → "signal")
-3. Startup health self-check
+### Phase A: Fix Known Issues — COMPLETE
+1. ~~Source adapter resilience tests~~ — 236 new tests in adapter_resilience_tests.rs
+2. ~~Settings auto-migration ("pro" → "signal")~~ — auto-migrates on startup, persists to disk
+3. ~~Startup health self-check~~ — 5 checks (DB, settings, embedding, sources, disk) + 15 tests
 
-### Phase B: Management System Upgrades (Next Session)
-1. Enhanced session briefing with test count trends
-2. Compound intelligence dashboard in `/ops`
-3. Release readiness gate script
+### Phase B: Management System Upgrades — COMPLETE
+1. ~~Enhanced session briefing with test count trends~~ — shows trend arrows, regression warnings
+2. ~~Compound intelligence dashboard in `/ops`~~ — 6-component weighted score
+3. ~~Release readiness gate script~~ — 9-step gate in release.sh
 
-### Phase C: Scale Systems (Ongoing)
-1. Automated regression canaries
-2. Source adapter self-healing
-3. Knowledge compound engine enhancements
-4. Parallel terminal status command
+### Phase C: Scale Systems — IN PROGRESS
+1. ~~Automated regression canaries~~ — canary-check.cjs (compilation, test count, file sizes, ghost commands)
+2. Source adapter self-healing — auto-retry with exponential backoff (implementing)
+3. ~~Knowledge compound engine enhancements~~ — compound score formula, test tracking, session briefing
+4. ~~Parallel terminal status command~~ — /status slash command
 
 ---
 

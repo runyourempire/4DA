@@ -363,6 +363,26 @@ When adding a new decision:
 - **Date:** 2026-03-10
 - **Status:** Final
 
+### AD-023: Team Relay Architecture — Encrypted Metadata Sync
+- **Decision:** Build a thin coordination relay server for Team/Enterprise multi-seat features. Architecture: "Dumb relay, smart clients" — relay stores and routes E2E encrypted blobs, cannot read team metadata. Clients aggregate locally.
+- **Rationale:** 4DA is a desktop app — each seat has its own SQLite database. Multi-seat features (shared DNA, signal chain aggregation, team decisions, org dashboards) require a data transport layer. Evaluated 4 options: (A) thin cloud relay, (B) designated coordinator machine, (C) Keygen metadata piggyback, (D) P2P mesh. Option A wins on reliability, UX, and privacy preservation.
+- **Architecture:** `docs/strategy/TEAM-RELAY-ARCHITECTURE.md`
+- **Encryption:** XChaCha20Poly1305 + X25519 key exchange + HKDF derivation. All pure Rust, no C deps.
+- **Conflict resolution:** Last Write Wins with Hybrid Logical Clock (not CRDTs — overkill for key-value metadata).
+- **Transport:** WebSocket (real-time) + HTTP polling (offline catch-up).
+- **Self-hosted:** Enterprise customers run relay on own infrastructure via Docker.
+- **Launch strategy:** Team/Enterprise tiers built pre-launch but not shipped on pricing page. Free + Signal only at launch. Team/Enterprise enabled post-launch when demand warrants.
+- **Crates:** chacha20poly1305 0.10, x25519-dalek 2, hkdf 0.12, uhlc 0.7, tokio-tungstenite 0.23. Relay: axum 0.7, sqlx 0.8.
+- **Date:** 2026-03-11
+- **Status:** Final
+
+### AD-024: Team/Enterprise Launch Deferral
+- **Decision:** Ship Free + Signal tiers only at launch. Team and Enterprise tiers built and tested pre-launch but hidden from pricing page until organic demand warrants activation.
+- **Rationale:** Shipping identical functionality at 3 price points erodes trust. Team requires relay infrastructure + shared intelligence features. Enterprise requires audit logs, webhooks, SSO, multi-team orgs. All of these need the relay (AD-023) as foundation. Building before launch ensures readiness; deferring visibility ensures quality.
+- **Trigger to enable:** Organic user signals ("I wish my team could see this"), email waitlist volume, or direct enterprise inquiry.
+- **Date:** 2026-03-11
+- **Status:** Final
+
 ---
 
 *Decisions are made once and referenced often. Re-litigation requires new evidence.*
