@@ -293,7 +293,7 @@ Create in Shopify Admin > **Products** > **Collections**:
 ## STORE SETTINGS REFERENCE
 
 - **Store name:** 4DA SYSTEMS
-- **Legal business name:** 4DA SYSTEMS (ABN 75 453 268 396)
+- **Legal business name:** 4DA Systems Pty Ltd (ACN 696 078 841 / ABN 51 696 078 841)
 - **Store email:** support@4da.ai
 - **Currency:** AUD
 - **Payments:** Shopify Payments (Stripe)
