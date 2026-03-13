@@ -6,13 +6,8 @@
   <!-- Placement: full front, 12x15 inches -->
   <!-- Product: Bella+Canvas 3001 White / Comfort Colors 1717 White -->
 
-  <!-- Drop shadow effect — subtle depth so it doesn't look flat -->
-  <rect x="108" y="108" width="3400" height="4000" rx="36" fill="#00000020"/>
-
-  <!-- Terminal window frame — warm gray with strong dark border -->
-  <rect x="100" y="100" width="3400" height="4000" rx="36" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="6"/>
-  <!-- Inner fill — warm light gray, distinct from white fabric -->
-  <rect x="103" y="320" width="3394" height="3777" fill="#E8E4DF"/>
+  <!-- Terminal window frame — stroke only, transparent background for clean mockups -->
+  <rect x="100" y="100" width="3400" height="4000" rx="36" fill="none" stroke="#1A1A1A" stroke-width="6"/>
 
   <!-- Title bar area — darker header strip -->
   <rect x="103" y="103" width="3394" height="217" rx="33" fill="#2A2A2A"/>
@@ -26,7 +21,8 @@
   <text x="1800" y="225" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', 'Fira Code', 'Courier New', monospace" font-size="56" fill="#888888">relevance.rs</text>
 
   <!-- Code content — JetBrains Mono, strong colors for light bg -->
-  <g font-family="'JetBrains Mono', 'SF Mono', 'Fira Code', 'Courier New', monospace" font-size="76">
+  <!-- xml:space="preserve" prevents tspan whitespace collapse during PNG rendering -->
+  <g font-family="'JetBrains Mono', 'SF Mono', 'Fira Code', 'Courier New', monospace" font-size="76" xml:space="preserve">
     <!-- Line numbers — visible gray -->
     <g fill="#999999">
       <text x="210" y="480" text-anchor="end">1</text>
@@ -70,15 +66,13 @@
     <text x="300" y="1830"><tspan fill="#1A1A1A">        stack, signal, ctx</tspan></text>
     <text x="300" y="1980"><tspan fill="#1A1A1A">    );</tspan></text>
 
-    <!-- Blank line -->
-    <text x="300" y="2130" fill="#D0CCC7">.</text>
+    <!-- Blank line (empty — no placeholder needed) -->
 
     <!-- Code: the killer line -->
     <text x="300" y="2280"><tspan fill="#2E7D32">    // Privacy first. Always.</tspan></text>
     <text x="300" y="2430"><tspan fill="#1A1A1A">    </tspan><tspan fill="#6A4C00">assert!</tspan><tspan fill="#1A1A1A">(data.</tspan><tspan fill="#C62828">stays_local</tspan><tspan fill="#1A1A1A">());</tspan></text>
 
-    <!-- Blank line -->
-    <text x="300" y="2580" fill="#D0CCC7">.</text>
+    <!-- Blank line (empty — no placeholder needed) -->
 
     <!-- Code: return -->
     <text x="300" y="2730"><tspan fill="#1A1A1A">    confidence.</tspan><tspan fill="#C62828">score</tspan></text>
