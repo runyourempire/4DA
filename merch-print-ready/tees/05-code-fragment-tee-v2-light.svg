@@ -18,7 +18,7 @@
   <circle cx="440" cy="212" r="28" fill="#22C55E"/>
 
   <!-- Title bar text -->
-  <text x="1800" y="225" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', 'Fira Code', 'Courier New', monospace" font-size="56" fill="#888888">relevance.rs</text>
+  <text x="1800" y="225" text-anchor="middle" font-family="'JetBrains Mono', 'SF Mono', 'Fira Code', 'Courier New', monospace" font-size="56" fill="#888888">scoring/pipeline.rs</text>
 
   <!-- Code content — JetBrains Mono, strong colors for light bg -->
   <!-- xml:space="preserve" prevents tspan whitespace collapse during PNG rendering -->
@@ -53,29 +53,29 @@
     <text x="300" y="480" fill="#2E7D32">/// Score what matters.</text>
     <text x="300" y="630" fill="#2E7D32">/// Ignore the noise.</text>
 
-    <!-- Code: function signature -->
-    <text x="300" y="780"><tspan fill="#7B1FA2">pub fn </tspan><tspan fill="#6A4C00">score_relevance</tspan><tspan fill="#1A1A1A">(</tspan></text>
-    <text x="300" y="930"><tspan fill="#1A1A1A">    item: </tspan><tspan fill="#0277BD">&amp;ContentItem</tspan><tspan fill="#1A1A1A">,</tspan></text>
-    <text x="300" y="1080"><tspan fill="#1A1A1A">    ctx:  </tspan><tspan fill="#0277BD">&amp;DevContext</tspan><tspan fill="#1A1A1A">,</tspan></text>
-    <text x="300" y="1230"><tspan fill="#1A1A1A">) -> </tspan><tspan fill="#0277BD">f64</tspan><tspan fill="#1A1A1A"> {</tspan></text>
+    <!-- Code: function signature — real names from 4DA codebase -->
+    <text x="300" y="780"><tspan fill="#7B1FA2">pub(crate) fn </tspan><tspan fill="#6A4C00">score_item</tspan><tspan fill="#1A1A1A">(</tspan></text>
+    <text x="300" y="930"><tspan fill="#1A1A1A">    input: </tspan><tspan fill="#0277BD">&amp;ScoringInput</tspan><tspan fill="#1A1A1A">,</tspan></text>
+    <text x="300" y="1080"><tspan fill="#1A1A1A">    ctx:   </tspan><tspan fill="#0277BD">&amp;ScoringContext</tspan><tspan fill="#1A1A1A">,</tspan></text>
+    <text x="300" y="1230"><tspan fill="#1A1A1A">) -> </tspan><tspan fill="#0277BD">SourceRelevance</tspan><tspan fill="#1A1A1A"> {</tspan></text>
 
-    <!-- Code: body -->
-    <text x="300" y="1380"><tspan fill="#7B1FA2">    let </tspan><tspan fill="#C62828">stack</tspan><tspan fill="#1A1A1A"> = ctx.</tspan><tspan fill="#6A4C00">detect</tspan><tspan fill="#1A1A1A">();</tspan></text>
-    <text x="300" y="1530"><tspan fill="#7B1FA2">    let </tspan><tspan fill="#C62828">signal</tspan><tspan fill="#1A1A1A"> = item.</tspan><tspan fill="#6A4C00">extract</tspan><tspan fill="#1A1A1A">();</tspan></text>
-    <text x="300" y="1680"><tspan fill="#7B1FA2">    let </tspan><tspan fill="#C62828">score</tspan><tspan fill="#1A1A1A"> = </tspan><tspan fill="#6A4C00">pasifa</tspan><tspan fill="#1A1A1A">(</tspan></text>
-    <text x="300" y="1830"><tspan fill="#1A1A1A">        stack, signal, ctx</tspan></text>
+    <!-- Code: body — real pipeline phases -->
+    <text x="300" y="1380"><tspan fill="#7B1FA2">    let </tspan><tspan fill="#C62828">raw</tspan><tspan fill="#1A1A1A"> = </tspan><tspan fill="#6A4C00">extract_signals</tspan><tspan fill="#1A1A1A">(input, ctx);</tspan></text>
+    <text x="300" y="1530"><tspan fill="#7B1FA2">    let </tspan><tspan fill="#C62828">cal</tspan><tspan fill="#1A1A1A"> = </tspan><tspan fill="#6A4C00">calibrate_signals</tspan><tspan fill="#1A1A1A">(&amp;raw);</tspan></text>
+    <text x="300" y="1680"><tspan fill="#7B1FA2">    let </tspan><tspan fill="#C62828">score</tspan><tspan fill="#1A1A1A"> = </tspan><tspan fill="#6A4C00">gate::confirm</tspan><tspan fill="#1A1A1A">(</tspan></text>
+    <text x="300" y="1830"><tspan fill="#1A1A1A">        &amp;cal, ctx</tspan></text>
     <text x="300" y="1980"><tspan fill="#1A1A1A">    );</tspan></text>
 
-    <!-- Blank line (empty — no placeholder needed) -->
+    <!-- Blank line -->
 
-    <!-- Code: the killer line -->
+    <!-- Code: the killer line — privacy is real, data never leaves -->
     <text x="300" y="2280"><tspan fill="#2E7D32">    // Privacy first. Always.</tspan></text>
-    <text x="300" y="2430"><tspan fill="#1A1A1A">    </tspan><tspan fill="#6A4C00">assert!</tspan><tspan fill="#1A1A1A">(data.</tspan><tspan fill="#C62828">stays_local</tspan><tspan fill="#1A1A1A">());</tspan></text>
+    <text x="300" y="2430"><tspan fill="#2E7D32">    // raw data never leaves the machine</tspan></text>
 
-    <!-- Blank line (empty — no placeholder needed) -->
+    <!-- Blank line -->
 
     <!-- Code: return -->
-    <text x="300" y="2730"><tspan fill="#1A1A1A">    confidence.</tspan><tspan fill="#C62828">score</tspan></text>
+    <text x="300" y="2730"><tspan fill="#1A1A1A">    score.</tspan><tspan fill="#6A4C00">into_relevance</tspan><tspan fill="#1A1A1A">()</tspan></text>
     <text x="300" y="2880"><tspan fill="#1A1A1A">}</tspan></text>
   </g>
 

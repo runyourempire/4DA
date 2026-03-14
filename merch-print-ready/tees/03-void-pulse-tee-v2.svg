@@ -8,7 +8,7 @@
   <!-- Concentric rings — fewer, bolder, higher contrast -->
   <g transform="translate(1800,1700)">
     <!-- Outer glow rings — visible on dark fabric -->
-    <circle r="1200" fill="none" stroke="#8B6914" stroke-width="3" opacity="0.35"/>
+    <circle r="1200" fill="none" stroke="#8B6914" stroke-width="5" opacity="0.4"/>
     <circle r="1000" fill="none" stroke="#B8860B" stroke-width="6" opacity="0.45"/>
     <circle r="800" fill="none" stroke="#D4AF37" stroke-width="10" opacity="0.6"/>
     <circle r="600" fill="none" stroke="#D4AF37" stroke-width="16" opacity="0.75"/>
@@ -36,7 +36,7 @@
     font-size="64" font-weight="300" letter-spacing="24" fill="#FFFFFF" opacity="0.6">VOID ENGINE</text>
 
   <!-- Gold accent line -->
-  <rect x="1400" y="3500" width="800" height="2" fill="#D4AF37" opacity="0.5"/>
+  <rect x="1400" y="3500" width="800" height="4" fill="#D4AF37" opacity="0.6"/>
 
   <!-- Brand mark -->
   <text x="1800" y="3620" text-anchor="middle"

@@ -17,7 +17,7 @@
     font-size="820" font-weight="900" letter-spacing="40" fill="#1A1A1A">STREETS</text>
 
   <!-- Accent underline — gold, slightly thicker for visibility on white -->
-  <rect x="300" y="1600" width="3900" height="8" fill="#B8860B" opacity="0.8"/>
+  <rect x="300" y="1600" width="3900" height="12" fill="#B8860B" opacity="0.85"/>
 
   <!-- Tagline — orange, strong -->
   <text x="2250" y="1780" text-anchor="middle"
