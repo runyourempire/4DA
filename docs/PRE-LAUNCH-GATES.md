@@ -4,18 +4,13 @@ Every gate must pass before launch. No exceptions.
 
 ---
 
-## Gate 1: Billing Infrastructure (Stripe)
+## Gate 1: Payment Infrastructure
 
-- [x] **1.1** Create Stripe account and complete business verification
-- [x] **1.2** Create Stripe products:
-  - Community: $29/mo (`prod_U1ZztSzoZQZf6p` / `price_1T3Wpx1U2RWjTPKyrw8czFVh`)
-  - Community Annual: $249/yr (`price_1T3Wpx1U2RWjTPKypLNXM9JQ`)
-  - Cohort: $499 one-time (`prod_U1ZzGVms5ZI1I1` / `price_1T3Wpy1U2RWjTPKyymVFL6Ss`)
-- [x] **1.3** Configure Stripe Checkout sessions with `streets_tier` metadata — `site/api/streets/checkout.js`
-- [x] **1.4** Set up Stripe webhook endpoint (`we_1T3Wpy1U2RWjTPKysz62mFF6`) pointing to `4da.ai/api/streets/activate`
-- [x] **1.5** Wire real Checkout URLs into `site/streets.html` (3 buttons wired to `streetsCheckout()`)
-- [x] **1.6** Wire real Checkout URLs into `site/streets/index.html` (3 buttons wired to `streetsCheckout()`)
-- [ ] **1.7** Test full flow: Stripe test mode → webhook fires → license generated → retrieved via email → activates in 4DA
+- [x] **1.1** Shopify store operational at shop.4da.ai (merch)
+- [x] **1.2** Keygen account configured for Signal tier license validation
+- [x] **1.3** Ed25519 keypair for offline license verification
+- [x] **1.4** Stripe account verified (dormant — available for future Signal checkout if needed)
+- ~~1.7~~ **N/A** — STREETS paid tiers deprecated (AD-022). Stripe checkout flow removed.
 
 ## Gate 2: License Persistence (Stripe Customer Metadata)
 
@@ -93,7 +88,7 @@ Every gate must pass before launch. No exceptions.
 ## Gate 10: Deployment
 
 - [x] **10.1** Vercel site deploys cleanly (`vercel.json` configured, Eleventy build, serverless functions)
-- [ ] **10.2** DNS configured for `streets.4da.ai` (or subdomain) — add custom domain in Vercel dashboard
+- [x] **10.2** ~~streets.4da.ai subdomain~~ — Not needed. STREETS served at 4da.ai/streets via Vercel rewrite.
 - [x] **10.3** SSL certificate active (auto-provisioned by Vercel on domain setup)
 - [x] **10.4** Stripe webhook handler verified (signature validation, raw body, test mode compatible)
 - [x] **10.5** GitHub release workflow configured (`.github/workflows/release.yml` — Windows, macOS x2, Linux)
@@ -105,7 +100,7 @@ Every gate must pass before launch. No exceptions.
 
 | Gate | Status | Remaining |
 |------|--------|-----------|
-| 1. Billing | 6/7 | 1.7: Live Stripe test transaction |
+| 1. Payment | 5/5 | COMPLETE (STREETS paid tiers deprecated per AD-022) |
 | 2. License | 4/4 | COMPLETE |
 | 3. Env Vars | 5/5 | COMPLETE |
 | 4. Landing | 5/6 | 4.5: Mobile rendering check |
@@ -114,6 +109,6 @@ Every gate must pass before launch. No exceptions.
 | 7. Site | 5/5 | COMPLETE |
 | 8. Content | 5/6 | 8.2: 90-second demo video |
 | 9. Security | 6/6 | COMPLETE |
-| 10. Deploy | 5/6 | 10.2: DNS custom domain setup |
+| 10. Deploy | 6/6 | COMPLETE |
 
-**48 of 51 gates PASS. 3 remaining require user action (external systems).**
+**47 of 49 gates PASS. 2 remaining require user action (4.5: mobile check, 8.2: demo video).**
