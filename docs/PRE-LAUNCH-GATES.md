@@ -33,13 +33,13 @@ Every gate must pass before launch. No exceptions.
 - [x] **4.2** `site/streets/index.html` — same replacements
 - [x] **4.3** `site/streets/activate.html` — license retrieval flow works (email + session_id + deep link)
 - [x] **4.4** `site/merch.html` — no placeholder links found, all navigation functional
-- [ ] **4.5** Verify all pages render correctly on mobile
+- [ ] **4.5** Verify all pages render correctly on mobile — *Requires manual device testing*
 - [x] **4.6** Vercel rewrites verified: `/streets`, `/streets/activate`, `/merch`, `/api/streets/*`, `/api/notify`
 
 ## Gate 5: Build & Test Integrity
 
-- [x] **5.1** `cargo check` — zero errors (verified: 2046 tests compile)
-- [x] **5.2** `cargo test --lib` — all tests pass (2046 passed, 0 failed, 4 ignored)
+- [x] **5.1** `cargo check` — zero errors (verified: 2071 tests compile)
+- [x] **5.2** `cargo test --lib` — all tests pass (2071 passed, 0 failed, 4 ignored)
 - [x] **5.3** `pnpm run test` — all tests pass (1101 passed, 78 test files)
 - [x] **5.4** `pnpm run validate:sizes` — no errors (31 warnings, 0 errors)
 - [x] **5.5** `pnpm run tauri build` — production binary builds (`4DA Home_1.0.0_x64-setup.exe`)
@@ -70,7 +70,7 @@ Every gate must pass before launch. No exceptions.
 ## Gate 8: Content Assets
 
 - [x] **8.1** Product screenshots (8 screenshots in `site/screenshots/`, 8 demo videos in `site/media/`)
-- [ ] **8.2** 90-second demo video recorded
+- [ ] **8.2** 90-second demo video recorded — *Requires screen recording*
 - [x] **8.3** Show HN post draft finalized (`docs/marketing/show-hn-draft.md`)
 - [x] **8.4** Product Hunt listing copy ready (`docs/marketing/product-hunt-draft.md`)
 - [x] **8.5** Blog post drafts ready (3 drafts in `docs/marketing/`)
@@ -91,8 +91,8 @@ Every gate must pass before launch. No exceptions.
 - [x] **10.2** ~~streets.4da.ai subdomain~~ — Not needed. STREETS served at 4da.ai/streets via Vercel rewrite.
 - [x] **10.3** SSL certificate active (auto-provisioned by Vercel on domain setup)
 - [x] **10.4** Stripe webhook handler verified (signature validation, raw body, test mode compatible)
-- [x] **10.5** GitHub release workflow configured (`.github/workflows/release.yml` — Windows, macOS x2, Linux)
-- [x] **10.6** All platform builds configured (`nsis`, `dmg`, `appimage`, `deb` in `tauri.conf.json`)
+- [x] **10.5** GitHub release workflow configured (`.github/workflows/release.yml` — Windows, macOS x2, Linux). Apple code signing + notarization now configured.
+- [x] **10.6** All platform builds configured (`nsis`, `dmg`, `appimage`, `deb`, `rpm` in `tauri.conf.json`)
 
 ---
 
@@ -104,11 +104,30 @@ Every gate must pass before launch. No exceptions.
 | 2. License | 4/4 | COMPLETE |
 | 3. Env Vars | 5/5 | COMPLETE |
 | 4. Landing | 5/6 | 4.5: Mobile rendering check |
-| 5. Build | 7/7 | COMPLETE |
+| 5. Build | 7/7 | COMPLETE (2071 Rust tests, 1101 frontend) |
 | 6. Product | 10/10 | COMPLETE |
 | 7. Site | 5/5 | COMPLETE |
 | 8. Content | 5/6 | 8.2: 90-second demo video |
 | 9. Security | 6/6 | COMPLETE |
-| 10. Deploy | 6/6 | COMPLETE |
+| 10. Deploy | 6/6 | COMPLETE (Apple signing + notarization, RPM added) |
 
 **47 of 49 gates PASS. 2 remaining require user action (4.5: mobile check, 8.2: demo video).**
+
+---
+
+## Additional Hardening (Completed 16 March 2026)
+
+- [x] Apple Developer enrollment + certificate (Developer ID Application)
+- [x] macOS code signing + notarization in CI (6 GitHub secrets)
+- [x] macOS Entitlements.plist (JIT, unsigned memory, network)
+- [x] Single-instance guard (tauri-plugin-single-instance)
+- [x] NVIDIA GPU auto-detection for Linux (WEBKIT_DISABLE_DMABUF_RENDERER)
+- [x] Linux keyring backends (sync-secret-service + linux-native)
+- [x] GNOME close-to-tray detection (prevents window trap)
+- [x] XDG Base Directory compliance
+- [x] RPM package target for Fedora/RHEL
+- [x] Atomic settings writes (crash-safe)
+- [x] Windows locale detection via PowerShell
+- [x] CLI with --version, --help, --json
+- [x] LINUX.md documentation
+- [x] AUR PKGBUILD, shell completions, systemd service, waybar module
