@@ -43,9 +43,9 @@ Every gate must pass before launch. No exceptions.
 
 ## Gate 5: Build & Test Integrity
 
-- [x] **5.1** `cargo check` — zero errors (verified: 1583 tests compile)
-- [x] **5.2** `cargo test --lib` — all tests pass (1583 passed, 0 failed, 5 ignored)
-- [x] **5.3** `pnpm run test` — all tests pass (852 passed, 58 test files)
+- [x] **5.1** `cargo check` — zero errors (verified: 2046 tests compile)
+- [x] **5.2** `cargo test --lib` — all tests pass (2046 passed, 0 failed, 4 ignored)
+- [x] **5.3** `pnpm run test` — all tests pass (1101 passed, 78 test files)
 - [x] **5.4** `pnpm run validate:sizes` — no errors (31 warnings, 0 errors)
 - [x] **5.5** `pnpm run tauri build` — production binary builds (`4DA Home_1.0.0_x64-setup.exe`)
 - [x] **5.6** `tests/stack_simulation.rs` — 84 tests pass (Gate verified)
