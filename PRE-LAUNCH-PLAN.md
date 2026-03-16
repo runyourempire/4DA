@@ -64,13 +64,13 @@ Each task has a priority tag:
 
 ### Day 2-3: Director ID + Company Preparation
 
-- [ ] **[BLOCK] Get Director Identification Number**
+- [x] **[BLOCK] Get Director Identification Number** — DONE (036 2164 1281 07)
   - Go to: abrs.gov.au/director-identification-number
   - You need myGovID (not myGov) — the identity app
   - Free, takes 15 minutes
   - Required by law before you can be a company director
 
-- [ ] **[BLOCK] Check company name availability**
+- [x] **[BLOCK] Check company name availability** — DONE, "4DA SYSTEMS PTY LTD" available
   - Search ASIC Connect for "4DA SYSTEMS PTY LTD"
   - If taken (possible given "4DA PTY LIMITED" exists), alternatives:
     - 4DA TECHNOLOGIES PTY LTD
@@ -80,7 +80,7 @@ Each task has a priority tag:
 
 ### Day 3-5: Register the Company
 
-- [ ] **[BLOCK] Register 4DA Systems Pty Ltd**
+- [x] **[BLOCK] Register 4DA Systems Pty Ltd** — REGISTERED 11 Mar 2026, ACN 696 078 841
   - Where: ASIC Connect (connectonline.asic.gov.au)
   - Cost: ~$576
   - Details:
@@ -91,7 +91,7 @@ Each task has a priority tag:
     - Shareholder: same, 100 ordinary shares at $1.00
   - Save the ACN (Australian Company Number) when issued
 
-- [ ] **[BLOCK] Apply for company ABN**
+- [x] **[BLOCK] Apply for company ABN** — ABN 51 696 078 841
   - Via Australian Business Register: abr.gov.au
   - Use the new ACN
   - Usually instant if done during registration
@@ -108,11 +108,8 @@ Each task has a priority tag:
 
 ### Company Asset Transfers
 
-- [ ] **[CRITICAL] Transfer business name "4DA SYSTEMS" to company**
-  - ASIC Connect → Transfer business name
-  - From: your personal ABN (75453268396)
-  - To: company ABN (new)
-  - Cost: ~$39
+- [x] **[CRITICAL] Transfer business name "4DA SYSTEMS" to company** — DONE 11 Mar 2026 (ref 1-YIRKEP5)
+  - Transferred from personal ABN to company ABN
 
 - [ ] **[CRITICAL] Assign 3 AU trademark applications to company**
   - IP Australia online services → Record change of ownership
@@ -129,22 +126,19 @@ Each task has a priority tag:
 
 ### US Trademark Filing
 
-- [ ] **[CRITICAL] File US trademark — Word Mark "4DA"**
-  - Via filing service (Trademarkia, Trademark Engine, or direct attorney)
-  - Non-US applicants MUST have a US-licensed attorney of record
-  - Filing basis: Section 44(d) — foreign application priority
-  - Foreign application: AU TM 2629468 (or whichever is the word mark)
-  - Foreign filing date: 27 February 2026
-  - Class 9: downloadable computer software for aggregating, filtering, and
-    displaying developer-relevant content from internet sources
-  - Applicant: 4DA Systems Pty Ltd (if registered by then, otherwise personal name)
-  - Cost: ~$250 (TEAS Plus) + ~$200-500 (attorney service)
+- [x] **[CRITICAL] File US trademark — Word Mark "4DA"** — FILED 16 Mar 2026
+  - Via Trademarkia (Order 2118488, Invoice 2a9683da)
+  - Cost: $516.47 USD + ~$350 govt fees (separately billed)
+  - Attorney of record assigned by LegalForce RAPC Worldwide
+  - Filing basis: Section 44(d) — priority from AU TM 2629468 (27 Feb 2026)
+  - Receipt: `D:\DOWNLOADS\4da\936319945644531d2730a0ffbed03a3803aff034.pdf`
+  - NOTE: Monitoring subscription auto-enrollled — CANCEL BEFORE 14 APRIL 2026
 
-- [ ] **[CRITICAL] File US trademark — Design Mark (the "4" logo)**
-  - Same service, same basis, same class
-  - Upload `!4da_logo_black.png`
-  - Description: stylised numeral 4 in white on black square background
-  - Cost: ~$250 (TEAS Plus) + ~$200-500 (attorney service)
+- [x] **[CRITICAL] File US trademark — Design Mark (the "4" logo)** — FILED 16 Mar 2026
+  - Via Trademarkia (Order 2118489, Invoice e150c1af)
+  - Cost: $516.47 USD + ~$350 govt fees (separately billed)
+  - Filing basis: Section 44(d) — priority from AU TM 2631247 (26 Feb 2026)
+  - Receipt: `D:\DOWNLOADS\4da\7a214cbfc120ad0a220553ad8628f6313a8f8394.pdf`
 
 - [ ] **[HIGH] Paris Convention priority claim**
   - VERIFY the filing service includes the Section 44(d) priority claim
@@ -167,7 +161,7 @@ Each task has a priority tag:
 
 ### Legal Pages for Website + App
 
-- [ ] **[BLOCK] Privacy Policy**
+- [x] **[BLOCK] Privacy Policy** — PUBLISHED at 4da.ai/privacy
   - Required by: Australian Privacy Act (if revenue >$3M or handling personal info),
     GDPR (if EU users visit your site), CCPA (if California users), Apple/Google
     app store policies
@@ -185,7 +179,7 @@ Each task has a priority tag:
     is easy to write because you're not doing anything invasive. This is a selling
     point, not just compliance.
 
-- [ ] **[BLOCK] Terms of Service**
+- [x] **[BLOCK] Terms of Service** — PUBLISHED at 4da.ai/terms
   - Required before accepting any payment or offering any service
   - Must cover:
     - License grant (reference the FSL-1.1-Apache-2.0)
@@ -206,7 +200,7 @@ Each task has a priority tag:
   - User must accept before using the app
   - This creates the legal relationship between 4DA Systems Pty Ltd and the user
 
-- [ ] **[MEDIUM] Contributor License Agreement (CLA)**
+- [x] **[MEDIUM] Contributor License Agreement (CLA)** — CREATED at CLA.md
   - Since 4DA is FSL open source and accepts contributions (if it does):
   - A CLA ensures contributors assign or license their contributions to you
   - Without a CLA, each contributor retains copyright on their code, which means
@@ -221,10 +215,8 @@ Each task has a priority tag:
 
 ### Banking + Payments
 
-- [ ] **[BLOCK] Open company bank account**
-  - Recommended: Up Business, Macquarie Business, or Westpac
-  - Need: ACN, ABN, Director ID, 100 points of ID
-  - All business revenue goes here, not your personal account
+- [x] **[BLOCK] Open company bank account** — DONE 13 Mar 2026 (Transaction + Saver accounts)
+  - Business finances separated from personal
 
 - [ ] **[BLOCK] Set up payment processing**
   - For Pro license keys: determine provider
@@ -289,51 +281,31 @@ Each task has a priority tag:
 
 ### Open Source Readiness
 
-- [ ] **[BLOCK] Verify LICENSE file is correct and visible**
-  - Confirm FSL-1.1-Apache-2.0 is in repo root
-  - Confirm it displays correctly on GitHub
-  - Confirm the copyright holder matches: "Copyright 2025-2026 4DA Systems Pty Ltd"
-    (update from personal name to company name after assignment)
+- [x] **[BLOCK] Verify LICENSE file is correct and visible** — VERIFIED
+  - FSL-1.1-Apache-2.0 in repo root
+  - Copyright: "Copyright 2025-2026 4DA Systems Pty Ltd (ACN 696 078 841)"
 
-- [ ] **[CRITICAL] Add NOTICE file to repo**
-  - List all third-party dependencies and their licenses
-  - Required for good open source hygiene
-  - Protects against claims of unlicensed use of dependencies
+- [x] **[CRITICAL] Add NOTICE file to repo** — CREATED (110 lines, all Rust + frontend deps)
+  - Lists all third-party dependencies with licenses and URLs
 
-- [ ] **[HIGH] Set up GitHub issue templates**
-  - Bug report template
-  - Feature request template
-  - Security vulnerability reporting template (SECURITY.md)
-  - This channels community interaction into manageable workflows
+- [x] **[HIGH] Set up GitHub issue templates** — CREATED
+  - Bug report, feature request, source adapter, security vulnerability templates
+  - PR template also created
 
-- [ ] **[CRITICAL] Create SECURITY.md**
-  - How to report security vulnerabilities privately
-  - Email: security@4da.ai (or similar)
-  - Expected response time
-  - Scope of what you consider a vulnerability
-  - This is critical for a BYOK app — if someone finds a way to exfiltrate
-    API keys, you need them to tell YOU, not post it on Twitter
+- [x] **[CRITICAL] Create SECURITY.md** — CREATED (106 lines)
+  - Scope, security model, disclosure policy, response timeline
+  - Contact: security@4da.ai
 
-- [ ] **[HIGH] Review README.md**
-  - Installation instructions
-  - Quick start guide
-  - Link to privacy policy
-  - Link to contributing guidelines
-  - License badge (FSL-1.1-Apache-2.0)
-  - "4DA" trademark notice in footer
+- [x] **[HIGH] Review README.md** — COMPLETE
+  - Installation, quick start, pricing, badges, trademark notice all present
 
 ### Trademark Notices
 
-- [ ] **[HIGH] Add trademark notice to README.md footer**
-  ```
-  "4DA" and the 4DA logo are trademarks of 4DA Systems Pty Ltd.
-  The FSL-1.1-Apache-2.0 license does not grant rights to use
-  these trademarks. See LICENSE for details.
-  ```
+- [x] **[HIGH] Add trademark notice to README.md footer** — DONE
+  - "4DA" and the 4DA logo are trademarks of 4DA Systems Pty Ltd (ACN 696 078 841).
 
-- [ ] **[HIGH] Add trademark notice to website footer**
-  - 4da.ai footer: "4DA is a trademark of 4DA Systems Pty Ltd"
-  - Shopify store: same
+- [x] **[HIGH] Add trademark notice to website footer** — DONE 16 Mar 2026
+  - Added to 4da.ai, STREETS page, and merch page footers
 
 - [ ] **[MEDIUM] Trademark usage guidelines**
   - Create a simple page: 4da.ai/brand or 4da.ai/trademark
