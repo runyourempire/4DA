@@ -193,35 +193,92 @@ pub(crate) async fn build_scoring_context(db: &Database) -> Result<ScoringContex
         }
     }
 
-    // ── Synthesize implicit interests from high-confidence ACE active topics ──
+    // ── Synthesize implicit interests from ACE-discovered context ──
+    // This bridges ACE intelligence into keyword scoring: detected tech, active
+    // topics, and key dependencies all become synthetic interests so the keyword
+    // engine matches content against the user's actual stack — not just what
+    // they declared during onboarding.
     let mut interests = static_identity.interests;
     {
-        let existing: std::collections::HashSet<String> =
+        let mut existing: std::collections::HashSet<String> =
             interests.iter().map(|i| i.topic.to_lowercase()).collect();
-        let mut synthesized = 0usize;
+
+        // Phase 1: Detected tech → keyword interests (weight from tech_weights)
+        let mut tech_synth = 0usize;
+        for tech_name in &ace_ctx.detected_tech {
+            let lower = tech_name.to_lowercase();
+            if existing.contains(&lower) {
+                continue;
+            }
+            let weight = ace_ctx.tech_weights.get(tech_name).copied().unwrap_or(0.4);
+            let embedding = topic_embeddings.get(tech_name).cloned();
+            interests.push(crate::context_engine::Interest {
+                id: None,
+                topic: tech_name.clone(),
+                weight,
+                embedding,
+                source: crate::context_engine::InterestSource::Inferred,
+            });
+            existing.insert(lower);
+            tech_synth += 1;
+        }
+        if tech_synth > 0 {
+            tracing::info!(target: "4da::scoring", tech_synth, "ACE auto-enrichment: synthesized interests from detected tech");
+        }
+
+        // Phase 2: Active topics → keyword interests (confidence-weighted)
+        let mut topic_synth = 0usize;
         for topic_name in &ace_ctx.active_topics {
-            if synthesized >= 5 {
-                break; // cap at 5 to avoid over-broadening
+            if topic_synth >= 10 {
+                break;
             }
             let conf = ace_ctx
                 .topic_confidence
                 .get(topic_name)
                 .copied()
                 .unwrap_or(0.0);
-            if conf >= 0.75 && !existing.contains(&topic_name.to_lowercase()) {
+            if conf >= 0.65 && !existing.contains(&topic_name.to_lowercase()) {
                 let embedding = topic_embeddings.get(topic_name).cloned();
                 interests.push(crate::context_engine::Interest {
                     id: None,
                     topic: topic_name.clone(),
-                    weight: 0.6,
+                    weight: 0.5 + (conf - 0.65) * 0.7, // 0.65→0.50, 1.0→0.75
                     embedding,
                     source: crate::context_engine::InterestSource::Inferred,
                 });
-                synthesized += 1;
+                existing.insert(topic_name.to_lowercase());
+                topic_synth += 1;
             }
         }
-        if synthesized > 0 {
-            tracing::info!(target: "4da::scoring", synthesized, "ACE auto-enrichment: synthesized interests from active topics");
+        if topic_synth > 0 {
+            tracing::info!(target: "4da::scoring", topic_synth, "ACE auto-enrichment: synthesized interests from active topics");
+        }
+
+        // Phase 3: Direct dependencies → low-weight keyword interests
+        let mut dep_synth = 0usize;
+        for (dep_name, dep_info) in &ace_ctx.dependency_info {
+            if dep_synth >= 15 {
+                break;
+            }
+            if !dep_info.is_direct || dep_info.is_dev {
+                continue;
+            }
+            let lower = dep_name.to_lowercase();
+            if existing.contains(&lower) || lower.len() < 3 {
+                continue;
+            }
+            interests.push(crate::context_engine::Interest {
+                id: None,
+                topic: dep_name.clone(),
+                weight: 0.3,
+                embedding: None,
+                source: crate::context_engine::InterestSource::Inferred,
+            });
+            existing.insert(lower);
+            dep_synth += 1;
+        }
+        if dep_synth > 0 {
+            tracing::info!(target: "4da::scoring", dep_synth, "ACE auto-enrichment: synthesized interests from direct dependencies");
         }
     }
 
