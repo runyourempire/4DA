@@ -379,6 +379,39 @@ pub(crate) async fn build_scoring_context(db: &Database) -> Result<ScoringContex
         "ACE context loaded for scoring"
     );
 
+    // ── Apply learned topic affinities to keyword interest weights ──
+    // If the user consistently engages with content about a topic, boost its
+    // keyword weight. If they consistently dismiss it, reduce it.
+    {
+        let affinities: HashMap<String, f32> = match crate::get_ace_engine() {
+            Ok(ace) => ace
+                .get_topic_affinities_min(affinity_min_exposures)
+                .unwrap_or_default()
+                .into_iter()
+                .filter(|a| a.confidence > 0.3)
+                .map(|a| (a.topic.to_lowercase(), a.affinity_score))
+                .collect(),
+            Err(_) => HashMap::new(),
+        };
+        if !affinities.is_empty() {
+            let mut adjusted = 0usize;
+            for interest in &mut interests {
+                if let Some(&affinity) = affinities.get(&interest.topic.to_lowercase()) {
+                    // affinity is -1.0..=1.0; scale to a ±20% weight adjustment
+                    let adjustment = affinity * 0.2;
+                    let new_weight = (interest.weight + adjustment).clamp(0.1, 1.0);
+                    if (new_weight - interest.weight).abs() > 0.01 {
+                        interest.weight = new_weight;
+                        adjusted += 1;
+                    }
+                }
+            }
+            if adjusted > 0 {
+                tracing::debug!(target: "4da::scoring", adjusted, "Applied topic affinity adjustments to keyword interest weights");
+            }
+        }
+    }
+
     if effective_feedback_count < 10 {
         info!(target: "4da::scoring",
             explicit = feedback_interaction_count,
