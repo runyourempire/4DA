@@ -194,93 +194,8 @@ pub(crate) async fn build_scoring_context(db: &Database) -> Result<ScoringContex
     }
 
     // ── Synthesize implicit interests from ACE-discovered context ──
-    // This bridges ACE intelligence into keyword scoring: detected tech, active
-    // topics, and key dependencies all become synthetic interests so the keyword
-    // engine matches content against the user's actual stack — not just what
-    // they declared during onboarding.
     let mut interests = static_identity.interests;
-    {
-        let mut existing: std::collections::HashSet<String> =
-            interests.iter().map(|i| i.topic.to_lowercase()).collect();
-
-        // Phase 1: Detected tech → keyword interests (weight from tech_weights)
-        let mut tech_synth = 0usize;
-        for tech_name in &ace_ctx.detected_tech {
-            let lower = tech_name.to_lowercase();
-            if existing.contains(&lower) {
-                continue;
-            }
-            let weight = ace_ctx.tech_weights.get(tech_name).copied().unwrap_or(0.4);
-            let embedding = topic_embeddings.get(tech_name).cloned();
-            interests.push(crate::context_engine::Interest {
-                id: None,
-                topic: tech_name.clone(),
-                weight,
-                embedding,
-                source: crate::context_engine::InterestSource::Inferred,
-            });
-            existing.insert(lower);
-            tech_synth += 1;
-        }
-        if tech_synth > 0 {
-            tracing::info!(target: "4da::scoring", tech_synth, "ACE auto-enrichment: synthesized interests from detected tech");
-        }
-
-        // Phase 2: Active topics → keyword interests (confidence-weighted)
-        let mut topic_synth = 0usize;
-        for topic_name in &ace_ctx.active_topics {
-            if topic_synth >= 10 {
-                break;
-            }
-            let conf = ace_ctx
-                .topic_confidence
-                .get(topic_name)
-                .copied()
-                .unwrap_or(0.0);
-            if conf >= 0.65 && !existing.contains(&topic_name.to_lowercase()) {
-                let embedding = topic_embeddings.get(topic_name).cloned();
-                interests.push(crate::context_engine::Interest {
-                    id: None,
-                    topic: topic_name.clone(),
-                    weight: 0.5 + (conf - 0.65) * 0.7, // 0.65→0.50, 1.0→0.75
-                    embedding,
-                    source: crate::context_engine::InterestSource::Inferred,
-                });
-                existing.insert(topic_name.to_lowercase());
-                topic_synth += 1;
-            }
-        }
-        if topic_synth > 0 {
-            tracing::info!(target: "4da::scoring", topic_synth, "ACE auto-enrichment: synthesized interests from active topics");
-        }
-
-        // Phase 3: Direct dependencies → low-weight keyword interests
-        let mut dep_synth = 0usize;
-        for (dep_name, dep_info) in &ace_ctx.dependency_info {
-            if dep_synth >= 15 {
-                break;
-            }
-            if !dep_info.is_direct || dep_info.is_dev {
-                continue;
-            }
-            let lower = dep_name.to_lowercase();
-            if existing.contains(&lower) || lower.len() < 3 {
-                continue;
-            }
-            interests.push(crate::context_engine::Interest {
-                id: None,
-                topic: dep_name.clone(),
-                weight: 0.3,
-                embedding: None,
-                source: crate::context_engine::InterestSource::Inferred,
-            });
-            existing.insert(lower);
-            dep_synth += 1;
-        }
-        if dep_synth > 0 {
-            tracing::info!(target: "4da::scoring", dep_synth, "ACE auto-enrichment: synthesized interests from direct dependencies");
-        }
-    }
+    synthesize_ace_interests(&mut interests, &ace_ctx, &topic_embeddings);
 
     // ── Count implicit interactions for faster bootstrap exit ──
     let implicit_interaction_count: i64 = {
@@ -380,8 +295,6 @@ pub(crate) async fn build_scoring_context(db: &Database) -> Result<ScoringContex
     );
 
     // ── Apply learned topic affinities to keyword interest weights ──
-    // If the user consistently engages with content about a topic, boost its
-    // keyword weight. If they consistently dismiss it, reduce it.
     {
         let affinities: HashMap<String, f32> = match crate::get_ace_engine() {
             Ok(ace) => ace
@@ -393,23 +306,7 @@ pub(crate) async fn build_scoring_context(db: &Database) -> Result<ScoringContex
                 .collect(),
             Err(_) => HashMap::new(),
         };
-        if !affinities.is_empty() {
-            let mut adjusted = 0usize;
-            for interest in &mut interests {
-                if let Some(&affinity) = affinities.get(&interest.topic.to_lowercase()) {
-                    // affinity is -1.0..=1.0; scale to a ±20% weight adjustment
-                    let adjustment = affinity * 0.2;
-                    let new_weight = (interest.weight + adjustment).clamp(0.1, 1.0);
-                    if (new_weight - interest.weight).abs() > 0.01 {
-                        interest.weight = new_weight;
-                        adjusted += 1;
-                    }
-                }
-            }
-            if adjusted > 0 {
-                tracing::debug!(target: "4da::scoring", adjusted, "Applied topic affinity adjustments to keyword interest weights");
-            }
-        }
+        apply_affinity_adjustments(&mut interests, &affinities);
     }
 
     if effective_feedback_count < 10 {
@@ -461,12 +358,545 @@ pub(crate) async fn build_scoring_context(db: &Database) -> Result<ScoringContex
     Ok(context)
 }
 
-/// Bridge ACE topic affinities into the feedback_boosts map.
+/// Synthesize ACE-discovered context into keyword interests.
 ///
-/// Filters for high-confidence (>0.6) affinities with significant signal (|score| > 0.2),
-// ============================================================================
-// Tests
-// ============================================================================
+/// Bridges ACE intelligence into keyword scoring: detected tech, active topics,
+/// and key dependencies become synthetic interests so the keyword engine matches
+/// content against the user's actual stack — not just onboarding declarations.
+pub(crate) fn synthesize_ace_interests(
+    interests: &mut Vec<crate::context_engine::Interest>,
+    ace_ctx: &super::ace_context::ACEContext,
+    topic_embeddings: &HashMap<String, Vec<f32>>,
+) {
+    let mut existing: std::collections::HashSet<String> =
+        interests.iter().map(|i| i.topic.to_lowercase()).collect();
+
+    // Phase 1: Detected tech → keyword interests (weight from tech_weights)
+    let mut tech_synth = 0usize;
+    for tech_name in &ace_ctx.detected_tech {
+        let lower = tech_name.to_lowercase();
+        if existing.contains(&lower) {
+            continue;
+        }
+        let weight = ace_ctx.tech_weights.get(tech_name).copied().unwrap_or(0.4);
+        let embedding = topic_embeddings.get(tech_name).cloned();
+        interests.push(crate::context_engine::Interest {
+            id: None,
+            topic: tech_name.clone(),
+            weight,
+            embedding,
+            source: crate::context_engine::InterestSource::Inferred,
+        });
+        existing.insert(lower);
+        tech_synth += 1;
+    }
+    if tech_synth > 0 {
+        tracing::info!(target: "4da::scoring", tech_synth, "ACE auto-enrichment: synthesized interests from detected tech");
+    }
+
+    // Phase 2: Active topics → keyword interests (confidence-weighted)
+    let mut topic_synth = 0usize;
+    for topic_name in &ace_ctx.active_topics {
+        if topic_synth >= 10 {
+            break;
+        }
+        let conf = ace_ctx
+            .topic_confidence
+            .get(topic_name)
+            .copied()
+            .unwrap_or(0.0);
+        if conf >= 0.65 && !existing.contains(&topic_name.to_lowercase()) {
+            let embedding = topic_embeddings.get(topic_name).cloned();
+            interests.push(crate::context_engine::Interest {
+                id: None,
+                topic: topic_name.clone(),
+                weight: 0.5 + (conf - 0.65) * 0.7, // 0.65→0.50, 1.0→0.75
+                embedding,
+                source: crate::context_engine::InterestSource::Inferred,
+            });
+            existing.insert(topic_name.to_lowercase());
+            topic_synth += 1;
+        }
+    }
+    if topic_synth > 0 {
+        tracing::info!(target: "4da::scoring", topic_synth, "ACE auto-enrichment: synthesized interests from active topics");
+    }
+
+    // Phase 3: Direct dependencies → low-weight keyword interests
+    let mut dep_synth = 0usize;
+    for (dep_name, dep_info) in &ace_ctx.dependency_info {
+        if dep_synth >= 15 {
+            break;
+        }
+        if !dep_info.is_direct || dep_info.is_dev {
+            continue;
+        }
+        let lower = dep_name.to_lowercase();
+        if existing.contains(&lower) || lower.len() < 3 {
+            continue;
+        }
+        interests.push(crate::context_engine::Interest {
+            id: None,
+            topic: dep_name.clone(),
+            weight: 0.3,
+            embedding: None,
+            source: crate::context_engine::InterestSource::Inferred,
+        });
+        existing.insert(lower);
+        dep_synth += 1;
+    }
+    if dep_synth > 0 {
+        tracing::info!(target: "4da::scoring", dep_synth, "ACE auto-enrichment: synthesized interests from direct dependencies");
+    }
+}
+
+/// Apply learned topic affinities to keyword interest weights.
+/// Positive affinity (+1.0) boosts weight by up to +0.2, negative (-1.0) reduces by up to -0.2.
+pub(crate) fn apply_affinity_adjustments(
+    interests: &mut [crate::context_engine::Interest],
+    affinities: &HashMap<String, f32>,
+) {
+    if affinities.is_empty() {
+        return;
+    }
+    let mut adjusted = 0usize;
+    for interest in interests.iter_mut() {
+        if let Some(&affinity) = affinities.get(&interest.topic.to_lowercase()) {
+            let adjustment = affinity * 0.2;
+            let new_weight = (interest.weight + adjustment).clamp(0.1, 1.0);
+            if (new_weight - interest.weight).abs() > 0.01 {
+                interest.weight = new_weight;
+                adjusted += 1;
+            }
+        }
+    }
+    if adjusted > 0 {
+        tracing::debug!(target: "4da::scoring", adjusted, "Applied topic affinity adjustments to keyword interest weights");
+    }
+}
 
 #[cfg(test)]
-mod tests {}
+mod tests {
+    use super::*;
+    use crate::context_engine::{Interest, InterestSource};
+    use crate::scoring::ace_context::ACEContext;
+    use crate::scoring::dependencies::DepInfo;
+
+    fn make_interest(topic: &str, weight: f32) -> Interest {
+        Interest {
+            id: None,
+            topic: topic.to_string(),
+            weight,
+            embedding: None,
+            source: InterestSource::Explicit,
+        }
+    }
+
+    fn make_dep(name: &str, direct: bool, dev: bool) -> DepInfo {
+        DepInfo {
+            package_name: name.to_string(),
+            version: None,
+            is_dev: dev,
+            is_direct: direct,
+            search_terms: vec![],
+            ecosystem: "rust".to_string(),
+        }
+    }
+
+    // ── Phase 1: Detected tech synthesis ──
+
+    #[test]
+    fn test_detected_tech_becomes_interests() {
+        let mut interests = vec![make_interest("Rust", 1.0)];
+        let mut ace = ACEContext::default();
+        ace.detected_tech = vec!["typescript".into(), "react".into()];
+        ace.tech_weights.insert("typescript".into(), 0.85);
+        ace.tech_weights.insert("react".into(), 0.40);
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert_eq!(interests.len(), 3);
+        let ts = interests.iter().find(|i| i.topic == "typescript").unwrap();
+        assert!(
+            (ts.weight - 0.85).abs() < 0.01,
+            "primary tech should get weight 0.85"
+        );
+        assert_eq!(ts.source, InterestSource::Inferred);
+
+        let react = interests.iter().find(|i| i.topic == "react").unwrap();
+        assert!(
+            (react.weight - 0.40).abs() < 0.01,
+            "secondary tech should get weight 0.40"
+        );
+    }
+
+    #[test]
+    fn test_detected_tech_no_duplicates() {
+        let mut interests = vec![make_interest("Rust", 1.0)];
+        let mut ace = ACEContext::default();
+        ace.detected_tech = vec!["rust".into()]; // same as existing (case-insensitive)
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert_eq!(interests.len(), 1, "should not duplicate existing interest");
+    }
+
+    #[test]
+    fn test_detected_tech_default_weight() {
+        let mut interests = vec![];
+        let mut ace = ACEContext::default();
+        ace.detected_tech = vec!["python".into()];
+        // No tech_weights entry → should default to 0.4
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert_eq!(interests.len(), 1);
+        assert!(
+            (interests[0].weight - 0.4).abs() < 0.01,
+            "no tech_weight → default 0.4"
+        );
+    }
+
+    // ── Phase 2: Active topic synthesis ──
+
+    #[test]
+    fn test_active_topics_high_confidence() {
+        let mut interests = vec![];
+        let mut ace = ACEContext::default();
+        ace.active_topics = vec!["docker".into(), "kubernetes".into()];
+        ace.topic_confidence.insert("docker".into(), 0.90);
+        ace.topic_confidence.insert("kubernetes".into(), 0.65);
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert_eq!(interests.len(), 2);
+        let docker = interests.iter().find(|i| i.topic == "docker").unwrap();
+        // weight = 0.5 + (0.90 - 0.65) * 0.7 = 0.5 + 0.175 = 0.675
+        assert!(
+            (docker.weight - 0.675).abs() < 0.01,
+            "docker weight should be ~0.675, got {}",
+            docker.weight
+        );
+
+        let k8s = interests.iter().find(|i| i.topic == "kubernetes").unwrap();
+        // weight = 0.5 + (0.65 - 0.65) * 0.7 = 0.5
+        assert!(
+            (k8s.weight - 0.5).abs() < 0.01,
+            "kubernetes weight should be 0.5, got {}",
+            k8s.weight
+        );
+    }
+
+    #[test]
+    fn test_active_topics_below_threshold_ignored() {
+        let mut interests = vec![];
+        let mut ace = ACEContext::default();
+        ace.active_topics = vec!["lowconf".into()];
+        ace.topic_confidence.insert("lowconf".into(), 0.50); // below 0.65
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert_eq!(
+            interests.len(),
+            0,
+            "low-confidence topics should not be synthesized"
+        );
+    }
+
+    #[test]
+    fn test_active_topics_cap_at_10() {
+        let mut interests = vec![];
+        let mut ace = ACEContext::default();
+        for i in 0..15 {
+            let name = format!("topic_{i}");
+            ace.active_topics.push(name.clone());
+            ace.topic_confidence.insert(name, 0.80);
+        }
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert_eq!(interests.len(), 10, "should cap at 10 topic interests");
+    }
+
+    // ── Phase 3: Dependency synthesis ──
+
+    #[test]
+    fn test_direct_deps_become_interests() {
+        let mut interests = vec![];
+        let mut ace = ACEContext::default();
+        ace.dependency_info
+            .insert("tokio".into(), make_dep("tokio", true, false));
+        ace.dependency_info
+            .insert("serde".into(), make_dep("serde", true, false));
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert_eq!(interests.len(), 2);
+        for i in &interests {
+            assert!((i.weight - 0.3).abs() < 0.01, "deps should have weight 0.3");
+            assert_eq!(i.source, InterestSource::Inferred);
+        }
+    }
+
+    #[test]
+    fn test_dev_deps_excluded() {
+        let mut interests = vec![];
+        let mut ace = ACEContext::default();
+        ace.dependency_info
+            .insert("insta".into(), make_dep("insta", true, true)); // dev dep
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert_eq!(interests.len(), 0, "dev deps should not be synthesized");
+    }
+
+    #[test]
+    fn test_transitive_deps_excluded() {
+        let mut interests = vec![];
+        let mut ace = ACEContext::default();
+        ace.dependency_info
+            .insert("syn".into(), make_dep("syn", false, false)); // transitive
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert_eq!(
+            interests.len(),
+            0,
+            "transitive deps should not be synthesized"
+        );
+    }
+
+    #[test]
+    fn test_short_dep_names_excluded() {
+        let mut interests = vec![];
+        let mut ace = ACEContext::default();
+        ace.dependency_info
+            .insert("cc".into(), make_dep("cc", true, false)); // too short
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert_eq!(
+            interests.len(),
+            0,
+            "deps with name < 3 chars should be excluded"
+        );
+    }
+
+    #[test]
+    fn test_dep_cap_at_15() {
+        let mut interests = vec![];
+        let mut ace = ACEContext::default();
+        for i in 0..20 {
+            let name = format!("package-{i:02}");
+            ace.dependency_info
+                .insert(name.clone(), make_dep(&name, true, false));
+        }
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert!(
+            interests.len() <= 15,
+            "should cap at 15 dep interests, got {}",
+            interests.len()
+        );
+    }
+
+    // ── Cross-phase deduplication ──
+
+    #[test]
+    fn test_no_cross_phase_duplicates() {
+        let mut interests = vec![make_interest("tokio", 1.0)];
+        let mut ace = ACEContext::default();
+        // tokio appears in all three phases
+        ace.detected_tech = vec!["tokio".into()];
+        ace.tech_weights.insert("tokio".into(), 0.85);
+        ace.active_topics = vec!["tokio".into()];
+        ace.topic_confidence.insert("tokio".into(), 0.90);
+        ace.dependency_info
+            .insert("tokio".into(), make_dep("tokio", true, false));
+
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        assert_eq!(interests.len(), 1, "tokio should appear exactly once");
+        assert!(
+            (interests[0].weight - 1.0).abs() < 0.01,
+            "original explicit weight preserved"
+        );
+    }
+
+    // ── Affinity adjustments ──
+
+    #[test]
+    fn test_positive_affinity_boosts_weight() {
+        let mut interests = vec![make_interest("Rust", 0.6)];
+        let mut affinities = HashMap::new();
+        affinities.insert("rust".to_string(), 0.8); // strong positive
+
+        apply_affinity_adjustments(&mut interests, &affinities);
+
+        // 0.6 + 0.8 * 0.2 = 0.6 + 0.16 = 0.76
+        assert!(
+            (interests[0].weight - 0.76).abs() < 0.01,
+            "weight should be ~0.76, got {}",
+            interests[0].weight
+        );
+    }
+
+    #[test]
+    fn test_negative_affinity_reduces_weight() {
+        let mut interests = vec![make_interest("Java", 0.6)];
+        let mut affinities = HashMap::new();
+        affinities.insert("java".to_string(), -1.0); // strong negative
+
+        apply_affinity_adjustments(&mut interests, &affinities);
+
+        // 0.6 + (-1.0) * 0.2 = 0.6 - 0.2 = 0.4
+        assert!(
+            (interests[0].weight - 0.4).abs() < 0.01,
+            "weight should be ~0.4, got {}",
+            interests[0].weight
+        );
+    }
+
+    #[test]
+    fn test_affinity_clamps_to_minimum() {
+        let mut interests = vec![make_interest("Cobol", 0.15)];
+        let mut affinities = HashMap::new();
+        affinities.insert("cobol".to_string(), -1.0);
+
+        apply_affinity_adjustments(&mut interests, &affinities);
+
+        // 0.15 - 0.2 = -0.05 → clamped to 0.1
+        assert!(
+            (interests[0].weight - 0.1).abs() < 0.01,
+            "weight should clamp to 0.1, got {}",
+            interests[0].weight
+        );
+    }
+
+    #[test]
+    fn test_affinity_clamps_to_maximum() {
+        let mut interests = vec![make_interest("Rust", 0.95)];
+        let mut affinities = HashMap::new();
+        affinities.insert("rust".to_string(), 1.0);
+
+        apply_affinity_adjustments(&mut interests, &affinities);
+
+        // 0.95 + 0.2 = 1.15 → clamped to 1.0
+        assert!(
+            (interests[0].weight - 1.0).abs() < 0.01,
+            "weight should clamp to 1.0, got {}",
+            interests[0].weight
+        );
+    }
+
+    #[test]
+    fn test_no_affinity_leaves_weight_unchanged() {
+        let mut interests = vec![make_interest("Rust", 0.7)];
+        let affinities = HashMap::new(); // empty
+
+        apply_affinity_adjustments(&mut interests, &affinities);
+
+        assert!(
+            (interests[0].weight - 0.7).abs() < 0.001,
+            "weight should be unchanged"
+        );
+    }
+
+    // ── End-to-end: ACE synthesis → keyword scoring ──
+
+    #[test]
+    fn test_e2e_synthesized_interest_improves_keyword_score() {
+        use crate::scoring::keywords::compute_keyword_interest_score;
+
+        // Without ACE: only explicit "Rust" interest
+        let explicit_only = vec![make_interest("Rust", 1.0)];
+        let score_without = compute_keyword_interest_score(
+            "New TypeScript 5.5 features for React developers",
+            "TypeScript introduces new type guards and React Server Components support",
+            &explicit_only,
+        );
+
+        // With ACE: "Rust" + synthesized "typescript" and "react"
+        let mut with_ace = vec![make_interest("Rust", 1.0)];
+        let mut ace = ACEContext::default();
+        ace.detected_tech = vec!["typescript".into(), "react".into()];
+        ace.tech_weights.insert("typescript".into(), 0.85);
+        ace.tech_weights.insert("react".into(), 0.40);
+        synthesize_ace_interests(&mut with_ace, &ace, &HashMap::new());
+
+        let score_with = compute_keyword_interest_score(
+            "New TypeScript 5.5 features for React developers",
+            "TypeScript introduces new type guards and React Server Components support",
+            &with_ace,
+        );
+
+        assert!(
+            score_with > score_without + 0.1,
+            "ACE synthesis should significantly improve score for stack-relevant content: \
+             without={score_without:.3}, with={score_with:.3}"
+        );
+        assert_eq!(
+            score_without, 0.0,
+            "explicit Rust interest should not match TypeScript content"
+        );
+        assert!(
+            score_with > 0.5,
+            "synthesized interests should produce a strong match, got {score_with:.3}"
+        );
+    }
+
+    #[test]
+    fn test_e2e_dep_synthesis_catches_dependency_content() {
+        use crate::scoring::keywords::compute_keyword_interest_score;
+
+        let mut interests = vec![make_interest("Rust", 1.0)];
+        let mut ace = ACEContext::default();
+        ace.dependency_info
+            .insert("tokio".into(), make_dep("tokio", true, false));
+        ace.dependency_info
+            .insert("serde".into(), make_dep("serde", true, false));
+        synthesize_ace_interests(&mut interests, &ace, &HashMap::new());
+
+        let score = compute_keyword_interest_score(
+            "Tokio 2.0 release brings major async runtime improvements",
+            "The tokio async runtime for Rust gets a major update with new scheduler",
+            &interests,
+        );
+
+        assert!(
+            score > 0.2,
+            "content about a direct dependency should score, got {score:.3}"
+        );
+    }
+
+    #[test]
+    fn test_e2e_affinity_changes_keyword_ranking() {
+        use crate::scoring::keywords::compute_keyword_interest_score;
+
+        let mut interests = vec![make_interest("Rust", 0.5), make_interest("Python", 0.5)];
+
+        // User engages heavily with Rust, dismisses Python
+        let mut affinities = HashMap::new();
+        affinities.insert("rust".to_string(), 0.9);
+        affinities.insert("python".to_string(), -0.8);
+        apply_affinity_adjustments(&mut interests, &affinities);
+
+        let rust_score = compute_keyword_interest_score(
+            "Advanced Rust async patterns",
+            "Exploring async Rust with tokio and futures",
+            &interests,
+        );
+        let python_score = compute_keyword_interest_score(
+            "Advanced Python async patterns",
+            "Exploring async Python with asyncio and aiohttp",
+            &interests,
+        );
+
+        assert!(
+            rust_score > python_score,
+            "Rust (positive affinity) should rank higher than Python (negative): \
+             rust={rust_score:.3}, python={python_score:.3}"
+        );
+    }
+}
