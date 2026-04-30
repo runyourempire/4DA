@@ -639,6 +639,14 @@ fn find_missed_signals(
         signal.dep_name = dep;
     }
 
+    // When we have dependency context, remove items with no specific dep
+    // match — if we can't explain why it matters, don't show it. When no
+    // deps are available (cold start), pass everything through rather than
+    // showing an empty tab.
+    if !direct_deps.is_empty() {
+        signals.retain(|s| !s.why_relevant.is_empty());
+    }
+
     // Deduplicate missed signals by normalized title similarity.
     // The same CVE or topic can appear from multiple sources (HN, Reddit, RSS)
     // — without dedup the same item shows 10+ times in the blind spot report.
@@ -1067,7 +1075,7 @@ fn dedup_missed_signals(signals: Vec<MissedSignal>) -> Vec<MissedSignal> {
 /// so callers can associate a signal with its coverage-gap dependency.
 fn compute_why_relevant(
     title: &str,
-    score: f32,
+    _score: f32,
     direct_deps: &[DepCoverage],
 ) -> (String, Option<String>) {
     let title_lower = title.to_lowercase();
@@ -1122,17 +1130,10 @@ fn compute_why_relevant(
         return (text, Some(first_dep));
     }
 
-    // No specific match — fall back to generic text keyed to score tier.
-    // These strings are DELIBERATELY general: we didn't find a specific
-    // match, so we don't claim one.
-    let text = if score >= 0.85 {
-        "High-relevance item matching your topic affinities".to_string()
-    } else if score >= 0.7 {
-        "Moderately relevant based on your scoring profile".to_string()
-    } else {
-        "Borderline-relevant — worth a glance if you have time".to_string()
-    };
-    (text, None)
+    // No specific dep match found — return empty explanation so
+    // downstream can filter or request LLM-generated reasoning.
+    // Never claim relevance we can't substantiate with evidence.
+    (String::new(), None)
 }
 
 /// Check whether `text` contains `term` at a word boundary.
@@ -1444,7 +1445,12 @@ fn uncovered_dep_to_evidence_item(d: &UncoveredDep) -> EvidenceItem {
         kind: EvidenceKind::Gap,
         title,
         explanation,
-        confidence: Confidence::heuristic(0.7),
+        confidence: Confidence::heuristic(match d.risk_level.as_str() {
+            "critical" => 0.65,
+            "high" => 0.55,
+            "medium" => 0.40,
+            _ => 0.30,
+        }),
         urgency: risk_level_to_urgency(&d.risk_level),
         reversibility: None,
         evidence: vec![citation],
@@ -1524,7 +1530,11 @@ fn stale_topic_to_evidence_item(t: &StaleTopic) -> EvidenceItem {
         kind: EvidenceKind::Gap,
         title,
         explanation,
-        confidence: Confidence::heuristic(0.6),
+        confidence: Confidence::heuristic(if t.missed_signal_count >= 5 {
+            0.55
+        } else {
+            0.35
+        }),
         urgency,
         reversibility: None,
         evidence: vec![citation],
@@ -1631,7 +1641,7 @@ fn recommendation_to_evidence_item(r: &BlindSpotRecommendation, idx: usize) -> E
         kind: EvidenceKind::Alert,
         title,
         explanation: r.reason.clone(),
-        confidence: Confidence::heuristic(0.55),
+        confidence: Confidence::heuristic(0.35),
         urgency: priority_to_urgency(&r.priority),
         reversibility: None,
         evidence: vec![citation],
@@ -1688,6 +1698,117 @@ pub fn blind_spot_report_to_feed(report: &BlindSpotReport) -> EvidenceFeed {
 }
 
 // ============================================================================
+// Tier 2: LLM-Judged Blind Spot Items
+// ============================================================================
+
+/// Pull LLM-judged items from `llm_judgments` that belong in the Blind Spots
+/// lens: topics, ecosystems, tech trends — everything EXCEPT security (which
+/// routes to Preemption). Skips items the user has already interacted with.
+fn llm_judged_blind_spot_items() -> Vec<EvidenceItem> {
+    let db = match crate::get_database() {
+        Ok(db) => db,
+        Err(e) => {
+            warn!(target: "4da::blind_spots", "Cannot load DB for Tier 2 items: {e}");
+            return Vec::new();
+        }
+    };
+
+    let judgments = match db.get_relevant_judgments(0.50, 30) {
+        Ok(j) => j,
+        Err(e) => {
+            warn!(target: "4da::blind_spots", "Failed to load LLM judgments: {e}");
+            return Vec::new();
+        }
+    };
+
+    let conn = db.conn.lock();
+    let mut items = Vec::new();
+
+    for judgment in &judgments {
+        // Load the source item to get title/url/source_type
+        let row: Option<(String, Option<String>, String)> = conn
+            .query_row(
+                "SELECT title, url, source_type FROM source_items WHERE id = ?1",
+                rusqlite::params![judgment.source_item_id],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+            )
+            .ok();
+
+        let (title_raw, url, source_type) = match row {
+            Some(r) => r,
+            None => continue, // source item deleted or missing
+        };
+
+        // Filter out security items — those belong in Preemption, not Blind Spots
+        let lower_title = title_raw.to_lowercase();
+        let is_security = lower_title.contains("cve")
+            || lower_title.contains("vulnerability")
+            || lower_title.contains("security advisory")
+            || lower_title.contains("exploit")
+            || source_type == "osv"
+            || source_type == "cve";
+        if is_security {
+            continue;
+        }
+
+        // Skip items the user has already interacted with
+        let already_seen: bool = conn
+            .query_row(
+                "SELECT COUNT(*) FROM interactions WHERE source_item_id = ?1 OR item_id = ?1",
+                rusqlite::params![judgment.source_item_id],
+                |row| row.get::<_, i64>(0).map(|c| c > 0),
+            )
+            .unwrap_or(false);
+        if already_seen {
+            continue;
+        }
+
+        let urgency = if judgment.relevance_score < 0.65 {
+            Urgency::Watch
+        } else {
+            Urgency::Medium
+        };
+
+        let citation = EvidenceCitation {
+            source: source_type.clone(),
+            title: truncate_title(&title_raw),
+            url: url.clone(),
+            freshness_days: 0.0, // judgment doesn't track age directly
+            relevance_note: truncate_note(&format!(
+                "LLM relevance {:.0}%",
+                judgment.relevance_score * 100.0
+            )),
+        };
+
+        items.push(EvidenceItem {
+            id: format!("llm-bs-{}", judgment.source_item_id),
+            kind: EvidenceKind::MissedSignal,
+            title: truncate_title(&title_raw),
+            explanation: judgment.explanation.clone(),
+            confidence: Confidence::llm_assessed(judgment.confidence as f32),
+            urgency,
+            reversibility: None,
+            evidence: vec![citation],
+            affected_projects: vec![],
+            affected_deps: vec![],
+            suggested_actions: vec![EvidenceAction {
+                action_id: "investigate".to_string(),
+                label: "Investigate".to_string(),
+                description: "Review this signal — the LLM flagged it as relevant to your stack."
+                    .to_string(),
+            }],
+            precedents: Vec::new(),
+            refutation_condition: None,
+            lens_hints: LensHints::blind_spots_only(),
+            created_at: now_millis(),
+            expires_at: None,
+        });
+    }
+
+    items
+}
+
+// ============================================================================
 // Tauri Command
 // ============================================================================
 
@@ -1700,6 +1821,9 @@ pub async fn get_blind_spots() -> std::result::Result<EvidenceFeed, String> {
     crate::settings::require_signal_feature("get_blind_spots").map_err(|e| e.to_string())?;
     let report = generate_blind_spot_report().map_err(|e| e.to_string())?;
     let mut feed = blind_spot_report_to_feed(&report);
+
+    // Tier 2: inject LLM-judged blind spot items (missed signals the user hasn't seen)
+    feed.items.extend(llm_judged_blind_spot_items());
 
     // TitanCA-inspired adversarial deliberation — signal/noise validation.
     // Critical/High bypass; Medium/Watch get deliberated. Fail-open on LLM unavailable.
@@ -2126,22 +2250,17 @@ mod tests {
     }
 
     #[test]
-    fn fix6_why_relevant_falls_back_when_no_match() {
+    fn fix6_why_relevant_returns_empty_when_no_match() {
         let deps = vec![DepCoverage {
             package_name: "react".to_string(),
             ecosystem: "javascript".to_string(),
             projects: vec![],
         }];
-        // Title doesn't mention react
+        // Title doesn't mention react — no evidence to claim relevance
         let (text, dep) = compute_why_relevant("Postgres new extension released", 0.9, &deps);
         assert!(
-            !text.contains("react"),
-            "must not claim a match that isn't there: {text}"
-        );
-        // Fallback text is deliberately generic
-        assert!(
-            text.contains("scoring") || text.contains("relevance") || text.contains("topic"),
-            "fallback should be honestly generic: {text}"
+            text.is_empty(),
+            "must return empty string when no dep match — never claim unsubstantiated relevance: {text}"
         );
         assert_eq!(dep, None, "dep_name must be None when no match");
     }

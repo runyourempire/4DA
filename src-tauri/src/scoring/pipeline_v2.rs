@@ -84,7 +84,7 @@ fn extract_fixed_version(content: &str) -> Option<String> {
     for line in content.lines() {
         let trimmed = line.trim();
         if trimmed.starts_with("Fixed in:") || trimmed.starts_with("Patched in:") {
-            let version = trimmed.splitn(2, ':').nth(1)?.trim();
+            let version = trimmed.split_once(':')?.1.trim();
             if !version.is_empty() {
                 return Some(version.to_string());
             }
@@ -98,7 +98,7 @@ fn extract_affected_range(content: &str) -> Option<String> {
     for line in content.lines() {
         let trimmed = line.trim();
         if trimmed.starts_with("Affected:") {
-            let range = trimmed.splitn(2, ':').nth(1)?.trim();
+            let range = trimmed.split_once(':')?.1.trim();
             if !range.is_empty() {
                 return Some(range.to_string());
             }
@@ -666,6 +666,7 @@ fn compute_quality_composite(
     f32,
     f32,
     f32,
+    f32,
 ) {
     // Freshness: topic-aware when autophagy half-lives are available
     let freshness = if options.apply_freshness {
@@ -826,7 +827,8 @@ fn compute_quality_composite(
     // Negative stack prior: Bayesian suppression for technologies user doesn't use.
     // UNDAMPENED — full suppressive force (0.15 for competing-absent, 0.30 for anti-topics).
     let negative_stack_prior =
-        crate::stacks::negative_stack::lookup_prior(&ctx.ace_ctx.negative_stack, &raw.topics);
+        crate::stacks::negative_stack::lookup_prior(&ctx.ace_ctx.negative_stack, &raw.topics)
+            as f32;
 
     // NOTE: ecosystem_shift_mult, stack_competing_mult, and content_analysis_mult are
     // still computed above for the return tuple (used by logging/diagnostics) but are
@@ -834,6 +836,10 @@ fn compute_quality_composite(
     //   - ecosystem_shift_mult: rare fire, no isolated test coverage
     //   - stack_competing_mult: redundant with competing_mult + negative_stack_prior
     //   - content_analysis_mult: falls back to 1.0 on cache miss, expensive
+
+    // Source tier authority: slight scoring adjustment by source classification
+    let tier = crate::source_tiers::SourceTier::default_for_source(input.source_type);
+    let tier_authority_mult = tier.authority_multiplier();
 
     // Full-strength multipliers — no dampening. Each multiplier expresses its
     // complete signal. The confirmation gate (Phase 7) prevents score inflation;
@@ -848,7 +854,8 @@ fn compute_quality_composite(
         * raw.affinity_mult
         * anti_mult
         * domain_quality_mult
-        * negative_stack_prior;
+        * negative_stack_prior
+        * tier_authority_mult;
 
     let quality_score = (relevance_score * composite).clamp(0.0, 1.0);
 
@@ -906,6 +913,7 @@ fn compute_quality_composite(
         stack_competing_mult,
         sophistication_mult,
         content_analysis_mult,
+        negative_stack_prior,
     )
 }
 
@@ -1372,6 +1380,7 @@ pub(crate) fn score_item(
         stack_competing_mult,
         _sophistication_mult,
         content_analysis_mult,
+        negative_stack_prior,
     ) = compute_quality_composite(relevance_score, input, ctx, &raw, options, db);
 
     // ── Phase 6: Boosts ───────────────────────────────────────────────
@@ -1724,6 +1733,7 @@ pub(crate) fn score_item(
         is_version_affected,
         dependency_path: dep_path.clone(),
         affected_project_count: Some(sec_affected_project_count),
+        negative_stack_prior,
     };
 
     // ── STREETS revenue engine mapping ────────────────────────────────

@@ -599,7 +599,7 @@ impl Database {
             .query_row("SELECT version FROM schema_version", [], |row| row.get(0))
             .unwrap_or(1);
 
-        const TARGET_VERSION: i64 = 62;
+        const TARGET_VERSION: i64 = 65;
 
         // Downgrade detection: if DB schema is newer than this binary expects,
         // show a clear error instead of silently corrupting the schema.
@@ -2286,6 +2286,141 @@ impl Database {
                                 "ALTER TABLE source_items ADD COLUMN tags TEXT DEFAULT NULL;",
                             )?;
                             info!(target: "4da::db", "Added tags column to source_items for source-fair scoring");
+                        }
+                        Ok(())
+                    },
+                )?;
+            }
+
+            // Phase 63: Local OSV advisory mirror for Tier 1 verified intelligence
+            if current_version < 63 {
+                Self::run_versioned_migration(
+                    &conn,
+                    62,
+                    63,
+                    "Phase 63: local OSV advisory mirror",
+                    |c| {
+                        c.execute_batch(
+                            "CREATE TABLE IF NOT EXISTS osv_advisories (
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                advisory_id TEXT NOT NULL,
+                                summary TEXT NOT NULL,
+                                details TEXT,
+                                package_name TEXT NOT NULL,
+                                ecosystem TEXT NOT NULL,
+                                affected_ranges TEXT,
+                                fixed_versions TEXT,
+                                severity_type TEXT,
+                                cvss_score REAL,
+                                source_url TEXT,
+                                published_at TEXT,
+                                modified_at TEXT,
+                                synced_at TEXT NOT NULL DEFAULT (datetime('now')),
+                                UNIQUE(advisory_id, package_name, ecosystem)
+                            );
+                            CREATE INDEX IF NOT EXISTS idx_osv_advisories_package
+                                ON osv_advisories(package_name, ecosystem);
+                            CREATE INDEX IF NOT EXISTS idx_osv_advisories_advisory
+                                ON osv_advisories(advisory_id);
+                            CREATE INDEX IF NOT EXISTS idx_osv_advisories_cvss
+                                ON osv_advisories(cvss_score DESC);
+
+                            CREATE TABLE IF NOT EXISTS osv_sync_status (
+                                ecosystem TEXT PRIMARY KEY,
+                                last_synced_at TEXT NOT NULL,
+                                advisory_count INTEGER NOT NULL DEFAULT 0,
+                                error TEXT
+                            );",
+                        )?;
+                        info!(
+                            target: "4da::db",
+                            "Created osv_advisories + osv_sync_status tables (Tier 1 intelligence)"
+                        );
+                        Ok(())
+                    },
+                )?;
+            }
+
+            // Phase 64: LLM judgment storage for Tier 2 intelligence
+            if current_version < 64 {
+                Self::run_versioned_migration(
+                    &conn,
+                    63,
+                    64,
+                    "Phase 64: LLM judgment storage for Tier 2 intelligence",
+                    |c| {
+                        c.execute_batch(
+                            "CREATE TABLE IF NOT EXISTS llm_judgments (
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                source_item_id INTEGER NOT NULL,
+                                relevance_score REAL NOT NULL,
+                                explanation TEXT NOT NULL,
+                                actions TEXT,
+                                confidence REAL NOT NULL,
+                                model TEXT NOT NULL,
+                                prompt_version TEXT NOT NULL DEFAULT 'v1',
+                                judged_at TEXT NOT NULL DEFAULT (datetime('now')),
+                                UNIQUE(source_item_id, prompt_version)
+                            );
+                            CREATE INDEX IF NOT EXISTS idx_llm_judgments_item
+                                ON llm_judgments(source_item_id);
+                            CREATE INDEX IF NOT EXISTS idx_llm_judgments_relevance
+                                ON llm_judgments(relevance_score DESC);",
+                        )?;
+                        info!(
+                            target: "4da::db",
+                            "Created llm_judgments table (Tier 2 intelligence)"
+                        );
+                        Ok(())
+                    },
+                )?;
+            }
+
+            // Phase 65: structured dismiss feedback for compound intelligence
+            if current_version < 65 {
+                Self::run_versioned_migration(
+                    &conn,
+                    64,
+                    65,
+                    "Phase 65: structured dismiss feedback for compound intelligence",
+                    |c| {
+                        // The `interactions` table lives in the ACE database, not the
+                        // main DB. On a fresh install the ACE DB may not have been
+                        // initialized yet, so check the table exists before ALTER.
+                        let table_exists = c
+                            .query_row(
+                                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='interactions'",
+                                [],
+                                |row| row.get::<_, i64>(0),
+                            )
+                            .unwrap_or(0)
+                            > 0;
+
+                        if table_exists {
+                            let has_dismiss_reason = c
+                                .query_row(
+                                    "SELECT COUNT(*) FROM pragma_table_info('interactions') WHERE name = 'dismiss_reason'",
+                                    [],
+                                    |row| row.get::<_, i64>(0),
+                                )
+                                .unwrap_or(0)
+                                > 0;
+
+                            if !has_dismiss_reason {
+                                c.execute_batch(
+                                    "ALTER TABLE interactions ADD COLUMN dismiss_reason TEXT;
+                                     ALTER TABLE interactions ADD COLUMN dismiss_category TEXT;",
+                                )?;
+                            }
+                            info!(
+                                target: "4da::db",
+                                "Added dismiss_reason + dismiss_category to interactions (compound intelligence loop)"
+                            );
+                        } else {
+                            info!(
+                                target: "4da::db",
+                                "Skipped dismiss columns — interactions table not yet created (ACE DB)"
+                            );
                         }
                         Ok(())
                     },

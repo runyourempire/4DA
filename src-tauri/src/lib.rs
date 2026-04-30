@@ -252,6 +252,7 @@ mod indexed_documents_commands;
 mod integrity;
 mod intelligence_core;
 mod intelligence_history;
+mod intelligence_metrics;
 mod intelligence_packs;
 mod ipc_guard;
 mod ipc_rate_limit;
@@ -261,6 +262,7 @@ pub(crate) mod language_detect;
 mod llm;
 pub(crate) mod llm_capability;
 mod llm_judge;
+mod llm_judgments;
 mod llm_stream;
 mod local_audit;
 mod log_retention;
@@ -274,6 +276,7 @@ mod natural_language_search;
 mod notification_window;
 mod novelty;
 mod ollama;
+mod osv;
 mod plugin_commands;
 pub mod plugins;
 mod preemption;
@@ -303,6 +306,7 @@ mod signals;
 mod source_config;
 mod source_fetch_commands;
 mod source_fetching;
+pub(crate) mod source_tiers;
 pub mod sources;
 mod standing_queries;
 mod standing_queries_evaluation;
@@ -1084,6 +1088,12 @@ pub fn run() {
             dependency_commands::resolve_dependency_alert,
             dependency_commands::check_dependency_upgrades,
             dependency_commands::get_license_overview,
+            // OSV Mirror (Tier 1 Intelligence)
+            osv::osv_sync_now,
+            osv::osv_get_matches,
+            osv::osv_get_sync_status,
+            // Intelligence Metrics (Phase 9)
+            intelligence_metrics::get_intelligence_metrics,
             // Accuracy Tracking (Phase 4.1)
             accuracy::get_accuracy_report,
             accuracy::get_intelligence_report,
