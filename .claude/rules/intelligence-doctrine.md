@@ -33,16 +33,9 @@ Every number displayed to the user must pass the test: *"what action does this i
 
 New backend intelligence commands (anything returning ranked items, alerts, recommendations) must route through the Evidence Materializer trait and emit `Vec<EvidenceItem>`. Direct frontend fetches of bespoke JSON blobs are rejected.
 
-### 5. No AWE UI panels outside the four sanctioned surfaces
+### 5. No standalone wisdom UI panels
 
-AWE is invisible infrastructure. Its only user-visible surfaces are:
-
-1. Confession Box (global `⌘.` modal)
-2. Decision Brief card
-3. Commitment Contract prompt
-4. Retrospective Card (in Evidence)
-
-No "Wisdom Trajectory," no "Decisions Tracked" counter, no "Run Wisdom" button, no AWE-branded panel on any tab. AWE's contribution to all other surfaces is through item *reasoning* (explanation, calibrated confidence, precedents) not through its own UI.
+Wisdom, judgment, and decision-tracking surfaces are collapsed into existing tabs (Brief, Preemption, Blind Spots, Signal, Playbook). No separate "Wisdom" or "Decisions Tracked" panel. Wisdom contributions flow through item *reasoning* (explanation, calibrated confidence, precedents) not through their own UI.
 
 ### 6. Cold-start is non-negotiable
 
@@ -72,7 +65,7 @@ No intelligence surface ships on a release branch until the founder has used it 
 
 ## Enforcement
 
-- **Pre-commit:** (where automatable) lint for banned patterns — `IntelligenceProfile` strings, `CompoundAdvantage` imports, AWE-panel component names, etc.
+- **Pre-commit:** (where automatable) lint for banned patterns — `IntelligenceProfile` strings, `CompoundAdvantage` imports, etc.
 - **PR review:** every intelligence-adjacent PR gets the doctrine checklist. Reviewer confirms each rule.
 - **Post-merge:** runtime schema validation catches what lint cannot.
 - **Pre-release:** the 7-day founder dogfood is a non-negotiable release gate.
@@ -81,7 +74,7 @@ No intelligence surface ships on a release branch until the founder has used it 
 
 ## If a rule is wrong
 
-These rules were written to solve the specific failure modes observed during the Momentum / AWE / Preemption / Blind Spots / Knowledge Decay accumulation incident (2026-04-16). If future learning invalidates a rule:
+These rules were written to solve the specific failure modes observed during the Momentum / Preemption / Blind Spots / Knowledge Decay accumulation incident (2026-04-16). If future learning invalidates a rule:
 
 1. Write an ADR explaining which specific failure mode the rule no longer needs to prevent.
 2. Cite what replaced it.
