@@ -30,7 +30,7 @@ Check the current state of these files before doing anything:
 7. `STREETS-course-design.md` — Full course architecture and 7-module breakdown
 8. `STREETS-landing-page.md` — Conversion-optimized landing page copy for STREETS
 
-### STREETS Course (docs/streets/)
+### STREETS Playbook (docs/streets/)
 1. `module-s-sovereign-setup.md` — Complete Module S (free lead magnet, ~1500 lines)
 2. `4da-integration-spec.md` — Product integration spec (opportunity signals, STREETS panel, DNA integration)
 
@@ -45,10 +45,10 @@ Check the current state of these files before doing anything:
 
 1. Read the existing files to understand current state
 2. Ask the user what they want to work on next
-3. If writing course content: match the style of module-s-sovereign-setup.md (direct, practical, code examples, real dollar amounts, "Real Talk" asides, "Common Mistake" callouts)
+3. If writing playbook content: match the style of module-s-sovereign-setup.md (direct, practical, code examples, real dollar amounts, "Real Talk" asides, "Common Mistake" callouts)
 4. If writing marketing copy: match the Cialdini-optimized style in the landing page docs
 5. Use subagents for 3+ files or heavy research tasks
-6. Cross-reference docs/marketing/STREETS-course-design.md for the canonical course structure
+6. Cross-reference docs/marketing/STREETS-course-design.md for the canonical playbook structure
 
 ## Design Tokens
 - Background: #0A0A0A / #141414 / #1F1F1F
