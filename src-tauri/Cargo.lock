@@ -2110,7 +2110,7 @@ dependencies = [
  "flate2",
  "fourda-macros",
  "futures",
- "getrandom 0.2.17",
+ "getrandom 0.4.2",
  "hex",
  "hkdf",
  "hmac",
