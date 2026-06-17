@@ -37,6 +37,8 @@ export interface OsvVulnerability {
   references?: Array<{ type: string; url: string }>;
   /** GitHub-advisory severity label: LOW | MODERATE | HIGH | CRITICAL. */
   database_specific?: { severity?: string };
+  /** Set (to an RFC3339 timestamp) when the advisory has been withdrawn/retracted. */
+  withdrawn?: string;
   published?: string;
   modified?: string;
 }

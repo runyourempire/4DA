@@ -157,7 +157,11 @@ export class OsvScanner {
     // clean deps are not re-queried).
     const results: VulnerabilityEntry[] = [];
     for (const { dep, ids } of matches) {
-      const depVulns = ids.map((id) => mapVulnerability(detailById.get(id) ?? { id }, dep));
+      // Drop advisories OSV has withdrawn/retracted — surfacing them is a false
+      // positive. Un-hydrated ids (detail fetch failed) are kept: we can't know,
+      // and dropping a real advisory is worse than keeping an un-enriched one.
+      const liveIds = ids.filter((id) => !detailById.get(id)?.withdrawn);
+      const depVulns = liveIds.map((id) => mapVulnerability(detailById.get(id) ?? { id }, dep));
       const cacheKey = `osv:${dep.ecosystem}:${dep.name}:${dep.version}`;
       this.cache.set(cacheKey, depVulns, "osv", OSV_CACHE_TTL);
       results.push(...depVulns);
