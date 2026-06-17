@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: Apache-2.0
 /**
- * 4DA MCP Server - Internal Use Only
+ * 4DA MCP Server
  *
- * This MCP server provides tool and resource access to 4DA's local database
- * for use with Claude Desktop and other MCP-compatible hosts.
+ * Provides dependency-intelligence tools (CVE scanning, dependency health,
+ * upgrade planning, ecosystem news, decision/agent memory) to Claude Code,
+ * Claude Desktop, and other MCP hosts. Runs locally; the only data leaving the
+ * machine is public package names/versions sent to registries (OSV, npm, etc.).
  *
- * IMPORTANT: This server is designed for LOCAL use only. It reads from the
- * user's local 4DA SQLite database. It does NOT implement authentication
- * or authorization - it trusts the local environment.
- *
- * Do NOT expose this server over a network without adding proper auth.
+ * SECURITY: the server trusts its local environment and does NOT implement
+ * authentication. The optional --http transport is intended for localhost use;
+ * do NOT expose it over a network without putting your own auth in front.
  */
 /**
  * 4DA MCP Server v4.6.2 — Dependency Intelligence for AI Coding Agents
@@ -174,8 +174,12 @@ function getDatabase(): FourDADatabase {
         if (groups.size > 0) {
           liveIntel.initFromDependencyGroups([...groups.values()]);
         }
-      } catch {
-        // Non-fatal — live intel just won't have version data
+      } catch (err) {
+        // Non-fatal — live intel just won't have version data — but log to stderr
+        // so a silent empty scan (e.g. project_dependencies schema drift) is
+        // diagnosable rather than looking like "no vulnerabilities".
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error(`[4da] dependency-group init from 4DA DB failed (continuing without version data): ${msg}`);
       }
     }
   }

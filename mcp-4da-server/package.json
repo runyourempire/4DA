@@ -13,6 +13,8 @@
   "files": [
     "dist",
     "!dist/__tests__",
+    "!dist/test-setup.*",
+    "!dist/**/*.map",
     "README.md",
     "LICENSE"
   ],
