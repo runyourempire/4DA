@@ -2201,6 +2201,49 @@ pub(crate) async fn synthesize_morning_briefing(
         format!("\nBlind spots:\n{g}\n")
     };
 
+    // Security/preemption alerts are the highest-priority content (system
+    // prompt priority #1: CVEs in the developer's dependencies), but they live
+    // in `preemption_alerts`, NOT in `items` — the cross-surface dedup pulls
+    // CVE items out of `items` into alerts. Feed them to the synthesizer
+    // explicitly, or on a CVE-heavy day it only sees the low-signal leftovers
+    // and abstains. See briefing_groundedness for the matching corpus/packages.
+    let preemption_text = if briefing.preemption_alerts.is_empty() {
+        String::new()
+    } else {
+        let p = briefing
+            .preemption_alerts
+            .iter()
+            .map(|a| {
+                let pkg = a
+                    .package_name
+                    .as_deref()
+                    .map(|p| format!(" [{p}]"))
+                    .unwrap_or_default();
+                let dep_kind = match a.is_direct {
+                    Some(true) => "direct dep",
+                    Some(false) => "transitive dep",
+                    None => "dependency",
+                };
+                let fix = match (a.installed_version.as_deref(), a.fixed_version.as_deref()) {
+                    (Some(cur), Some(fixed)) => format!("; installed {cur}, fix in {fixed}"),
+                    (None, Some(fixed)) => format!("; fix in {fixed}"),
+                    (Some(cur), None) => format!("; installed {cur}"),
+                    (None, None) => String::new(),
+                };
+                format!(
+                    "- [{}] {}{} ({}{})",
+                    a.urgency.to_uppercase(),
+                    a.title,
+                    pkg,
+                    dep_kind,
+                    fix
+                )
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+        format!("\nSECURITY ALERTS in your dependencies (HIGHEST priority -- lead with these):\n{p}\n")
+    };
+
     let system_prompt = r#"You are an intelligence analyst writing a morning brief for a developer's desktop widget.
 
 YOUR JOB: synthesize, don't summarize. Find the 1-2 strongest threads across all signals, explain WHY they matter together, and state what to do. The signal list below handles individual items -- your job is the "so what?" that a senior dev can't see by scanning titles.
@@ -2287,12 +2330,13 @@ Never use "research confirms" for blog posts. Never use "developers report" for 
 
     let user_prompt = format!(
         "Developer context:\nTech stack: {tech}\nWorking on: {topics}\n\
-         Installed dependencies: {deps}\n\n\
+         Installed dependencies: {deps}\n{preemption}\n\
          {count} signals:\n{items}\n{chains}{gaps}\n\
          Synthesize my morning intelligence briefing.",
         tech = tech_summary,
         topics = topics_summary,
         deps = deps_summary,
+        preemption = preemption_text,
         count = briefing.items.len(),
         items = items_text,
         chains = chains_text,
@@ -2304,7 +2348,7 @@ Never use "research confirms" for blog posts. Never use "developers report" for 
         content: user_prompt,
     }];
 
-    let corpus: Vec<String> = briefing
+    let mut corpus: Vec<String> = briefing
         .items
         .iter()
         .map(|i| {
@@ -2320,6 +2364,41 @@ Never use "research confirms" for blog posts. Never use "developers report" for 
             c
         })
         .collect();
+    // The security alerts now lead the prompt, so the synthesis will reference
+    // them — ground those sentences by adding the alert text to the corpus.
+    for a in &briefing.preemption_alerts {
+        let mut c = a.title.clone();
+        if !a.explanation.is_empty() {
+            c.push(' ');
+            c.push_str(&a.explanation);
+        }
+        for v in [&a.package_name, &a.installed_version, &a.fixed_version]
+            .into_iter()
+            .flatten()
+        {
+            c.push(' ');
+            c.push_str(v);
+        }
+        corpus.push(c);
+    }
+
+    // Known package/dependency names for the groundedness allowlist — bare
+    // lowercase names ("axios", "jsonwebtoken") the capitalized salient-term
+    // extractor cannot see on its own.
+    let packages: Vec<String> = {
+        let mut s: std::collections::HashSet<String> = std::collections::HashSet::new();
+        for a in &briefing.preemption_alerts {
+            if let Some(p) = a.package_name.as_deref().filter(|p| !p.is_empty()) {
+                s.insert(p.to_lowercase());
+            }
+        }
+        for i in &briefing.items {
+            for dep in i.matched_deps.iter().filter(|d| !d.is_empty()) {
+                s.insert(dep.to_lowercase());
+            }
+        }
+        s.into_iter().collect()
+    };
 
     const GROUNDEDNESS_THRESHOLD: f32 = 0.65;
 
@@ -2374,7 +2453,9 @@ Never use "research confirms" for blog posts. Never use "developers report" for 
 
                         let prose = output.to_prose();
                         let report =
-                            crate::briefing_groundedness::validate_groundedness(&prose, &corpus);
+                            crate::briefing_groundedness::validate_groundedness_with_packages(
+                                &prose, &corpus, &packages,
+                            );
                         if !report.is_acceptable(GROUNDEDNESS_THRESHOLD) {
                             tracing::warn!(
                                 target: "4da::briefing",
@@ -2659,8 +2740,11 @@ Never use "research confirms" for blog posts. Never use "developers report" for 
             ..response
         };
 
-        let report =
-            crate::briefing_groundedness::validate_groundedness(&response.content, &corpus);
+        let report = crate::briefing_groundedness::validate_groundedness_with_packages(
+            &response.content,
+            &corpus,
+            &packages,
+        );
 
         if !report.is_acceptable(GROUNDEDNESS_THRESHOLD) {
             tracing::warn!(

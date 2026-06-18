@@ -61,6 +61,12 @@ impl GroundednessReport {
         // version, a project). Fewer than 2 means the output is too
         // generic (e.g. "Prioritize configuring your tech stack") and
         // isn't grounded in any actual signal content.
+        //
+        // The two checks are distinct concerns and `confidence` is now
+        // reported honestly for the empty case (0.0, not 1.0) so the
+        // specificity floor is the sole gate when nothing groundable was
+        // extracted — no more "confidence=1.0 total_terms=0 -> reject"
+        // contradiction in the logs.
         if self.total_terms < 2 {
             return false;
         }
@@ -73,9 +79,49 @@ impl GroundednessReport {
 /// was fed to the LLM: concatenate title + description + matched_deps
 /// per item.
 pub fn validate_groundedness(output: &str, corpus: &[String]) -> GroundednessReport {
-    let corpus_lower: Vec<String> = corpus.iter().map(|s| s.to_lowercase()).collect();
+    validate_groundedness_with_packages(output, corpus, &[])
+}
 
-    let terms = extract_salient_terms(output);
+/// Like [`validate_groundedness`], but with an explicit allowlist of the
+/// brief's known package / dependency names (e.g. "axios", "jsonwebtoken",
+/// "@clerk/clerk-react"). Bare lowercase package names are invisible to the
+/// capitalized salient-term extractor, so a dependency-security brief would
+/// otherwise extract ~0 terms and be wrongly rejected by the specificity
+/// floor. Matching against the brief's actual packages recognizes them with
+/// zero risk of counting ordinary lowercase English words.
+pub fn validate_groundedness_with_packages(
+    output: &str,
+    corpus: &[String],
+    packages: &[String],
+) -> GroundednessReport {
+    let pkg_set: std::collections::HashSet<String> =
+        packages.iter().map(|p| p.to_lowercase()).collect();
+
+    let mut corpus_lower: Vec<String> = corpus.iter().map(|s| s.to_lowercase()).collect();
+    // Known packages are grounded by construction — they are the brief's
+    // real dependencies — so ensure the grounding check can always match them.
+    corpus_lower.extend(pkg_set.iter().cloned());
+
+    let mut terms = extract_salient_terms(output);
+
+    // Augment with bare/hyphenated package names that the shape-based extractor
+    // cannot tell apart from English (axios, jsonwebtoken, clerk-react) by
+    // matching output tokens against the brief's actual dependency set.
+    if !pkg_set.is_empty() {
+        let mut seen: std::collections::HashSet<String> =
+            terms.iter().map(|t| t.to_lowercase()).collect();
+        for raw in output.split_whitespace() {
+            let tok = raw
+                .trim_matches(|c: char| !c.is_alphanumeric() && !matches!(c, '@' | '/' | '-' | '_' | '.'))
+                .trim_matches(|c: char| matches!(c, '.' | '-' | '_'));
+            let key = tok.to_lowercase();
+            if !key.is_empty() && pkg_set.contains(&key) && !seen.contains(&key) {
+                seen.insert(key);
+                terms.push(tok.to_string());
+            }
+        }
+    }
+
     let total = terms.len();
 
     let mut ungrounded = Vec::new();
@@ -89,8 +135,11 @@ pub fn validate_groundedness(output: &str, corpus: &[String]) -> GroundednessRep
         }
     }
 
+    // No groundable terms means we have no evidence either way — report 0.0,
+    // not 1.0. The specificity floor in `is_acceptable` rejects on `total < 2`
+    // regardless, but an honest score keeps the logs truthful.
     let confidence = if total == 0 {
-        1.0
+        0.0
     } else {
         grounded as f32 / total as f32
     };
@@ -281,5 +330,67 @@ mod tests {
             !r.is_acceptable(0.65),
             "vague rephrasing with <2 salient terms should be rejected"
         );
+    }
+
+    // ---- Regression: the morning-brief abstention bug (2026-06) ----------
+
+    #[test]
+    fn lowercase_package_brief_passes_via_allowlist() {
+        // The production bug: a specific, grounded synthesis about lowercase
+        // npm packages extracted ~0 salient terms (the extractor only sees
+        // capitalized names + versions) and was force-abstained. With the
+        // brief's package allowlist, the bare names are recognized.
+        let output = "jsonwebtoken has a type confusion flaw and axios carries known \
+                      vulnerabilities; patch both today.";
+        let c = corpus(&[
+            "axios: 24 known vulnerabilities axios",
+            "jsonwebtoken has Type Confusion jsonwebtoken",
+        ]);
+        let packages = vec!["axios".to_string(), "jsonwebtoken".to_string()];
+        let r = validate_groundedness_with_packages(output, &c, &packages);
+        assert!(
+            r.total_terms >= 2,
+            "package names should be counted as salient: {r:?}"
+        );
+        assert!(
+            r.is_acceptable(0.65),
+            "grounded package-centric brief should pass: {r:?}"
+        );
+    }
+
+    #[test]
+    fn scoped_npm_name_is_extracted() {
+        let terms = extract_salient_terms(
+            "@ai-sdk/provider-utils has an uncontrolled resource consumption issue.",
+        );
+        assert!(
+            terms
+                .iter()
+                .any(|t| t.eq_ignore_ascii_case("@ai-sdk/provider-utils")),
+            "scoped npm name not extracted: {terms:?}"
+        );
+    }
+
+    #[test]
+    fn ordinary_hyphenated_english_is_not_salient() {
+        // Guard the package-shape heuristic against counting common hyphenated
+        // English, which would read as ungrounded and tank confidence.
+        let terms = extract_salient_terms(
+            "this real-world, well-known, open-source pattern is long-term.",
+        );
+        assert!(
+            terms.is_empty(),
+            "hyphenated English leaked as salient terms: {terms:?}"
+        );
+    }
+
+    #[test]
+    fn empty_extraction_reports_zero_confidence_not_one() {
+        // Honest reporting: nothing groundable => 0.0, not a misleading 1.0
+        // that contradicts the specificity-floor rejection in the logs.
+        let r = validate_groundedness("nothing salient here at all", &[]);
+        assert_eq!(r.total_terms, 0);
+        assert_eq!(r.confidence, 0.0);
+        assert!(!r.is_acceptable(0.65));
     }
 }
