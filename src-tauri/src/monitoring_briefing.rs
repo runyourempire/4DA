@@ -2133,8 +2133,60 @@ fn project_label(path: &str) -> String {
     }
 }
 
-/// Synthesize a narrative morning intelligence briefing using LLM.
+/// The exact prose the synthesis gates emit when they reject output (LLM
+/// abstention, failed groundedness, or a wrong package version). Used to detect
+/// a quality-rejection so the retry wrapper can re-attempt.
+const ABSTENTION_PROSE: &str = "Low signal -- no noteworthy intelligence overnight.";
+
+fn is_abstention_prose(prose: &str) -> bool {
+    prose.trim_start().starts_with(ABSTENTION_PROSE)
+}
+
+/// Synthesize a narrative morning intelligence briefing, retrying on a quality
+/// rejection. LLM output is non-deterministic (default temperature), so a brief
+/// that gets rejected for a fabricated/transposed version (e.g. "jsonwebtoken to
+/// 5.61.6", caught by `check_factual_claims`) usually synthesizes cleanly on a
+/// re-attempt. We only retry when the brief HAS content to synthesize — a
+/// genuinely quiet day abstains on the first pass without burning extra calls.
 pub(crate) async fn synthesize_morning_briefing(
+    briefing: &BriefingNotification,
+) -> std::result::Result<SynthesisResult, String> {
+    const MAX_ATTEMPTS: u32 = 3;
+    // A brief with <2 pieces of content has nothing to synthesize; a first-pass
+    // abstention there is legitimate, so don't retry (and don't burn LLM calls).
+    let has_content = briefing.items.len() + briefing.preemption_alerts.len() >= 2;
+
+    let mut last: Option<SynthesisResult> = None;
+    for attempt in 1..=MAX_ATTEMPTS {
+        let result = synthesize_morning_briefing_once(briefing).await?;
+        if !is_abstention_prose(&result.prose) || !has_content {
+            if attempt > 1 {
+                tracing::info!(
+                    target: "4da::briefing",
+                    attempt,
+                    "Synthesis accepted on retry after an earlier quality rejection"
+                );
+            }
+            return Ok(result);
+        }
+        tracing::warn!(
+            target: "4da::briefing",
+            attempt,
+            max = MAX_ATTEMPTS,
+            "Synthesis abstained on a content-bearing brief — retrying for an accurate generation"
+        );
+        last = Some(result);
+    }
+    tracing::warn!(
+        target: "4da::briefing",
+        "Synthesis abstained on all attempts — serving the honest quiet state"
+    );
+    Ok(last.expect("loop runs at least once"))
+}
+
+/// One synthesis attempt (LLM call + groundedness + factual gates). Wrapped by
+/// `synthesize_morning_briefing`, which retries this on a quality rejection.
+async fn synthesize_morning_briefing_once(
     briefing: &BriefingNotification,
 ) -> std::result::Result<SynthesisResult, String> {
     let configured_settings = {
@@ -2389,11 +2441,13 @@ QUALITY RULES:
 11. PROJECTS ARE GROUND TRUTH. Each security alert states its project and scope. Reference the actual project by name (e.g. "in kairos-mvp/backend"). NEVER invent a use-case, feature, or flow the input does not state -- do not say "auth flows", "webhook flows", "payment path" etc. unless those exact words appear in the input. The path is data; the use-case is your imagination.
 12. NO CROSS-PROJECT COMPOUNDING. Two issues only "compound", "combine", or form a "combined exposure" when they are in the SAME project/path. If alert A is in project X and alert B is in project Y, they are SEPARATE issues -- say so, or cover only the strongest. Never manufacture a combined-attack-surface narrative across different projects.
 13. RESPECT SCOPE. An alert marked "in a SIDE project" or "dev-only" is NOT in the app the developer ships. Do not imply it is active core work or that "the attack surface is live" in their main product. State the scope honestly: "in your side project navcal" not "in flows you're actively working on". Lead with PRIMARY-app issues; for side projects, name the project and label it as such.
+14. VERSIONS BELONG TO THEIR PACKAGE. When you recommend an upgrade, the fix version MUST be the one listed for THAT EXACT package in the SECURITY ALERTS block. NEVER attach one package's version to another. If jsonwebtoken's fix is 10.3.0 and Clerk's is 5.61.6, write "jsonwebtoken to 10.3.0" and "Clerk to 5.61.6" -- never "jsonwebtoken to 5.61.6". Each package has exactly one fix version in the input; copy it verbatim for that package only.
 
 BANNED:
 - Inventing a use-case/feature/flow not stated in the input ("auth flows", "webhook flows", "billing path") -- name the project, not an imagined purpose
 - Claiming two issues "compound" / "combine" / are a "combined exposure" when they are in different projects -- that is a fabricated narrative
 - Implying a side-project or dev-only dependency is active core work or a live threat to the shipped app
+- Attaching one package's fix version to a different package (e.g. "jsonwebtoken to 5.61.6" when 5.61.6 is Clerk's version) -- match each version to its own package
 - Restating signal titles without adding context or connecting dots
 - Speculative implications: "could impact", "might affect", "may influence" without evidence in the signals
 - Transition padding: "meanwhile", "in another domain", "in a related vein", "additionally", "furthermore"
@@ -3661,6 +3715,21 @@ mod tests {
         let out = dedupe_alerts_by_advisory(vec![a1, a2]);
         assert_eq!(out.len(), 1);
         assert_eq!(out[0].package_name.as_deref(), Some("axios"));
+    }
+
+    #[test]
+    fn is_abstention_prose_detects_gate_rejections_but_not_real_synthesis() {
+        // The exact prose every synthesis gate emits on rejection — must match so
+        // the retry wrapper re-attempts instead of shipping a blank brief.
+        assert!(is_abstention_prose(ABSTENTION_PROSE));
+        assert!(is_abstention_prose(
+            "Low signal -- no noteworthy intelligence overnight.\n\n(8 items)"
+        ));
+        // Real synthesis must NOT read as abstention (else we'd retry good output).
+        assert!(!is_abstention_prose(
+            "Upgrade jsonwebtoken to 10.3.0 in 4da/relay; it has a type confusion flaw."
+        ));
+        assert!(!is_abstention_prose(""));
     }
 
     #[test]
