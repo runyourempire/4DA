@@ -2407,7 +2407,7 @@ PRIORITY ORDER for picking clusters:
 4. Everything else -- skip unless it compounds with (1) or (2)
 
 WHAT GOOD LOOKS LIKE:
-"Tokio 1.38.x has a confirmed RCE via malformed HTTP/2 frames -- if you're on 1.38.0-1.38.5, upgrade to 1.38.6 today. Upstream says the HTTP/2 parser rewrite lands in 1.39, so this is a stopgap patch.
+"Tokio has a confirmed RCE via malformed HTTP/2 frames -- patch it today; the alerts list below has the exact fixed version. Upstream's HTTP/2 parser rewrite is still pending, so this is a stopgap.
 
 Embedding fine-tuning research shows significant retrieval gains on domain-specific corpora -- worth prototyping against your scoring pipeline given the current relevance accuracy work."
 
@@ -2441,13 +2441,13 @@ QUALITY RULES:
 11. PROJECTS ARE GROUND TRUTH. Each security alert states its project and scope. Reference the actual project by name (e.g. "in kairos-mvp/backend"). NEVER invent a use-case, feature, or flow the input does not state -- do not say "auth flows", "webhook flows", "payment path" etc. unless those exact words appear in the input. The path is data; the use-case is your imagination.
 12. NO CROSS-PROJECT COMPOUNDING. Two issues only "compound", "combine", or form a "combined exposure" when they are in the SAME project/path. If alert A is in project X and alert B is in project Y, they are SEPARATE issues -- say so, or cover only the strongest. Never manufacture a combined-attack-surface narrative across different projects.
 13. RESPECT SCOPE. An alert marked "in a SIDE project" or "dev-only" is NOT in the app the developer ships. Do not imply it is active core work or that "the attack surface is live" in their main product. State the scope honestly: "in your side project navcal" not "in flows you're actively working on". Lead with PRIMARY-app issues; for side projects, name the project and label it as such.
-14. VERSIONS BELONG TO THEIR PACKAGE. When you recommend an upgrade, the fix version MUST be the one listed for THAT EXACT package in the SECURITY ALERTS block. NEVER attach one package's version to another. If jsonwebtoken's fix is 10.3.0 and Clerk's is 5.61.6, write "jsonwebtoken to 10.3.0" and "Clerk to 5.61.6" -- never "jsonwebtoken to 5.61.6". Each package has exactly one fix version in the input; copy it verbatim for that package only.
+14. DO NOT WRITE VERSION NUMBERS. Never put a version number (e.g. 1.16.0, 5.61.6, 9.3.1) in your prose. Name the package and the action -- "upgrade jsonwebtoken", "patch axios" -- and let the SECURITY ALERTS list below carry the exact installed/fixed versions. Stating versions yourself reliably transposes them between packages (e.g. attaching Clerk's 5.61.6 to axios); the list owns versions, you own the "so what".
 
 BANNED:
 - Inventing a use-case/feature/flow not stated in the input ("auth flows", "webhook flows", "billing path") -- name the project, not an imagined purpose
 - Claiming two issues "compound" / "combine" / are a "combined exposure" when they are in different projects -- that is a fabricated narrative
 - Implying a side-project or dev-only dependency is active core work or a live threat to the shipped app
-- Attaching one package's fix version to a different package (e.g. "jsonwebtoken to 5.61.6" when 5.61.6 is Clerk's version) -- match each version to its own package
+- Writing ANY version number in the prose (1.16.0, 5.61.6, 9.3.1, etc.) -- name the package; the alerts list shows the exact version
 - Restating signal titles without adding context or connecting dots
 - Speculative implications: "could impact", "might affect", "may influence" without evidence in the signals
 - Transition padding: "meanwhile", "in another domain", "in a related vein", "additionally", "furthermore"
