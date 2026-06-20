@@ -196,7 +196,13 @@ jobs:
     needs: changes
     if: needs.changes.outputs.rust == 'true' || needs.changes.outputs.workflows == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: [self-hosted, windows, 4da]
-    timeout-minutes: 45
+    # 75 not 45: the self-hosted box is shared with the whole fleet's dev/cargo
+    # churn (dozens of concurrent cargo processes), so a COLD compile here can
+    # crawl well past 45 min under contention — long enough to false-timeout a
+    # legitimate build (observed on the first run of this very change). Warm
+    # runs (clean:false) finish in ~12 min; this ceiling only ever bites a cold,
+    # heavily-contended compile, and is still a real hang backstop.
+    timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:
