@@ -26,12 +26,18 @@ if (-not $env:SSL_COM_CREDENTIAL_ID) {
 
 Log "Signing: $FilePath"
 
-# Diagnostics: confirm the signer + its Java runtime are actually resolvable in
-# THIS process (PATH set via GITHUB_PATH in a prior step is inherited here).
-$cst = Get-Command CodeSignTool -ErrorAction SilentlyContinue
-Log ("CodeSignTool: " + $(if ($cst) { $cst.Source } else { 'NOT FOUND on PATH' }))
+# Resolve CodeSignTool by ABSOLUTE path (CODESIGNTOOL_BAT, set by the install
+# step) — the signCommand subprocess does NOT reliably inherit the GITHUB_PATH
+# addition, so a bare `CodeSignTool` was "not recognized". Fall back to PATH.
+$tool = $env:CODESIGNTOOL_BAT
+if (-not $tool -or -not (Test-Path $tool)) {
+    $cmd = Get-Command CodeSignTool -ErrorAction SilentlyContinue
+    if ($cmd) { $tool = $cmd.Source }
+}
+Log ("CodeSignTool: " + $(if ($tool) { $tool } else { 'NOT FOUND (CODESIGNTOOL_BAT unset and not on PATH)' }))
 $java = Get-Command java -ErrorAction SilentlyContinue
 Log ("java: " + $(if ($java) { $java.Source } else { 'NOT FOUND on PATH' }))
+if (-not $tool) { Log "Cannot sign: CodeSignTool unavailable"; exit 1 }
 
 # Pass -input_file_path WITHOUT embedded quotes. PowerShell quotes array args
 # containing spaces automatically when spawning; the previous
@@ -47,9 +53,14 @@ $signArgs = @(
     "-override"
 )
 
+# Run from CodeSignTool's own directory: the .bat resolves its jar/conf relative
+# to itself, and some versions assume the working dir is the tool dir.
+$toolDir = Split-Path -Parent $tool
 try {
-    $output = & CodeSignTool @signArgs 2>&1
+    Push-Location $toolDir
+    $output = & $tool @signArgs 2>&1
     $code = $LASTEXITCODE
+    Pop-Location
     $text = ($output | Out-String)
     Write-Host $text
     try { Add-Content -Path $logFile -Value $text -ErrorAction SilentlyContinue } catch {}
@@ -59,6 +70,7 @@ try {
     }
     Log "Signed successfully: $FilePath"
 } catch {
+    try { Pop-Location } catch {}
     Log "Code signing EXCEPTION: $_"
     exit 1
 }

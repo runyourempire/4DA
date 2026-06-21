@@ -158,9 +158,21 @@ jobs:
           if ($actual -ne $expected.ToLowerInvariant()) { Write-Error "CodeSignTool SHA-256 mismatch - expected $expected, got $actual"; exit 1 }
 
           Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
-          # Add to PATH for signCommand
-          $cstDir = Get-ChildItem -Path $extractPath -Directory | Select-Object -First 1
-          echo "$($cstDir.FullName)" | Out-File -Append -Encoding utf8 $env:GITHUB_PATH
+          # Resolve the ABSOLUTE path to CodeSignTool.bat and export it as an env
+          # var. The previous approach only added the dir to GITHUB_PATH, but the
+          # signCommand subprocess tauri spawns did NOT see it on PATH
+          # ("CodeSignTool: NOT FOUND on PATH" in the sign debug log), so signing
+          # failed. sign-windows.ps1 now invokes $env:CODESIGNTOOL_BAT directly.
+          $cstBat = Get-ChildItem -Path $extractPath -Recurse -Filter "CodeSignTool.bat" | Select-Object -First 1
+          if (-not $cstBat) {
+            Write-Error "CodeSignTool.bat not found under $extractPath after extraction"
+            Get-ChildItem -Path $extractPath -Recurse -Depth 2 | Select-Object FullName | Format-Table -AutoSize
+            exit 1
+          }
+          Write-Host "CodeSignTool.bat: $($cstBat.FullName)"
+          echo "CODESIGNTOOL_BAT=$($cstBat.FullName)" | Out-File -Append -Encoding utf8 $env:GITHUB_ENV
+          # Keep the dir on PATH too (belt-and-suspenders for any other consumer).
+          echo "$($cstBat.Directory.FullName)" | Out-File -Append -Encoding utf8 $env:GITHUB_PATH
 
       - name: Pre-sign bundled ORT dylib (macOS notarization)
         # tauri bundles src-tauri/models/ort/libonnxruntime.dylib as a plain
