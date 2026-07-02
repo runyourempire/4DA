@@ -34,20 +34,26 @@ const BRIEF_MAX_PER_SOURCE: usize = 5;
 /// DB-fallback relevance floor. 0.35 keeps score-0.1 noise out of the LLM slate
 /// while staying below the 0.40 relevance threshold (recall margin).
 const BRIEF_DB_SCORE_FLOOR: f64 = 0.35;
-/// Cold-start floor: when NOTHING clears 0.35 (thin context in the first days,
-/// before scoring has personal signal), fall back to the historical permissive
-/// floor rather than serving an empty brief. The 0.1 floor dates to v1.0.0 and
-/// is only load-bearing for exactly this no-better-items case.
+/// Cold-start floor: when the quality floor yields too little (thin context in
+/// the first days, before scoring has personal signal), top up from the
+/// historical permissive floor rather than serving an empty or one-item brief.
+/// The 0.1 floor dates to v1.0.0 and is only load-bearing for this case.
 const BRIEF_DB_COLDSTART_FLOOR: f64 = 0.1;
+/// Minimum candidate count below which the cold-start top-up kicks in. Guards
+/// the floor cliff: one item at 0.36 plus forty in [0.1, 0.35) must not yield
+/// a one-item brief.
+const BRIEF_MIN_CANDIDATES: usize = 5;
 
-/// Fetch brief candidates from the DB at the quality floor, retrying at the
-/// cold-start floor only when the quality floor yields nothing.
+/// Fetch brief candidates from the DB at the quality floor, topping up from
+/// the cold-start floor (deduped by id) when fewer than
+/// `BRIEF_MIN_CANDIDATES` clear it. Above-floor items keep priority — the
+/// grounded-first slate sort downstream re-orders by grounding and score.
 fn fetch_db_fallback_items(
     db: &crate::db::Database,
     period_start: chrono::DateTime<chrono::Utc>,
     user_lang: &str,
 ) -> Result<Vec<crate::db::DigestSourceItem>> {
-    let items = db
+    let mut items = db
         .get_relevant_items_since(
             period_start,
             BRIEF_DB_SCORE_FLOOR,
@@ -55,16 +61,20 @@ fn fetch_db_fallback_items(
             user_lang,
         )
         .context("Failed to fetch items")?;
-    if !items.is_empty() {
+    if items.len() >= BRIEF_MIN_CANDIDATES {
         return Ok(items);
     }
-    db.get_relevant_items_since(
-        period_start,
-        BRIEF_DB_COLDSTART_FLOOR,
-        BRIEF_CANDIDATE_FETCH,
-        user_lang,
-    )
-    .context("Failed to fetch items")
+    let seen: std::collections::HashSet<i64> = items.iter().map(|i| i.id).collect();
+    let top_up = db
+        .get_relevant_items_since(
+            period_start,
+            BRIEF_DB_COLDSTART_FLOOR,
+            BRIEF_CANDIDATE_FETCH,
+            user_lang,
+        )
+        .context("Failed to fetch items")?;
+    items.extend(top_up.into_iter().filter(|i| !seen.contains(&i.id)));
+    Ok(items)
 }
 
 /// Order the Brief candidate slate grounded-first and apply a per-source cap.
@@ -823,7 +833,7 @@ mod tests {
     }
 
     // ========================================================================
-    // DB-fallback floor (0.35 quality floor, 0.1 cold-start retry)
+    // DB-fallback floor (0.35 quality floor, 0.1 cold-start top-up)
     // ========================================================================
 
     fn insert_scored_item(db: &crate::db::Database, title: &str, score: f64) {
@@ -837,19 +847,25 @@ mod tests {
     }
 
     #[test]
-    fn db_fallback_floor_drops_low_score_noise_when_better_items_exist() {
+    fn db_fallback_floor_drops_low_score_noise_when_enough_better_items_exist() {
         let db = crate::test_utils::test_db();
-        insert_scored_item(&db, "good item", 0.5);
+        for i in 1..=5 {
+            insert_scored_item(&db, &format!("good item {i}"), 0.5);
+        }
         insert_scored_item(&db, "noise item", 0.15);
 
         let period_start = chrono::Utc::now() - chrono::Duration::hours(72);
         let items = fetch_db_fallback_items(&db, period_start, "en").expect("fetch");
-        assert_eq!(items.len(), 1, "0.15 noise must not clear the 0.35 floor");
-        assert_eq!(items[0].title, "good item");
+        assert_eq!(
+            items.len(),
+            5,
+            "with >= BRIEF_MIN_CANDIDATES above the floor, 0.15 noise stays out"
+        );
+        assert!(items.iter().all(|i| i.title != "noise item"));
     }
 
     #[test]
-    fn db_fallback_retries_at_coldstart_floor_when_nothing_clears_quality_floor() {
+    fn db_fallback_tops_up_at_coldstart_floor_when_nothing_clears_quality_floor() {
         let db = crate::test_utils::test_db();
         insert_scored_item(&db, "thin-context item", 0.2);
 
@@ -861,6 +877,30 @@ mod tests {
             "cold-start: with nothing >= 0.35 the 0.1 floor keeps the brief alive"
         );
         assert_eq!(items[0].title, "thin-context item");
+    }
+
+    #[test]
+    fn db_fallback_tops_up_past_floor_cliff_without_duplicates() {
+        // Floor cliff: one item at 0.36 + several in [0.1, 0.35) must not yield
+        // a one-item brief. The top-up merges the sub-floor items and dedups by
+        // id (the 0.36 item also matches the 0.1 fetch).
+        let db = crate::test_utils::test_db();
+        insert_scored_item(&db, "just above floor", 0.36);
+        for i in 1..=3 {
+            insert_scored_item(&db, &format!("sub-floor item {i}"), 0.2);
+        }
+
+        let period_start = chrono::Utc::now() - chrono::Duration::hours(72);
+        let items = fetch_db_fallback_items(&db, period_start, "en").expect("fetch");
+        assert_eq!(items.len(), 4, "top-up fills past the cliff, deduped by id");
+        assert_eq!(
+            items
+                .iter()
+                .filter(|i| i.title == "just above floor")
+                .count(),
+            1,
+            "above-floor item must not be duplicated by the top-up fetch"
+        );
     }
 
     // ========================================================================

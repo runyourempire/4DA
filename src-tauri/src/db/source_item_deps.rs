@@ -197,34 +197,39 @@ impl Database {
     /// Of the given source-item ids, return the subset with at least one persisted
     /// dependency link strong enough to ground the item in the user's stack.
     ///
-    /// Mirrors the canonical grounding rule (`scoring::dependencies::
-    /// is_strong_grounding_match`: non-dev edge at confidence >= 0.40 whose package
-    /// name can be trusted) for surfaces where no in-memory `ScoreBreakdown` is
-    /// available — the Brief's DB-fallback slate. Persisted links are already
-    /// non-dev/direct-only (dep_linker loads only `is_dev = 0 AND is_direct = 1`
-    /// deps), and the current linker never creates title-heuristic links for
-    /// ambiguous English-word package names — but legacy rows may predate those
-    /// filters, so ambiguous names here additionally require registry/advisory
-    /// proof (the `package_ambiguity` policy: ambiguous names surface only with
-    /// ecosystem-qualified evidence).
+    /// This is a SUPERSET of the canonical in-memory grounding rule
+    /// (`scoring::dependencies::is_strong_grounding_match`): both require a
+    /// non-dev edge at confidence >= `STRONG_GROUNDING_CONFIDENCE`, but this
+    /// predicate is deliberately LOOSER for ambiguous English-word package names
+    /// — it grounds them when the persisted link carries registry/advisory proof
+    /// (`match_type` of `exact_registry`/`advisory`), matching dep_linker's
+    /// classify policy and the `package_ambiguity` doctrine ("ambiguous names
+    /// surface only with ecosystem-qualified evidence"). The canonical DepMatch
+    /// predicate has no proof-type information, so it must reject ambiguous
+    /// names outright; here the proof is persisted, so rejecting would wrongly
+    /// unground e.g. a crates.io release of the user's real `log` dep. Do NOT
+    /// "fix" this difference by tightening it to the canonical rule.
+    ///
+    /// Used where no in-memory `ScoreBreakdown` is available — the Brief's
+    /// DB-fallback slate. Persisted links are already non-dev/direct-only
+    /// (dep_linker loads only `is_dev = 0 AND is_direct = 1` deps), and the
+    /// current linker never creates title-heuristic links for ambiguous names —
+    /// the ambiguity check below only bites on legacy rows predating its filters.
     pub fn filter_strongly_grounded_items(
         &self,
         item_ids: &[i64],
     ) -> SqliteResult<std::collections::HashSet<i64>> {
-        // Keep in sync with `scoring::dependencies::STRONG_GROUNDING_CONFIDENCE`
-        // (not importable here: `scoring::dependencies` is module-private).
-        const STRONG_GROUNDING_CONFIDENCE: f64 = 0.40;
-
         let mut grounded = std::collections::HashSet::new();
         if item_ids.is_empty() {
             return Ok(grounded);
         }
         let conn = self.read_conn();
         let placeholders = vec!["?"; item_ids.len()].join(",");
+        let floor = crate::scoring::STRONG_GROUNDING_CONFIDENCE;
         let sql = format!(
             "SELECT DISTINCT source_item_id, package_name, match_type
              FROM source_item_dependencies
-             WHERE confidence >= {STRONG_GROUNDING_CONFIDENCE}
+             WHERE confidence >= {floor}
                AND source_item_id IN ({placeholders})"
         );
         let mut stmt = conn.prepare(&sql)?;

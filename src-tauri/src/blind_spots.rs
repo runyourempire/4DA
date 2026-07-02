@@ -1703,12 +1703,11 @@ fn find_missed_signals(
     // Priority-aware ranking: security advisories + breaking changes surface
     // above generic blog posts, even if they score slightly lower on relevance.
     // Old blog posts (>10 days) are capped at 3 slots so the list doesn't
-    // become a stale-blog archive.
+    // become a stale-blog archive. Per-dep diversity (max 3 per matched dep,
+    // max 2 unmatched) is enforced INSIDE the same selection pass — quota
+    // before truncation — so one popular dep can't both eat the panel's slots
+    // and then be cut down to a near-empty panel.
     let signals = rank_by_missed_priority(signals);
-
-    // Cap per-dep diversity: max 3 signals per matched dep to prevent the
-    // "5 items all saying Mentions react" wall-of-sameness problem.
-    let signals = cap_per_dep(signals, 3);
 
     Ok(signals)
 }
@@ -1823,8 +1822,10 @@ fn signal_priority_tier(signal: &MissedSignal) -> u8 {
 /// ordering, an ungrounded keyword-"urgent" tier-3/4 item could leapfrog a
 /// dep-matched tier-1 item. Urgency still decides WITHIN equal grounding
 /// (grounded security advisories outrank grounded blog posts), and relevance
-/// breaks remaining ties. Also caps older non-urgent content so the panel
-/// stays focused on recent-enough material.
+/// breaks remaining ties. The selection pass then enforces per-dep diversity
+/// (max 3 per matched dep, max 2 unmatched) and the old-blog cap BEFORE the
+/// final_limit truncation, so a single popular dep can neither crowd out other
+/// deps at the cut nor collapse the panel to a handful of survivors.
 fn rank_by_missed_priority(mut signals: Vec<MissedSignal>) -> Vec<MissedSignal> {
     let final_limit = scoring_config::MISSED_SIGNAL_FINAL_LIMIT as usize;
     let old_blog_cap = scoring_config::MISSED_SIGNAL_OLD_BLOG_CAP as usize;
@@ -1856,13 +1857,41 @@ fn rank_by_missed_priority(mut signals: Vec<MissedSignal>) -> Vec<MissedSignal> 
             })
     });
 
-    // Cap Tier 1 (generic blog) items older than old_days_threshold to old_blog_cap.
+    // Selection pass: per-dep quota + old-blog cap + final_limit truncation in
+    // ONE loop, quota BEFORE truncation. The grounded-first sort clusters one
+    // popular dep's items at the head of the stream, so truncating first and
+    // capping afterwards would evict grounded other-dep items at the cut and
+    // then shrink the survivors (12 react items -> 3 after a post-hoc cap =
+    // a ~5-item panel). Skipping over-quota items during selection lets the
+    // stream's remaining deps fill the panel to final_limit instead.
+    const MAX_PER_DEP: usize = 3;
+    const MAX_UNMATCHED: usize = 2;
     let mut kept = Vec::with_capacity(final_limit);
     let mut old_tier1_count = 0;
+    let mut per_dep_counts: std::collections::HashMap<String, usize> =
+        std::collections::HashMap::new();
+    let mut unmatched_count = 0usize;
     for s in signals {
         if kept.len() >= final_limit {
             break;
         }
+        // Per-dep diversity quota: max 3 per matched dep ("5 items all saying
+        // Mentions react" wall-of-sameness); max 2 unmatched — they passed on
+        // score alone and shouldn't dominate over dep-matched items.
+        let over_quota = match &s.dep_name {
+            Some(dep) => {
+                per_dep_counts
+                    .get(&dep.to_lowercase())
+                    .copied()
+                    .unwrap_or(0)
+                    >= MAX_PER_DEP
+            }
+            None => unmatched_count >= MAX_UNMATCHED,
+        };
+        if over_quota {
+            continue;
+        }
+        // Cap Tier 1 (generic blog) items older than old_days_threshold.
         let tier = signal_priority_tier(&s);
         let age = age_days(&s.created_at);
         if tier == 1 && age > old_days_threshold {
@@ -1871,34 +1900,14 @@ fn rank_by_missed_priority(mut signals: Vec<MissedSignal>) -> Vec<MissedSignal> 
             }
             old_tier1_count += 1;
         }
+        match &s.dep_name {
+            Some(dep) => *per_dep_counts.entry(dep.to_lowercase()).or_insert(0) += 1,
+            None => unmatched_count += 1,
+        }
         kept.push(s);
     }
 
     kept
-}
-
-/// Cap per-dep diversity: at most `max_per_dep` signals per matched dep name.
-/// Signals with no dep_name are capped at 2 total — they passed on score alone
-/// and shouldn't dominate over dep-matched items.
-fn cap_per_dep(signals: Vec<MissedSignal>, max_per_dep: usize) -> Vec<MissedSignal> {
-    use std::collections::HashMap;
-    const MAX_UNMATCHED: usize = 2;
-    let mut counts: HashMap<String, usize> = HashMap::new();
-    let mut unmatched_count = 0usize;
-    signals
-        .into_iter()
-        .filter(|s| match &s.dep_name {
-            Some(dep) => {
-                let c = counts.entry(dep.to_lowercase()).or_insert(0);
-                *c += 1;
-                *c <= max_per_dep
-            }
-            None => {
-                unmatched_count += 1;
-                unmatched_count <= MAX_UNMATCHED
-            }
-        })
-        .collect()
 }
 
 /// Filter missed signals using two-layer stack awareness.
@@ -3824,6 +3833,68 @@ mod tests {
             vec![1, 2, 3],
             "tier decides within equal grounding, relevance within equal tier"
         );
+    }
+
+    #[test]
+    fn per_dep_quota_applies_before_truncation_so_panel_stays_full() {
+        // Regression: a React user with 12 distinct react articles (all >0.5)
+        // used to pack 12 of the 15 truncation slots; a post-hoc per-dep cap
+        // then cut them to 3, rendering a ~5-item panel with the grounded
+        // other-dep items already evicted at the cut. With the quota enforced
+        // inside the selection pass, react is capped at 3 DURING selection and
+        // the remaining deps fill the panel to final_limit (15).
+        let mut signals: Vec<MissedSignal> = (1..=12)
+            .map(|i| {
+                missed_signal(
+                    i,
+                    Some("react"),
+                    Some("discussion"),
+                    &format!("react article {i}"),
+                    0.99 - (i as f32) * 0.01,
+                )
+            })
+            .collect();
+        signals.extend((13..=27).map(|i| {
+            missed_signal(
+                i,
+                Some(&format!("dep-{i}")),
+                Some("discussion"),
+                &format!("article about dep-{i}"),
+                0.60,
+            )
+        }));
+
+        let ranked = rank_by_missed_priority(signals);
+
+        assert_eq!(
+            ranked.len(),
+            scoring_config::MISSED_SIGNAL_FINAL_LIMIT as usize,
+            "panel must be FULL — quota'd stream fills to final_limit"
+        );
+        let react_count = ranked
+            .iter()
+            .filter(|s| s.dep_name.as_deref() == Some("react"))
+            .count();
+        assert_eq!(react_count, 3, "popular dep capped at 3 during selection");
+    }
+
+    #[test]
+    fn unmatched_quota_enforced_in_selection_pass() {
+        // Score-only (unmatched) signals stay capped at 2 — same quota the old
+        // post-hoc cap_per_dep enforced, now inside the selection pass.
+        let signals: Vec<MissedSignal> = (1..=5)
+            .map(|i| {
+                missed_signal(
+                    i,
+                    None,
+                    Some("discussion"),
+                    &format!("unmatched article {i}"),
+                    0.90,
+                )
+            })
+            .collect();
+        let ranked = rank_by_missed_priority(signals);
+        assert_eq!(ranked.len(), 2, "unmatched signals capped at 2");
     }
 
     // ─── Free teaser (tier rebalance) ────────────────────────────────
