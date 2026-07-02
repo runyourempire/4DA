@@ -22,9 +22,9 @@ use crate::evidence::{
     EvidenceKind, LensHints, Urgency,
 };
 use crate::monitoring_briefing::DataFreshness;
-use crate::package_ambiguity::{has_word_boundary_match, is_generic_dep_name};
-// Re-exported because peers (dep_linker) import this via blind_spots.
-pub(crate) use crate::package_ambiguity::is_ambiguous_package_name;
+use crate::package_ambiguity::{
+    has_word_boundary_match, is_ambiguous_package_name, is_generic_dep_name,
+};
 use crate::scoring_config;
 
 // ============================================================================
