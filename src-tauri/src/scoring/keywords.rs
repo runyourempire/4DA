@@ -24,10 +24,7 @@ pub(crate) fn interest_specificity_weight_for(
     let topic_lower = interest_topic.to_lowercase();
     let word_count = topic_lower.split_whitespace().count();
 
-    let is_broad = BROAD_INTEREST_TERMS
-        .iter()
-        .any(|b| topic_lower == *b || topic_lower.contains(b))
-        && !profile.is_some_and(|p| p.exempts_broad(&topic_lower));
+    let is_broad = is_broad_interest_topic(&topic_lower, profile);
 
     if is_broad {
         scoring_config::SPECIFICITY_BROAD // Broad terms contribute 25% of normal weight
@@ -107,22 +104,29 @@ pub(crate) fn best_interest_specificity_weight_for(
                     return true;
                 }
             }
-            // Stemmed match — only for plain-English interests. Known tech
-            // names (anything with an alias group: react, rust, go, ...)
-            // match literally or via aliases only; English morphology is a
-            // different word ("reaction" is not React, "rusted" is not Rust).
-            if aliases::get_aliases(term).is_none() {
-                let term_stem = stemming::stem(term);
-                if term_stem.len() >= 3 {
-                    let words_match = title_lower
-                        .split(|c: char| !c.is_alphanumeric())
-                        .chain(text_lower.split(|c: char| !c.is_alphanumeric()))
-                        .any(|w| {
-                            w.len() >= 3 && stemming::stems_equiv(&stemming::stem(w), &term_stem)
-                        });
-                    if words_match {
-                        return true;
-                    }
+            // Known tech names (anything with an alias group: react, rust,
+            // llm, ...) skip English stemming — morphology is a different
+            // word ("reaction" is not React, "rusted" is not Rust) — but DO
+            // get a bare-plural fallback: alias groups carry no plurals, so
+            // "LLMs"/"APIs"/"containers" must still match their singular
+            // interest. Derived forms ("dockerized") stay unmatched by design.
+            if aliases::get_aliases(term).is_some() {
+                let plural_s = format!("{term}s");
+                let plural_es = format!("{term}es");
+                return has_word_boundary_match(&title_lower, &plural_s)
+                    || has_word_boundary_match(&text_lower, &plural_s)
+                    || has_word_boundary_match(&title_lower, &plural_es)
+                    || has_word_boundary_match(&text_lower, &plural_es);
+            }
+            // Stemmed match — plain-English interests only.
+            let term_stem = stemming::stem(term);
+            if term_stem.len() >= 3 {
+                let words_match = title_lower
+                    .split(|c: char| !c.is_alphanumeric())
+                    .chain(text_lower.split(|c: char| !c.is_alphanumeric()))
+                    .any(|w| w.len() >= 3 && stemming::stems_equiv(&stemming::stem(w), &term_stem));
+                if words_match {
+                    return true;
                 }
             }
             false
@@ -171,6 +175,37 @@ const SHORT_TECH_KEYWORDS: &[&str] = &[
     "vm", "k8", "tf", "gcp", "aws", "api", "cli", "css", "sql", "llm", "nlp", "cv",
 ];
 
+/// Is a (lowercased) interest topic a broad term per BROAD_INTEREST_TERMS,
+/// honoring the profile's own-domain exemption?
+///
+/// Matching is by exact equality, whitespace-token equality, or (for
+/// multi-word broad entries like "open source" / "machine learning")
+/// word-bounded phrase containment — NEVER raw substring. Raw `contains`
+/// misclassified specific tech as broad: "tailwind" ⊃ "ai", "html" ⊃ "ml",
+/// "fastapi" ⊃ "api", "webpack" ⊃ "web", "cloudflare" ⊃ "cloud",
+/// "langchain"/"openai" ⊃ "ai" — which (for focused users) dropped a lone
+/// specific interest to 0.25 and structurally killed it when embeddings
+/// were unavailable.
+fn is_broad_interest_topic(
+    topic_lower: &str,
+    profile: Option<&super::calibration::SpecificityProfile>,
+) -> bool {
+    let matches_broad = BROAD_INTEREST_TERMS.iter().any(|b| {
+        if topic_lower == *b {
+            return true;
+        }
+        if b.contains(' ') {
+            // Multi-word broad entry: word-bounded phrase match
+            // ("machine learning ops" is broad; "openai" is not "ai").
+            has_word_boundary_match(topic_lower, b)
+        } else {
+            // Single-word broad entry: token equality only.
+            topic_lower.split_whitespace().any(|w| w == *b)
+        }
+    });
+    matches_broad && !profile.is_some_and(|p| p.exempts_broad(topic_lower))
+}
+
 /// A declared interest is "generic" when it is a known broad term (per the
 /// specificity classifier, profile-exempted) or a single common-English /
 /// ambiguous token ("ai", "api", "data"). Generic interests never earn the
@@ -181,11 +216,7 @@ fn is_generic_interest_term(
     interest_lower: &str,
     profile: Option<&super::calibration::SpecificityProfile>,
 ) -> bool {
-    let is_broad = BROAD_INTEREST_TERMS
-        .iter()
-        .any(|b| interest_lower == *b || interest_lower.contains(b))
-        && !profile.is_some_and(|p| p.exempts_broad(interest_lower));
-    if is_broad {
+    if is_broad_interest_topic(interest_lower, profile) {
         return true;
     }
     // A single-word interest that is a common English word / ambiguous
@@ -385,8 +416,27 @@ pub(crate) fn compute_keyword_interest_score(
                         // Known tech name (has an alias group) with no direct
                         // or alias hit: do NOT fall through to stemming —
                         // English morphology is a different word ("reaction"
-                        // is not React, "rusted" is not Rust).
-                        (0.0, None)
+                        // is not React, "rusted" is not Rust). Bare plurals
+                        // ARE the same noun though, and alias groups carry no
+                        // plural variants, so recover "LLMs"/"APIs"/
+                        // "containers" at direct-match strength (the old
+                        // substring path scored them 0.80/0.55). Derived
+                        // forms ("dockerized") stay unmatched by design.
+                        // Density/negation keep the singular term — identical
+                        // to the old substring behavior.
+                        let plural_s = format!("{term}s");
+                        let plural_es = format!("{term}es");
+                        if has_word_boundary_match(&title_lower, &plural_s)
+                            || has_word_boundary_match(&title_lower, &plural_es)
+                        {
+                            (0.80, Some(*term))
+                        } else if has_word_boundary_match(&text_lower, &plural_s)
+                            || has_word_boundary_match(&text_lower, &plural_es)
+                        {
+                            (0.55, Some(*term))
+                        } else {
+                            (0.0, None)
+                        }
                     } else {
                         // Stemmed match (no effective term for density/negation)
                         let term_stem = stemming::stem(term);

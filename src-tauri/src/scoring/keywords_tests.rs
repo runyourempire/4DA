@@ -574,6 +574,131 @@ fn test_focused_specific_interest_keeps_full_weight() {
 }
 
 #[test]
+fn test_broad_classification_token_equality_not_substring() {
+    // Specific tech that CONTAINS a broad term as a substring must classify
+    // as SPECIFIC — the old raw-`contains` check misread "tailwind" as "ai",
+    // "html" as "ml", "fastapi" as "api" and dropped a focused user's lone
+    // interest to 0.25, structurally killing it when embeddings are down.
+    for specific in [
+        "tailwind",
+        "langchain",
+        "fastapi",
+        "html",
+        "webpack",
+        "cloudflare",
+    ] {
+        assert!(
+            !is_generic_interest_term(specific, None),
+            "'{specific}' must classify as SPECIFIC, not generic"
+        );
+    }
+    // Genuinely generic terms still classify as generic.
+    for generic in ["ai", "api", "open source"] {
+        assert!(
+            is_generic_interest_term(generic, None),
+            "'{generic}' must classify as generic"
+        );
+    }
+    // Token equality inside a multi-word interest still counts as broad
+    // ("ai agents" is an ai interest), and multi-word broad entries match
+    // as word-bounded phrases.
+    assert!(is_generic_interest_term("ai agents", None));
+    assert!(is_generic_interest_term("machine learning ops", None));
+}
+
+#[test]
+fn test_focused_specific_interest_with_broad_substring_keeps_weight() {
+    // End-to-end: a focused user whose lone interest is "Tailwind" must keep
+    // full 1.0 weight on a genuine Tailwind title (old contains-based broad
+    // check dropped this to 0.25).
+    let w = best_interest_specificity_weight(
+        "Tailwind v4 rewrites its engine",
+        "",
+        &single_interest("tailwind"),
+    );
+    assert_eq!(w, 1.0, "focused 'tailwind' must keep full weight, got {w}");
+
+    let w_lc = best_interest_specificity_weight(
+        "Building agents with LangChain",
+        "",
+        &single_interest("langchain"),
+    );
+    assert_eq!(w_lc, 1.0, "focused 'langchain' must keep full weight");
+}
+
+#[test]
+fn test_specificity_weight_broad_substring_not_penalized_non_focused() {
+    // Non-focused path: "railway" (contains "ai") is a single specific word —
+    // 0.60, not the broad 0.25.
+    assert_eq!(interest_specificity_weight("railway"), 0.60);
+    assert_eq!(interest_specificity_weight("tailwind"), 0.60);
+    // Exact broad terms still get the broad weight.
+    assert_eq!(interest_specificity_weight("ai"), 0.25);
+}
+
+#[test]
+fn test_plural_fallback_for_alias_group_terms() {
+    // Alias-group terms skip English stemming but must still match bare
+    // plurals — alias groups carry no plural variants.
+    let llm = compute_keyword_interest_score(
+        "Why LLMs still fail at long-horizon planning",
+        "",
+        &single_interest("llm"),
+    );
+    assert!(llm > 0.0, "'llm' must match 'LLMs' via plural fallback");
+
+    let api = compute_keyword_interest_score(
+        "Designing APIs that survive versioning",
+        "",
+        &single_interest("api"),
+    );
+    assert!(api > 0.0, "'api' must match 'APIs' via plural fallback");
+
+    let container = compute_keyword_interest_score(
+        "Debugging containers in production",
+        "",
+        &single_interest("container"),
+    );
+    assert!(
+        container > 0.0,
+        "'container' must match 'containers' via plural fallback"
+    );
+
+    // Specificity path gets the same fallback. Use a non-focused (3-interest)
+    // fixture where a registered match (single-word "container" -> 0.60) is
+    // distinguishable from no-match (neutral 1.0).
+    let make = |topic: &str| context_engine::Interest {
+        id: Some(1),
+        topic: topic.to_string(),
+        weight: 1.0,
+        source: context_engine::InterestSource::Explicit,
+        embedding: None,
+    };
+    let interests = vec![make("container"), make("rust"), make("kubernetes")];
+    let w = best_interest_specificity_weight("Debugging containers in production", "", &interests);
+    assert_eq!(
+        w, 0.60,
+        "plural hit must register as a match in the specificity path (matched \
+         single-word weight), not fall through to the neutral 1.0"
+    );
+}
+
+#[test]
+fn test_plural_fallback_does_not_match_derived_forms() {
+    // "dockerized" is a derived form, not a plural — losing it is the
+    // accepted cost of skipping English stemming for tech names.
+    let score = compute_keyword_interest_score(
+        "How we dockerized our monolith",
+        "the team dockerized everything",
+        &single_interest("docker"),
+    );
+    assert_eq!(
+        score, 0.0,
+        "'docker' must not match 'dockerized' via the plural fallback"
+    );
+}
+
+#[test]
 fn test_count_word_occurrences_unicode_boundary() {
     // Bug E regression: UTF-8 continuation bytes must not count as word boundaries.
     assert_eq!(count_word_occurrences("go", "иgo"), 0);
