@@ -36,6 +36,15 @@ pub(crate) struct DepMatch {
     /// Ecosystem of the matched dependency (e.g. "rust", "javascript").
     /// Critical for rejecting cross-ecosystem CVE false positives.
     pub ecosystem: String,
+    /// Whether the item demonstrably names the package ITSELF — a full-name
+    /// token occurrence (with, for word-like single-token names, software
+    /// context or an adjacent version literal) — as opposed to a subterm
+    /// expansion ("anthropic" for `@anthropic-ai/sdk`, "router" for
+    /// `react-router-dom`) or an alias/topic overlap ("sqlite3" for
+    /// `better-sqlite3`). Text-match grounding requires this
+    /// (`is_strong_grounding_match`); the structured-advisory route checks
+    /// affected-package metadata independently at its call site.
+    pub corroborated: bool,
 }
 
 /// Version comparison between installed and mentioned
@@ -56,15 +65,30 @@ pub(crate) enum VersionDelta {
 /// single question "is this item grounded in the user's dependencies?".
 pub(crate) const STRONG_GROUNDING_CONFIDENCE: f32 = 0.40;
 
-/// True when `d` is a trustworthy grounding edge on its own: a non-dev match at
-/// or above the strong-confidence floor whose package name is not so word-like
-/// that a bare text hit can't be trusted. Mirrors the persistence-layer denylist
-/// (`is_ambiguous_package_name`) so the gate, the pool, and the persisted
-/// `source_item_dependencies` set never disagree about what counts as grounded.
-pub(crate) fn is_strong_grounding_match(d: &DepMatch) -> bool {
+/// Base grounding requirements shared by every route: a non-dev match at or
+/// above the strong-confidence floor whose package name is not so word-like
+/// that a bare text hit can't be trusted (the persistence-layer denylist,
+/// `is_ambiguous_package_name`). NOT sufficient on its own — the text route
+/// additionally requires name corroboration (`is_strong_grounding_match`);
+/// the structured-advisory route (`security_applicability` in `pipeline_v2`)
+/// substitutes affected-package metadata as the proof instead.
+pub(crate) fn is_grounding_candidate(d: &DepMatch) -> bool {
     !d.is_dev
         && d.confidence >= STRONG_GROUNDING_CONFIDENCE
         && !crate::package_ambiguity::is_ambiguous_package_name(&d.package_name)
+}
+
+/// True when `d` is a trustworthy grounding edge on its own: the base
+/// requirements PLUS name corroboration — the item must actually name the
+/// package, not merely contain one of its subterms or overlap a topic token.
+/// Mirrors the persistence layer's proof grades
+/// (`dep_linker::classify_item_dep_match`) so the gate, the pool, and the
+/// persisted `source_item_dependencies` set never disagree about what counts
+/// as grounded. The 2026-07-02 dogfood: 29 of 39 critical signals were
+/// phantom-grounded by matches persistence refused — every one via a subterm
+/// expansion or alias overlap whose full package name never appeared.
+pub(crate) fn is_strong_grounding_match(d: &DepMatch) -> bool {
+    is_grounding_candidate(d) && d.corroborated
 }
 
 /// The single canonical "is this item grounded in the user's stack?" predicate.
@@ -481,6 +505,159 @@ fn has_language_context_nearby(text: &str, position: usize, window: usize) -> bo
     LANGUAGE_CONTEXT_WORDS.iter().any(|w| context.contains(w))
 }
 
+/// Security/advisory markers that corroborate a package-name mention as being
+/// about the SOFTWARE — advisory-id prefixes, vulnerability vocabulary,
+/// supply-chain vocabulary. Only consulted NEAR a full-name occurrence, so a
+/// CVE roundup can't corroborate a dep whose name never appears
+/// (stems like "vulnerabilit"/"compromis" cover the word families).
+const SECURITY_CONTEXT_MARKERS: &[&str] = &[
+    "cve-",
+    "rustsec-",
+    "ghsa-",
+    "osv-",
+    "vulnerabilit",
+    "advisor",
+    "security",
+    "exploit",
+    "malware",
+    "malicious",
+    "supply chain",
+    "supply-chain",
+    "compromis",
+    "backdoor",
+    "0-day",
+    "zero-day",
+    "patch",
+];
+
+/// Check if security-advisory markers appear near a position in text.
+fn has_security_context_nearby(text: &str, position: usize, window: usize) -> bool {
+    let start = snap_to_char_boundary(text, position.saturating_sub(window), false);
+    let end = snap_to_char_boundary(text, (position + window).min(text.len()), true);
+    let context = &text[start..end];
+    SECURITY_CONTEXT_MARKERS.iter().any(|m| context.contains(m))
+}
+
+/// A package-name boundary: characters that may legitimately appear INSIDE a
+/// written package name (`-`, `_`, `.`, `@`) do not terminate it. Mirrors
+/// `dep_linker::is_package_boundary` so "react" never counts as an occurrence
+/// inside "react-router-dom".
+fn is_package_boundary_char(c: char) -> bool {
+    !c.is_alphanumeric() && c != '-' && c != '_' && c != '.' && c != '@'
+}
+
+/// Byte positions where the FULL package name occurs as a whole package token,
+/// in any accepted written form: the normalized name (`anthropic-ai-sdk`), its
+/// underscore variant (`anthropic_ai_sdk`), or the original scoped form
+/// (`@anthropic-ai/sdk`). A trailing sentence period ("axios.") and the
+/// `.js`/`.ts`/`.rs` suffixes are accepted; "axios.get" is not an occurrence
+/// boundary violation we care to reject (the call site is still the package).
+fn package_name_positions(text: &str, package_name: &str, normalized_name: &str) -> Vec<usize> {
+    let mut forms: Vec<String> = vec![normalized_name.to_string()];
+    let underscored = normalized_name.replace('-', "_");
+    if underscored != normalized_name {
+        forms.push(underscored);
+    }
+    let original = package_name.to_lowercase();
+    if !forms.contains(&original) {
+        forms.push(original);
+    }
+
+    let mut positions = Vec::new();
+    for form in &forms {
+        if form.is_empty() {
+            continue;
+        }
+        let mut search_from = 0;
+        while let Some(rel) = text[search_from..].find(form.as_str()) {
+            let pos = search_from + rel;
+            let before_ok = text[..pos]
+                .chars()
+                .next_back()
+                .is_none_or(is_package_boundary_char);
+            let after = pos + form.len();
+            let after_ok = match text[after..].chars().next() {
+                None => true,
+                Some(c) if is_package_boundary_char(c) => true,
+                Some('.') => {
+                    let rest = &text[after..];
+                    rest.starts_with(".js")
+                        || rest.starts_with(".ts")
+                        || rest.starts_with(".rs")
+                        // Sentence period: "…update axios. The fix…"
+                        || rest[1..].chars().next().is_none_or(|c2| !c2.is_alphanumeric())
+                }
+                Some(_) => false,
+            };
+            if before_ok && after_ok {
+                positions.push(pos);
+            }
+            search_from = pos + 1;
+        }
+    }
+    positions.sort_unstable();
+    positions.dedup();
+    positions
+}
+
+/// Window (bytes) around a full-name occurrence in CONTENT within which
+/// software-context words must appear to corroborate a single-token name.
+const NAME_CONTEXT_WINDOW: usize = 120;
+
+/// Does the item demonstrably talk about the package ITSELF — not merely
+/// contain one of its subterms or overlap one of its topic tokens?
+///
+/// Scoring-time mirror of the persistence layer's proof grades
+/// (`dep_linker::classify_item_dep_match`):
+/// - Word-like names (`is_ambiguous_dep_name`: COMMON_ENGLISH_WORDS or <= 3
+///   chars — "path", "open", "got") can NEVER be proven by text alone. This
+///   mirrors `dep_linker::is_specific_title_match_candidate` exactly: such
+///   names only persist via the exact-registry or structured-advisory routes,
+///   and the gate's structured route (`security_applicability` metadata
+///   proof) covers them independently. Live phantom killed by this arm: the
+///   `path` npm dep grounding an arxiv cloud-security paper.
+/// - Otherwise the FULL package name must occur as a whole package token.
+///   Subterm expansions ("anthropic" → `@anthropic-ai/sdk` on Anthropic
+///   company news, "router" → `react-router-dom` on a Zyxel router headline,
+///   "updater" → `tauri-plugin-updater` on an AMD auto-updater story) and
+///   alias/topic overlaps ("sqlite3" → `better-sqlite3` on a sqlite-utils
+///   release) never qualify — those were the 2026-07-02 phantom classes.
+/// - Multi-token names are self-evident: a literal "windows-sys" or
+///   "better-sqlite3" occurrence cannot be prose coincidence.
+/// - Single-token names (axios, react, tokio) double as ordinary words
+///   ("companies react to market changes"), so they corroborate only with
+///   software context near an occurrence (language/registry words, a
+///   security-advisory marker) or a version literal adjacent to the name
+///   ("axios 1.12.2", "crates.io: axum v0.8.9").
+fn is_name_corroborated(
+    title_lower: &str,
+    text_lower: &str,
+    package_name: &str,
+    normalized_name: &str,
+) -> bool {
+    if is_ambiguous_dep_name(normalized_name) {
+        return false;
+    }
+    let positions = package_name_positions(text_lower, package_name, normalized_name);
+    if positions.is_empty() {
+        return false;
+    }
+    if normalized_name.contains(['-', '_']) {
+        return true;
+    }
+    let title_len = title_lower.len();
+    positions.iter().any(|&pos| {
+        // A title hit may draw context from the whole title.
+        let window = if pos < title_len {
+            title_len.max(NAME_CONTEXT_WINDOW)
+        } else {
+            NAME_CONTEXT_WINDOW
+        };
+        has_language_context_nearby(text_lower, pos, window)
+            || has_security_context_nearby(text_lower, pos, window)
+    }) || find_mentioned_version(text_lower, normalized_name).is_some()
+}
+
 /// Snap a byte index to the nearest valid char boundary.
 /// If `forward` is true, snaps forward (for end indices); otherwise snaps backward (for start indices).
 fn snap_to_char_boundary(s: &str, index: usize, forward: bool) -> usize {
@@ -571,27 +748,15 @@ fn compare_triplets(installed: (u32, u32, u32), mentioned: (u32, u32, u32)) -> V
     }
 }
 
-/// Extract a mentioned version from content near a package name and compare with installed
-fn compare_version_in_content(
-    text: &str,
-    pkg_name: &str,
-    installed_version: &Option<String>,
-) -> VersionDelta {
-    let installed_triplet = match installed_version {
-        Some(v) => match version_triplet(v) {
-            Some(p) => p,
-            None => return VersionDelta::Unknown,
-        },
-        None => return VersionDelta::Unknown,
-    };
-
-    // Find package mentions and look for version numbers nearby
-    let text_lower = text.to_lowercase();
-    let pkg_lower = pkg_name.to_lowercase();
-    for (idx, _) in text_lower.match_indices(&pkg_lower) {
+/// Find the first plausible version literal mentioned adjacent to a package
+/// name (both arguments already lowercased). Returns the `(major, minor,
+/// patch)` triplet of e.g. "React 19", "tokio 2.0", "gtk 0.18", "axios v1.12".
+/// Also serves as version-adjacency proof for grounding corroboration.
+fn find_mentioned_version(text_lower: &str, pkg_lower: &str) -> Option<(u32, u32, u32)> {
+    for (idx, _) in text_lower.match_indices(pkg_lower) {
         let start = idx;
         let end = (idx + pkg_lower.len() + 40).min(text_lower.len());
-        let end = snap_to_char_boundary(&text_lower, end, true);
+        let end = snap_to_char_boundary(text_lower, end, true);
         let nearby = &text_lower[start..end];
 
         // Match patterns: "React 19", "tokio 2.0", "gtk 0.18", "v3", "version 5.1".
@@ -616,7 +781,7 @@ fn compare_version_in_content(
                         // (parses to (0,0,0)), but a real "0.0.5" -> (0,0,5) is kept
                         // so 0.0.x version intelligence is no longer disabled (bug B).
                         if mentioned_triplet.0 < 100 && mentioned_triplet != (0, 0, 0) {
-                            return compare_triplets(installed_triplet, mentioned_triplet);
+                            return Some(mentioned_triplet);
                         }
                     }
                 }
@@ -625,7 +790,29 @@ fn compare_version_in_content(
         }
     }
 
-    VersionDelta::Unknown
+    None
+}
+
+/// Extract a mentioned version from content near a package name and compare with installed
+fn compare_version_in_content(
+    text: &str,
+    pkg_name: &str,
+    installed_version: &Option<String>,
+) -> VersionDelta {
+    let installed_triplet = match installed_version {
+        Some(v) => match version_triplet(v) {
+            Some(p) => p,
+            None => return VersionDelta::Unknown,
+        },
+        None => return VersionDelta::Unknown,
+    };
+
+    let text_lower = text.to_lowercase();
+    let pkg_lower = pkg_name.to_lowercase();
+    match find_mentioned_version(&text_lower, &pkg_lower) {
+        Some(mentioned_triplet) => compare_triplets(installed_triplet, mentioned_triplet),
+        None => VersionDelta::Unknown,
+    }
 }
 
 /// Load all tracked dependencies from database into fast-lookup structures
@@ -705,7 +892,8 @@ pub(crate) fn match_dependencies(
     }
 
     let title_lower = title.to_lowercase();
-    let text_lower = format!("{} {}", title_lower, content.to_lowercase());
+    let content_lower = content.to_lowercase();
+    let text_lower = format!("{title_lower} {content_lower}");
     let mut matched = Vec::new();
 
     for info in ace_ctx.dependency_info.values() {
@@ -801,6 +989,17 @@ pub(crate) fn match_dependencies(
             VersionDelta::Unknown => {}
         }
 
+        // Name corroboration — computed only for deps that actually matched.
+        // This is the grounding proof, NOT a confidence input: the score
+        // machinery is unchanged; only the canonical grounding predicate
+        // (`is_strong_grounding_match`) consumes it.
+        let corroborated = is_name_corroborated(
+            &title_lower,
+            &text_lower,
+            &info.package_name,
+            &normalized_name,
+        );
+
         matched.push(DepMatch {
             package_name: normalized_name,
             confidence: confidence.min(1.0),
@@ -809,6 +1008,7 @@ pub(crate) fn match_dependencies(
             is_direct: info.is_direct,
             version: info.version.clone(),
             ecosystem: info.ecosystem.clone(),
+            corroborated,
         });
     }
 
@@ -1217,6 +1417,8 @@ mod tests {
     // ── Canonical grounding predicate ─────────────────────────────────────
 
     /// Build a DepMatch for predicate tests without going through matching.
+    /// Corroborated by default — flip `.corroborated` to exercise the
+    /// text-proof term of the predicate.
     fn grounding_match(name: &str, confidence: f32, is_dev: bool, is_direct: bool) -> DepMatch {
         DepMatch {
             package_name: name.to_string(),
@@ -1226,7 +1428,395 @@ mod tests {
             is_direct,
             version: None,
             ecosystem: "rust".to_string(),
+            corroborated: true,
         }
+    }
+
+    /// Build a direct non-dev DepInfo for matcher fixtures, with search terms
+    /// derived exactly as production does (`extract_search_terms`).
+    fn direct_dep_info(name: &str, version: Option<&str>, ecosystem: &str) -> DepInfo {
+        DepInfo {
+            package_name: name.to_string(),
+            version: version.map(str::to_string),
+            is_dev: false,
+            is_direct: true,
+            search_terms: extract_search_terms(name),
+            ecosystem: ecosystem.to_string(),
+        }
+    }
+
+    #[test]
+    fn uncorroborated_match_never_grounds() {
+        // Even a confident, direct, distinctively-named match cannot ground
+        // without name corroboration — the item never named the package.
+        let mut m = grounding_match("axios", 0.9, false, true);
+        m.corroborated = false;
+        assert!(!is_strong_grounding_match(&m));
+        assert!(!is_strongly_grounded(std::slice::from_ref(&m)));
+        assert!(!is_strongly_grounded_direct(&[m.clone()]));
+        // But it remains a grounding CANDIDATE — the structured-advisory
+        // route may still prove it via affected-package metadata.
+        assert!(is_grounding_candidate(&m));
+    }
+
+    // ── Phantom-critical regression fixtures (live DB, 2026-07-02) ────────
+    //
+    // Each case below is a REAL critical signal measured on the founder's DB
+    // after the v9 drain, phantom-grounded by a match the persistence layer
+    // (dep_linker proof grades) refused. The fixtures assert BOTH halves:
+    // the matcher still mints a confident (>= 0.40) match — proving the
+    // fixture reproduces the phantom mechanism — and the canonical predicate
+    // now refuses to ground it.
+
+    #[test]
+    fn anthropic_company_news_does_not_ground_the_sdk_dep() {
+        // Company-name/package-name homonym: the "anthropic" scope token of
+        // @anthropic-ai/sdk matched Anthropic company news.
+        let mut ace_ctx = ACEContext::default();
+        ace_ctx.dependency_info.insert(
+            "anthropic-ai-sdk".to_string(),
+            direct_dep_info("@anthropic-ai/sdk", Some("0.30.0"), "javascript"),
+        );
+
+        for title in [
+            "Anthropic released Claude Fable 5 yesterday. Public version of Mythos with cyber classifiers",
+            "Anthropic's coordinated vulnerability disclosure dashboard",
+            "Show HN: GitHub Copilot port of Anthropic's AI vulnerability discovery harness",
+        ] {
+            let (matches, _) = match_dependencies(
+                title,
+                "Anthropic announced the release. The company says the model improves coding.",
+                &["anthropic".to_string()],
+                &ace_ctx,
+            );
+            let m = matches
+                .iter()
+                .find(|m| m.package_name == "anthropic-ai-sdk")
+                .unwrap_or_else(|| panic!("fixture must reproduce the phantom match: {title}"));
+            assert!(
+                m.confidence >= STRONG_GROUNDING_CONFIDENCE,
+                "phantom mechanism requires a confident match, got {} for {title}",
+                m.confidence
+            );
+            assert!(
+                !is_strongly_grounded(&matches),
+                "company news must NOT ground @anthropic-ai/sdk: {title}"
+            );
+        }
+    }
+
+    #[test]
+    fn real_anthropic_sdk_advisory_still_grounds() {
+        let mut ace_ctx = ACEContext::default();
+        ace_ctx.dependency_info.insert(
+            "anthropic-ai-sdk".to_string(),
+            direct_dep_info("@anthropic-ai/sdk", Some("0.30.0"), "javascript"),
+        );
+        let (matches, _) = match_dependencies(
+            "GHSA-xxxx: @anthropic-ai/sdk vulnerable to token exposure via debug logging",
+            "Affected: @anthropic-ai/sdk (npm). Upgrade to 0.32.4.",
+            &["anthropic-ai-sdk".to_string()],
+            &ace_ctx,
+        );
+        assert!(
+            is_strongly_grounded(&matches),
+            "a real advisory naming the scoped package must still ground, got {matches:?}"
+        );
+    }
+
+    #[test]
+    fn sqlite_utils_release_does_not_ground_other_sqlite_deps() {
+        // Cross-package subterm/alias: a sqlite-utils (different package!)
+        // release grounded better-sqlite3 via the "sqlite3" subterm + the
+        // sqlite<->sqlite3 topic alias. Live phantom title, 2026-07-02.
+        let mut ace_ctx = ACEContext::default();
+        ace_ctx.dependency_info.insert(
+            "better-sqlite3".to_string(),
+            direct_dep_info("better-sqlite3", Some("12.0.0"), "javascript"),
+        );
+        ace_ctx.dependency_info.insert(
+            "rusqlite".to_string(),
+            direct_dep_info("rusqlite", Some("0.31.0"), "rust"),
+        );
+        ace_ctx.dependency_info.insert(
+            "sqlite-vec".to_string(),
+            direct_dep_info("sqlite-vec", Some("0.1.6"), "rust"),
+        );
+
+        let (matches, _) = match_dependencies(
+            "sqlite-utils 4.0rc1 adds migrations and nested transactions",
+            "sqlite-utils is a Python CLI tool and library built on the sqlite3 module \
+             for manipulating SQLite databases.",
+            &["sqlite-utils".to_string(), "sqlite".to_string()],
+            &ace_ctx,
+        );
+
+        let phantom = matches
+            .iter()
+            .find(|m| m.package_name == "better-sqlite3")
+            .expect("fixture must reproduce the better-sqlite3 phantom match");
+        assert!(
+            phantom.confidence >= STRONG_GROUNDING_CONFIDENCE,
+            "phantom mechanism requires a confident match, got {}",
+            phantom.confidence
+        );
+        assert!(
+            !is_strongly_grounded(&matches),
+            "a sqlite-utils release must not ground sqlite-vec/rusqlite/better-sqlite3, got {matches:?}"
+        );
+    }
+
+    #[test]
+    fn real_sqlite_dep_advisories_still_ground() {
+        let mut ace_ctx = ACEContext::default();
+        ace_ctx.dependency_info.insert(
+            "better-sqlite3".to_string(),
+            direct_dep_info("better-sqlite3", Some("12.0.0"), "javascript"),
+        );
+        ace_ctx.dependency_info.insert(
+            "rusqlite".to_string(),
+            direct_dep_info("rusqlite", Some("0.31.0"), "rust"),
+        );
+
+        // Multi-token full name in the title — self-evident.
+        let (m1, _) = match_dependencies(
+            "CVE-2026-99999: better-sqlite3 prepared statement use-after-free",
+            "Affected: better-sqlite3 (npm). Upgrade to 12.6.1.",
+            &["better-sqlite3".to_string()],
+            &ace_ctx,
+        );
+        assert!(
+            is_strongly_grounded(&m1),
+            "a real better-sqlite3 advisory must ground, got {m1:?}"
+        );
+
+        // Single-token full name + RUSTSEC advisory marker.
+        let (m2, _) = match_dependencies(
+            "RUSTSEC-2026-0042: rusqlite improper lifetime on prepared statements",
+            "The rusqlite crate has an unsound API. cargo update recommended.",
+            &["rusqlite".to_string()],
+            &ace_ctx,
+        );
+        assert!(
+            is_strongly_grounded(&m2),
+            "a real rusqlite advisory must ground, got {m2:?}"
+        );
+    }
+
+    #[test]
+    fn subterm_expansion_hits_do_not_ground() {
+        // The dominant live phantom class: a bare subterm of a compound dep
+        // name word-boundary-matches an unrelated headline. Each (dep, title)
+        // pair below is a REAL phantom critical from the 2026-07-02 dogfood.
+        let cases: &[(&str, &str, &str)] = &[
+            (
+                "tauri-plugin-deep-link",
+                "rust",
+                // "deep" -> Deep Reinforcement Learning
+                "Angel or Demon: Investigating the Plasticity Interventions' Impact on \
+                 Backdoor Threats in Deep Reinforcement Learning",
+            ),
+            (
+                "@alpacahq/alpaca-trade-api",
+                "javascript",
+                // "trade" -> Trade War
+                "[Opinion] Tooth and Claw: Why Europe Must Urgently Brace for a Two-Front Trade War",
+            ),
+            (
+                "react-router-dom",
+                "javascript",
+                // "router" -> router image (Zyxel firmware)
+                "Zyxel super-admin credential leak expanded from one router image to \
+                 CPE/ONT/LTE/5G devices + password gen algo",
+            ),
+            (
+                "@tauri-apps/plugin-updater",
+                "javascript",
+                // "updater" -> AMD auto-updater; note "vulnerability" appears in
+                // the title — security markers must NOT resurrect subterm hits.
+                "AMD denies researcher a $10,000 bug bounty after fixing critical \
+                 auto-updater vulnerability",
+            ),
+            (
+                "express-rate-limit",
+                "javascript",
+                // "rate" -> Ultra-Low Poison Rate
+                "TooBad: Backdoor Diffusion Models with Ultra-Low Poison Rate and \
+                 Imperceptible Trigger",
+            ),
+        ];
+
+        for (dep_name, ecosystem, title) in cases {
+            let mut ace_ctx = ACEContext::default();
+            ace_ctx.dependency_info.insert(
+                normalize_package_name(dep_name),
+                direct_dep_info(dep_name, Some("1.0.0"), ecosystem),
+            );
+            let (matches, _) = match_dependencies(title, "", &[], &ace_ctx);
+            let m = matches
+                .iter()
+                .find(|m| m.package_name == normalize_package_name(dep_name))
+                .unwrap_or_else(|| {
+                    panic!("fixture must reproduce the subterm phantom for {dep_name}: {title}")
+                });
+            assert!(
+                m.confidence >= STRONG_GROUNDING_CONFIDENCE,
+                "phantom mechanism requires a confident match, got {} for {dep_name}",
+                m.confidence
+            );
+            assert!(
+                !is_strongly_grounded(&matches),
+                "subterm expansion must NOT ground {dep_name} on: {title}"
+            );
+        }
+    }
+
+    #[test]
+    fn real_stack_advisories_still_ground() {
+        // The legitimate survivors of the 2026-07-02 dogfood — real advisories
+        // naming the package itself, with CVE ids / versions / security
+        // vocabulary. These MUST keep grounding (precision fix, not recall cut).
+        let cases: &[(&str, &str, Option<&str>, &str, &str)] = &[
+            (
+                "axios",
+                "javascript",
+                Some("1.6.0"),
+                "[CVE-2026-44490] axios has DoS & Header Injection via Prototype \
+                 Pollution Read-Side Gadgets in axios merge functions",
+                "Affected: axios (npm). Versions before 1.12.2 are vulnerable. \
+                 Upgrade axios to 1.12.2.",
+            ),
+            (
+                "react",
+                "javascript",
+                Some("19.0.0"),
+                "Critical Security Vulnerability in React Server Components – React",
+                "A remote code execution vulnerability was found in React Server \
+                 Components. All React 19 users should patch immediately.",
+            ),
+            (
+                "vscode",
+                "javascript",
+                None,
+                "GitHub supply chain attack hits developer tools (NX Console, VSCode, TeamPCP)",
+                "Malicious extensions compromised the vscode marketplace build pipeline.",
+            ),
+            (
+                "rack",
+                "ruby",
+                Some("3.1.0"),
+                "CVE-2026-12345: rack has a denial of service vulnerability",
+                "The rack gem before 3.1.16 allows attackers to exhaust memory.",
+            ),
+        ];
+
+        for (dep_name, ecosystem, version, title, content) in cases {
+            let mut ace_ctx = ACEContext::default();
+            ace_ctx.dependency_info.insert(
+                normalize_package_name(dep_name),
+                direct_dep_info(dep_name, *version, ecosystem),
+            );
+            let (matches, _) = match_dependencies(
+                title,
+                content,
+                &[(*dep_name).to_string(), "security".to_string()],
+                &ace_ctx,
+            );
+            assert!(
+                is_strongly_grounded(&matches),
+                "a real {dep_name} advisory must still ground: {title}, got {matches:?}"
+            );
+            assert!(
+                is_strongly_grounded_direct(&matches),
+                "a real direct-dep {dep_name} advisory must ground at Critical trust level"
+            );
+        }
+    }
+
+    #[test]
+    fn prose_homonym_full_name_does_not_ground_without_software_context() {
+        // Single-token package names double as ordinary words. Mere presence
+        // ("companies react to market changes") is not proof the item is about
+        // the package.
+        let mut ace_ctx = ACEContext::default();
+        ace_ctx.dependency_info.insert(
+            "react".to_string(),
+            direct_dep_info("react", Some("19.0.0"), "javascript"),
+        );
+        let (matches, _) = match_dependencies(
+            "How companies react to market changes in 2026",
+            "Businesses must react quickly to shifting consumer trends.",
+            &[],
+            &ace_ctx,
+        );
+        assert!(
+            !is_strongly_grounded(&matches),
+            "prose 'react' without software context must not ground, got {matches:?}"
+        );
+    }
+
+    #[test]
+    fn word_like_names_are_never_text_grounded() {
+        // "path" is a real npm package AND an everyday word. dep_linker's
+        // title heuristic refuses such names outright
+        // (`is_specific_title_match_candidate`) — only the exact-registry and
+        // structured-advisory routes may prove them. The gate mirrors that:
+        // no amount of text/context grounds "path" (live phantom: an arxiv
+        // cloud-security paper grounded the `path` dep via title prose).
+        let mut ace_ctx = ACEContext::default();
+        ace_ctx.dependency_info.insert(
+            "path".to_string(),
+            direct_dep_info("path", Some("0.12.7"), "javascript"),
+        );
+
+        let (prose, _) = match_dependencies(
+            "Demand-Driven Vulnerability Detection: Removing Human Rule Authoring from the Path",
+            "The scanner walks every path in the module dependency graph to find \
+             misconfigurations in the install pipeline.",
+            &["path".to_string()],
+            &ace_ctx,
+        );
+        assert!(
+            !is_strongly_grounded(&prose),
+            "prose 'path' must not ground, got {prose:?}"
+        );
+
+        // Even an advisory-shaped TITLE cannot text-ground a word-like name —
+        // that is the structured-advisory route's job (security_applicability
+        // proves it from the Affected-packages metadata, independent of this
+        // flag; see pipeline_v2 tests).
+        let (advisory, _) = match_dependencies(
+            "npm package path 0.12 security advisory",
+            "The path package on npm has a prototype pollution vulnerability.",
+            &["path".to_string()],
+            &ace_ctx,
+        );
+        assert!(
+            !is_strongly_grounded(&advisory),
+            "word-like 'path' must never text-ground; structured metadata is the only proof, got {advisory:?}"
+        );
+        // The match itself still exists as a grounding CANDIDATE, so the
+        // metadata route can elevate it.
+        assert!(
+            advisory.iter().any(is_grounding_candidate),
+            "the path match must remain a candidate for the metadata route, got {advisory:?}"
+        );
+    }
+
+    #[test]
+    fn version_adjacency_corroborates_single_token_names() {
+        // A registry release line is proof the item is about the package even
+        // without security vocabulary: full name + adjacent version literal.
+        let mut ace_ctx = ACEContext::default();
+        ace_ctx.dependency_info.insert(
+            "axum".to_string(),
+            direct_dep_info("axum", Some("0.8.0"), "rust"),
+        );
+        let (matches, _) = match_dependencies("crates.io: axum v0.8.9", "", &[], &ace_ctx);
+        assert!(
+            is_strongly_grounded(&matches),
+            "a registry release naming axum with a version must ground, got {matches:?}"
+        );
     }
 
     #[test]
