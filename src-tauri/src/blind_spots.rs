@@ -1687,16 +1687,7 @@ fn find_missed_signals(
     // deps are available (cold start), pass everything through rather than
     // showing an empty tab.
     if !direct_deps.is_empty() {
-        // Keep signals that either have a dep match OR score >= 0.75 relevance.
-        // High-relevance signals without an exact dep name match are still
-        // valuable — they matched on stack/ecosystem context.
-        signals.retain(|s| !s.why_relevant.is_empty() || s.relevance_score >= 0.75);
-        // Give high-relevance unmatched signals a generic explanation
-        for signal in &mut signals {
-            if signal.why_relevant.is_empty() {
-                signal.why_relevant = "Highly relevant to your technology stack".to_string();
-            }
-        }
+        retain_and_label_unmatched_signals(&mut signals);
     }
 
     // Deduplicate missed signals by normalized title similarity.
@@ -1720,6 +1711,25 @@ fn find_missed_signals(
     let signals = cap_per_dep(signals, 3);
 
     Ok(signals)
+}
+
+/// Honest label for signals kept on relevance score alone. The system found NO
+/// dependency link for these items, so it must not claim stack relevance it
+/// cannot substantiate (doctrine: never show intelligence the system can't
+/// stand behind — the previous label "Highly relevant to your technology
+/// stack" asserted a connection that was never verified).
+const UNMATCHED_HIGH_SCORE_REASON: &str = "High relevance score — no dependency link found";
+
+/// When dependency context exists, keep only signals with a concrete dep match
+/// OR a high (>= 0.75) relevance score, and label the score-only survivors with
+/// the honest, derived truth instead of a fabricated stack claim.
+fn retain_and_label_unmatched_signals(signals: &mut Vec<MissedSignal>) {
+    signals.retain(|s| !s.why_relevant.is_empty() || s.relevance_score >= 0.75);
+    for signal in signals.iter_mut() {
+        if signal.why_relevant.is_empty() {
+            signal.why_relevant = UNMATCHED_HIGH_SCORE_REASON.to_string();
+        }
+    }
 }
 
 /// Returns true if a title's keywords indicate the item belongs in Preemption,
@@ -1805,9 +1815,16 @@ fn signal_priority_tier(signal: &MissedSignal) -> u8 {
         .unwrap_or_else(|| title_priority_tier_fallback(&signal.title))
 }
 
-/// Re-rank missed signals so high-urgency content surfaces above opinion/blog
-/// content, even when relevance scores are similar. Also caps older non-urgent
-/// content so the panel stays focused on recent-enough material.
+/// Re-rank missed signals: dependency grounding first, urgency second.
+///
+/// Grounding (a `dep_name` link to one of the user's actual direct deps) is the
+/// PRIMARY key — it is evidence the system can stand behind, whereas the
+/// urgency tier can come from mere title-keyword pattern matching. Before this
+/// ordering, an ungrounded keyword-"urgent" tier-3/4 item could leapfrog a
+/// dep-matched tier-1 item. Urgency still decides WITHIN equal grounding
+/// (grounded security advisories outrank grounded blog posts), and relevance
+/// breaks remaining ties. Also caps older non-urgent content so the panel
+/// stays focused on recent-enough material.
 fn rank_by_missed_priority(mut signals: Vec<MissedSignal>) -> Vec<MissedSignal> {
     let final_limit = scoring_config::MISSED_SIGNAL_FINAL_LIMIT as usize;
     let old_blog_cap = scoring_config::MISSED_SIGNAL_OLD_BLOG_CAP as usize;
@@ -1825,15 +1842,18 @@ fn rank_by_missed_priority(mut signals: Vec<MissedSignal>) -> Vec<MissedSignal> 
             .unwrap_or(0)
     }
 
-    // Sort by (priority_tier DESC, relevance DESC).
+    // Sort by (dep-grounded DESC, priority_tier DESC, relevance DESC).
     signals.sort_by(|a, b| {
-        let tier_a = signal_priority_tier(a);
-        let tier_b = signal_priority_tier(b);
-        tier_b.cmp(&tier_a).then_with(|| {
-            b.relevance_score
-                .partial_cmp(&a.relevance_score)
-                .unwrap_or(std::cmp::Ordering::Equal)
-        })
+        let grounded_a = a.dep_name.is_some();
+        let grounded_b = b.dep_name.is_some();
+        grounded_b
+            .cmp(&grounded_a)
+            .then_with(|| signal_priority_tier(b).cmp(&signal_priority_tier(a)))
+            .then_with(|| {
+                b.relevance_score
+                    .partial_cmp(&a.relevance_score)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            })
     });
 
     // Cap Tier 1 (generic blog) items older than old_days_threshold to old_blog_cap.
@@ -3696,6 +3716,113 @@ mod tests {
         assert_eq!(
             format_dep_display_name("monolog/monolog", "php"),
             "monolog/monolog (Packagist)"
+        );
+    }
+
+    // ─── Missed-signal grounding: honest labels + grounded-first rank ───
+
+    fn missed_signal(
+        id: i64,
+        dep_name: Option<&str>,
+        content_type: Option<&str>,
+        title: &str,
+        score: f32,
+    ) -> MissedSignal {
+        MissedSignal {
+            item_id: id,
+            title: title.to_string(),
+            url: None,
+            source_type: "hackernews".to_string(),
+            relevance_score: score,
+            created_at: chrono::Utc::now().to_rfc3339(),
+            why_relevant: dep_name
+                .map(|d| format!("Mentions {d} from your stack"))
+                .unwrap_or_default(),
+            dep_name: dep_name.map(str::to_string),
+            was_shown: false,
+            content_type: content_type.map(str::to_string),
+        }
+    }
+
+    #[test]
+    fn unmatched_signals_get_honest_label_not_fabricated_stack_claim() {
+        let mut signals = vec![
+            // Dep-matched: kept with its concrete reason regardless of score.
+            missed_signal(1, Some("tokio"), None, "tokio 2.0 released", 0.55),
+            // Unmatched but high score: kept, labeled with the honest truth.
+            missed_signal(2, None, None, "some very relevant post", 0.80),
+            // Unmatched and below the 0.75 bar: dropped.
+            missed_signal(3, None, None, "some mediocre post", 0.60),
+        ];
+        retain_and_label_unmatched_signals(&mut signals);
+
+        assert_eq!(signals.len(), 2);
+        assert_eq!(signals[0].why_relevant, "Mentions tokio from your stack");
+        assert_eq!(signals[1].why_relevant, UNMATCHED_HIGH_SCORE_REASON);
+        // The system has NO dependency link for item 2 — it must never claim one.
+        assert!(
+            !signals[1].why_relevant.contains("your technology stack"),
+            "unverified stack-relevance claim must not be fabricated"
+        );
+    }
+
+    #[test]
+    fn grounded_signal_outranks_ungrounded_keyword_urgent_signal() {
+        // Intended product behavior: a dep-GROUNDED tier-1 item ranks ahead of an
+        // ungrounded item whose tier-4 urgency comes only from title keywords —
+        // even when the ungrounded item has the higher relevance score. Grounding,
+        // not keyword urgency or raw score, is the axis that separates signal
+        // from noise.
+        let grounded_blog = missed_signal(
+            1,
+            Some("tokio"),
+            Some("discussion"), // tier 1
+            "Deep dive into tokio scheduling",
+            0.60,
+        );
+        let ungrounded_keyword_urgent = missed_signal(
+            2,
+            None,
+            None, // legacy row: tier 4 via title-keyword fallback
+            "CVE-2026-9999 vulnerability discovered in some framework",
+            0.95,
+        );
+        let ranked = rank_by_missed_priority(vec![ungrounded_keyword_urgent, grounded_blog]);
+        assert_eq!(ranked[0].item_id, 1, "grounded item must rank first");
+        assert_eq!(ranked[1].item_id, 2);
+    }
+
+    #[test]
+    fn urgency_then_relevance_order_within_equal_grounding() {
+        // Within the grounded partition, urgency tier still surfaces security
+        // above blog content; relevance breaks ties within the same tier.
+        let grounded_release = missed_signal(
+            1,
+            Some("serde"),
+            Some("release_notes"), // tier 2
+            "serde 2.0 released",
+            0.60,
+        );
+        let grounded_blog_hi = missed_signal(
+            2,
+            Some("tokio"),
+            Some("discussion"), // tier 1
+            "tokio patterns",
+            0.90,
+        );
+        let grounded_blog_lo = missed_signal(
+            3,
+            Some("axum"),
+            Some("discussion"), // tier 1
+            "axum patterns",
+            0.70,
+        );
+        let ranked =
+            rank_by_missed_priority(vec![grounded_blog_lo, grounded_blog_hi, grounded_release]);
+        assert_eq!(
+            ranked.iter().map(|s| s.item_id).collect::<Vec<_>>(),
+            vec![1, 2, 3],
+            "tier decides within equal grounding, relevance within equal tier"
         );
     }
 
