@@ -81,12 +81,16 @@ pub(crate) fn is_grounding_candidate(d: &DepMatch) -> bool {
 /// True when `d` is a trustworthy grounding edge on its own: the base
 /// requirements PLUS name corroboration — the item must actually name the
 /// package, not merely contain one of its subterms or overlap a topic token.
-/// Mirrors the persistence layer's proof grades
-/// (`dep_linker::classify_item_dep_match`) so the gate, the pool, and the
-/// persisted `source_item_dependencies` set never disagree about what counts
-/// as grounded. The 2026-07-02 dogfood: 29 of 39 critical signals were
-/// phantom-grounded by matches persistence refused — every one via a subterm
-/// expansion or alias overlap whose full package name never appeared.
+/// Follows the persistence layer's proof philosophy
+/// (`dep_linker::classify_item_dep_match`), and is deliberately the STRICTER
+/// of the two: dep_linker's Tier-3 title heuristic persists a bare whole-token
+/// title hit for a distinctive single-token name with no context requirement,
+/// while this gate additionally demands software context / a version literal.
+/// So persistence may record an edge the gate refuses (precision-first) — but
+/// never the reverse for text matches. The 2026-07-02 dogfood: 29 of 39
+/// critical signals were phantom-grounded by matches persistence refused —
+/// every one via a subterm expansion or alias overlap whose full package name
+/// never appeared.
 pub(crate) fn is_strong_grounding_match(d: &DepMatch) -> bool {
     is_grounding_candidate(d) && d.corroborated
 }
@@ -549,9 +553,11 @@ fn is_package_boundary_char(c: char) -> bool {
 /// Byte positions where the FULL package name occurs as a whole package token,
 /// in any accepted written form: the normalized name (`anthropic-ai-sdk`), its
 /// underscore variant (`anthropic_ai_sdk`), or the original scoped form
-/// (`@anthropic-ai/sdk`). A trailing sentence period ("axios.") and the
-/// `.js`/`.ts`/`.rs` suffixes are accepted; "axios.get" is not an occurrence
-/// boundary violation we care to reject (the call site is still the package).
+/// (`@anthropic-ai/sdk`). Trailing-dot handling: a sentence period ("axios.")
+/// and the `.js`/`.ts`/`.rs` suffixes ("next.js") are accepted as boundaries;
+/// any other dotted continuation ("axios.get", "next.config") is REJECTED as
+/// package-name-internal — conservative, matching `dep_linker`'s treatment of
+/// `.` as a name character.
 fn package_name_positions(text: &str, package_name: &str, normalized_name: &str) -> Vec<usize> {
     let mut forms: Vec<String> = vec![normalized_name.to_string()];
     let underscored = normalized_name.replace('-', "_");
@@ -612,9 +618,14 @@ const NAME_CONTEXT_WINDOW: usize = 120;
 /// - Word-like names (`is_ambiguous_dep_name`: COMMON_ENGLISH_WORDS or <= 3
 ///   chars — "path", "open", "got") can NEVER be proven by text alone. This
 ///   mirrors `dep_linker::is_specific_title_match_candidate` exactly: such
-///   names only persist via the exact-registry or structured-advisory routes,
-///   and the gate's structured route (`security_applicability` metadata
-///   proof) covers them independently. Live phantom killed by this arm: the
+///   names only persist via the exact-registry or structured-advisory routes.
+///   Coverage split: word-like names NOT on the package-ambiguity denylist
+///   ("path", "open", "got") can still be elevated by the GATE's structured
+///   route (`security_applicability` metadata proof — they remain grounding
+///   candidates); names on BOTH lists ("config", "log", "time", "data") fail
+///   `is_grounding_candidate` outright, so only the PERSISTENCE layer records
+///   their advisory/registry edges — the gate never marks them critical
+///   (pre-existing #174 behavior). Live phantom killed by this arm: the
 ///   `path` npm dep grounding an arxiv cloud-security paper.
 /// - Otherwise the FULL package name must occur as a whole package token.
 ///   Subterm expansions ("anthropic" → `@anthropic-ai/sdk` on Anthropic
@@ -655,7 +666,76 @@ fn is_name_corroborated(
         };
         has_language_context_nearby(text_lower, pos, window)
             || has_security_context_nearby(text_lower, pos, window)
-    }) || find_mentioned_version(text_lower, normalized_name).is_some()
+    }) || has_adjacent_version_literal(text_lower, &positions, normalized_name.len())
+}
+
+/// Version-adjacency corroboration for a single-token name — anchored to the
+/// boundary-checked `positions`, never a raw substring re-scan, so "react"
+/// inside "Preact 10.30" or "react-router 7.5" cannot borrow a sibling
+/// package's version. (In this arm every accepted form equals the normalized
+/// single-token name, so `name_len` is uniform across positions.)
+fn has_adjacent_version_literal(text: &str, positions: &[usize], name_len: usize) -> bool {
+    positions.iter().any(|&pos| {
+        let after_start = pos + name_len;
+        if after_start >= text.len() {
+            return false;
+        }
+        let end = snap_to_char_boundary(text, (after_start + 40).min(text.len()), true);
+        version_literal_at_start(&text[after_start..end])
+    })
+}
+
+/// Does a genuine version LITERAL appear in the first ~20 bytes after a name
+/// occurrence? Accepted: a dotted numeric ("axios 1.12.2", "tokio 1.40") or a
+/// v-prefixed number ("v3", "axum v0.8.9"). A bare small integer is NOT a
+/// version — "How devs react to 25 new AI rules" must not read "25" as
+/// react's version. (Bare integers do pass `version_triplet`, so the
+/// confidence-multiplier path in `compare_version_in_content` deliberately
+/// keeps its pre-existing laxity; grounding PROOF is held to more.)
+fn version_literal_at_start(after_name: &str) -> bool {
+    for (i, ch) in after_name.char_indices() {
+        if i >= 20 {
+            return false;
+        }
+        if !ch.is_ascii_digit() {
+            continue;
+        }
+        // Word boundary: preceded by a non-alphanumeric, or a standalone
+        // v/V prefix ("v0.8.9") — mirroring find_mentioned_version.
+        let bytes = after_name.as_bytes();
+        let prev = if i == 0 {
+            None
+        } else {
+            bytes.get(i - 1).copied()
+        };
+        let prev_is_v_prefix = matches!(prev, Some(b'v') | Some(b'V'))
+            && (i < 2 || !bytes[i - 2].is_ascii_alphanumeric());
+        let boundary_ok = prev.is_none_or(|b| !b.is_ascii_alphanumeric()) || prev_is_v_prefix;
+        if !boundary_ok {
+            // Glued to a word — not a version. The first digit region
+            // decides, as in find_mentioned_version.
+            return false;
+        }
+        let token: String = after_name[i..]
+            .chars()
+            .take_while(|c| c.is_ascii_digit() || *c == '.')
+            .collect();
+        // Dotted x.y — numeric on both sides of a dot — or v-prefixed.
+        let dotted = token.contains('.')
+            && token
+                .split('.')
+                .filter(|p| !p.is_empty() && p.chars().all(|c| c.is_ascii_digit()))
+                .count()
+                >= 2;
+        if !(dotted || prev_is_v_prefix) {
+            return false;
+        }
+        return match version_triplet(&token) {
+            Some(triplet) => triplet.0 < 100 && triplet != (0, 0, 0),
+            None => false,
+        };
+    }
+    false
 }
 
 /// Snap a byte index to the nearest valid char boundary.
@@ -1781,10 +1861,14 @@ mod tests {
             "prose 'path' must not ground, got {prose:?}"
         );
 
-        // Even an advisory-shaped TITLE cannot text-ground a word-like name —
-        // that is the structured-advisory route's job (security_applicability
-        // proves it from the Affected-packages metadata, independent of this
-        // flag; see pipeline_v2 tests).
+        // Even an advisory-shaped TITLE cannot text-ground a word-like name.
+        // "path" is word-like (COMMON_ENGLISH_WORDS) but NOT on the
+        // package-ambiguity denylist, so it remains a grounding CANDIDATE and
+        // the gate's structured route (security_applicability metadata proof)
+        // can still elevate a real advisory. Names on BOTH lists ("config",
+        // "log", "time") fail is_grounding_candidate too — for those only the
+        // persistence layer records the edge; the gate never marks them
+        // critical (pre-existing #174 behavior).
         let (advisory, _) = match_dependencies(
             "npm package path 0.12 security advisory",
             "The path package on npm has a prototype pollution vulnerability.",
@@ -1816,6 +1900,90 @@ mod tests {
         assert!(
             is_strongly_grounded(&matches),
             "a registry release naming axum with a version must ground, got {matches:?}"
+        );
+    }
+
+    #[test]
+    fn bare_integer_after_name_is_not_version_corroboration() {
+        // "25" is a count, not a version. Without this guard, prose "react"
+        // followed by any small integer minted version-adjacency proof
+        // (NewerMajor x1.1 -> 0.55 -> strongly grounded).
+        let mut ace_ctx = ACEContext::default();
+        ace_ctx.dependency_info.insert(
+            "react".to_string(),
+            direct_dep_info("react", Some("19.0.0"), "javascript"),
+        );
+        // Content avoids "developers"/"dependency"-adjacent words: the <=5
+        // char context markers ("dep", "lib", "gem") still match as
+        // substrings — an accepted follow-up, not this test's subject.
+        let (matches, _) = match_dependencies(
+            "How devs react to 25 new AI rules",
+            "Teams react to 25 new rules issued this quarter.",
+            &[],
+            &ace_ctx,
+        );
+        assert!(
+            !matches.is_empty(),
+            "fixture must reproduce the prose react match"
+        );
+        assert!(
+            !is_strongly_grounded(&matches),
+            "a bare integer after prose 'react' must not corroborate, got {matches:?}"
+        );
+    }
+
+    #[test]
+    fn sibling_package_version_cannot_corroborate() {
+        // The version scan is anchored to boundary-checked occurrences of THE
+        // name — "react" inside "Preact 10.30" or "react-router 7.5" must not
+        // lend the react dep a version literal.
+        let mut ace_ctx = ACEContext::default();
+        ace_ctx.dependency_info.insert(
+            "react".to_string(),
+            direct_dep_info("react", Some("19.0.0"), "javascript"),
+        );
+
+        let (preact, _) = match_dependencies(
+            "How devs react to the new frontend wars",
+            "Preact 10.30 released this week with a smaller runtime.",
+            &[],
+            &ace_ctx,
+        );
+        assert!(
+            !is_strongly_grounded(&preact),
+            "'react' inside 'Preact 10.30' must not corroborate the react dep, got {preact:?}"
+        );
+
+        let (router, _) = match_dependencies(
+            "How devs react to the new frontend wars",
+            "react-router 7.5 announced new data APIs.",
+            &[],
+            &ace_ctx,
+        );
+        assert!(
+            !is_strongly_grounded(&router),
+            "'react' inside 'react-router 7.5' must not corroborate the react dep, got {router:?}"
+        );
+    }
+
+    #[test]
+    fn dotted_version_literal_still_corroborates() {
+        // The tightening must not cost real release intelligence: a dotted
+        // literal right after the package name remains proof.
+        let mut ace_ctx = ACEContext::default();
+        ace_ctx.dependency_info.insert(
+            "tokio".to_string(),
+            direct_dep_info("tokio", Some("1.35.0"), "rust"),
+        );
+        let (matches, _) = match_dependencies(
+            "tokio 1.40 released with runtime improvements",
+            "",
+            &[],
+            &ace_ctx,
+        );
+        assert!(
+            is_strongly_grounded(&matches),
+            "a dotted version literal after tokio must still ground, got {matches:?}"
         );
     }
 
