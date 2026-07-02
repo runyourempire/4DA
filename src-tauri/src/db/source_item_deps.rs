@@ -194,6 +194,56 @@ impl Database {
         Ok(rows.filter_map(|r| r.ok()).collect())
     }
 
+    /// Of the given source-item ids, return the subset with at least one persisted
+    /// dependency link strong enough to ground the item in the user's stack.
+    ///
+    /// Mirrors the canonical grounding rule (`scoring::dependencies::
+    /// is_strong_grounding_match`: non-dev edge at confidence >= 0.40 whose package
+    /// name can be trusted) for surfaces where no in-memory `ScoreBreakdown` is
+    /// available — the Brief's DB-fallback slate. Persisted links are already
+    /// non-dev/direct-only (dep_linker loads only `is_dev = 0 AND is_direct = 1`
+    /// deps), and the current linker never creates title-heuristic links for
+    /// ambiguous English-word package names — but legacy rows may predate those
+    /// filters, so ambiguous names here additionally require registry/advisory
+    /// proof (the `package_ambiguity` policy: ambiguous names surface only with
+    /// ecosystem-qualified evidence).
+    pub fn filter_strongly_grounded_items(
+        &self,
+        item_ids: &[i64],
+    ) -> SqliteResult<std::collections::HashSet<i64>> {
+        // Keep in sync with `scoring::dependencies::STRONG_GROUNDING_CONFIDENCE`
+        // (not importable here: `scoring::dependencies` is module-private).
+        const STRONG_GROUNDING_CONFIDENCE: f64 = 0.40;
+
+        let mut grounded = std::collections::HashSet::new();
+        if item_ids.is_empty() {
+            return Ok(grounded);
+        }
+        let conn = self.read_conn();
+        let placeholders = vec!["?"; item_ids.len()].join(",");
+        let sql = format!(
+            "SELECT DISTINCT source_item_id, package_name, match_type
+             FROM source_item_dependencies
+             WHERE confidence >= {STRONG_GROUNDING_CONFIDENCE}
+               AND source_item_id IN ({placeholders})"
+        );
+        let mut stmt = conn.prepare(&sql)?;
+        let rows = stmt.query_map(rusqlite::params_from_iter(item_ids.iter()), |row| {
+            Ok((
+                row.get::<_, i64>(0)?,
+                row.get::<_, String>(1)?,
+                row.get::<_, String>(2)?,
+            ))
+        })?;
+        for (item_id, package_name, match_type) in rows.flatten() {
+            let proof_based = matches!(match_type.as_str(), "exact_registry" | "advisory");
+            if proof_based || !crate::package_ambiguity::is_ambiguous_package_name(&package_name) {
+                grounded.insert(item_id);
+            }
+        }
+        Ok(grounded)
+    }
+
     /// Count dependency links by match type (for diagnostics).
     pub fn count_source_item_deps_by_type(&self) -> SqliteResult<Vec<(String, i64)>> {
         let conn = self.read_conn();
@@ -499,6 +549,83 @@ mod tests {
             .get_deps_for_source_item(sid)
             .expect("query after delete");
         assert!(deps.is_empty(), "cascade delete should remove dep links");
+    }
+
+    #[test]
+    fn test_filter_strongly_grounded_items() {
+        let db = test_db();
+        let strong = insert_source_item(&db, "tokio 2.0 vulnerability");
+        let weak = insert_source_item(&db, "legacy weak serde mention");
+        let ambiguous_heuristic = insert_source_item(&db, "log rotation best practices");
+        let ambiguous_registry = insert_source_item(&db, "log crate 0.5 released");
+        let unlinked = insert_source_item(&db, "no dependency links at all");
+
+        // Strong non-ambiguous link (>= 0.40) — grounded.
+        db.link_source_item_dep(strong, "tokio", None, "title_heuristic", 0.50, None, None)
+            .expect("link strong");
+        // Legacy low-confidence link below the 0.40 strong-grounding floor — not grounded.
+        db.link_source_item_dep(weak, "serde", None, "title_heuristic", 0.30, None, None)
+            .expect("link weak");
+        // Ambiguous English-word package via bare title heuristic (legacy row shape)
+        // — not grounded even at high confidence.
+        db.link_source_item_dep(
+            ambiguous_heuristic,
+            "log",
+            None,
+            "title_heuristic",
+            0.50,
+            None,
+            None,
+        )
+        .expect("link ambiguous heuristic");
+        // Ambiguous name WITH registry proof — grounded (ecosystem-qualified evidence).
+        db.link_source_item_dep(
+            ambiguous_registry,
+            "log",
+            Some("crates.io"),
+            "exact_registry",
+            0.95,
+            None,
+            None,
+        )
+        .expect("link ambiguous registry");
+
+        let grounded = db
+            .filter_strongly_grounded_items(&[
+                strong,
+                weak,
+                ambiguous_heuristic,
+                ambiguous_registry,
+                unlinked,
+            ])
+            .expect("filter");
+
+        assert!(grounded.contains(&strong), "strong link grounds the item");
+        assert!(
+            !grounded.contains(&weak),
+            "sub-floor confidence must not ground"
+        );
+        assert!(
+            !grounded.contains(&ambiguous_heuristic),
+            "ambiguous name without registry/advisory proof must not ground"
+        );
+        assert!(
+            grounded.contains(&ambiguous_registry),
+            "ambiguous name with exact_registry proof grounds the item"
+        );
+        assert!(
+            !grounded.contains(&unlinked),
+            "unlinked item is not grounded"
+        );
+    }
+
+    #[test]
+    fn test_filter_strongly_grounded_items_empty_input() {
+        let db = test_db();
+        let grounded = db
+            .filter_strongly_grounded_items(&[])
+            .expect("empty filter");
+        assert!(grounded.is_empty());
     }
 
     #[test]
